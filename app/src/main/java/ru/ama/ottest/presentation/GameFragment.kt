@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -68,8 +69,8 @@ class GameFragment : Fragment() {
     }
 
     private fun setupClickListenersToOptions() {
-		binding.lv_answers.setOnItemClickListener { parent, view, position, id -> 
-    val element = adapter.getItemAtPosition(position)
+		binding.lvAnswers.setOnItemClickListener { parent, view, position, id ->
+   // val element = adapter.getItemAtPosition(position)
      viewModel.chooseAnswer(position)
 }
         /*for (textView in optionsTextViews) {
@@ -82,11 +83,9 @@ class GameFragment : Fragment() {
     private fun observeViewModel() {
         viewModel.question.observe(viewLifecycleOwner) {
             with(binding) {
-                tvSum.text = it.sum.toString()
-                tvLeftNumber.text = it.visibleNumber.toString()
-				val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, 
+				val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1,
 				it.answers )
-				lv_answers.adapter = adapter
+				lvAnswers.adapter = adapter
                 //setupTextToOptions(it.answers)
             }
         }
