@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import ru.ama.ottest.R
 import ru.ama.ottest.databinding.FragmentChooseLevelBinding
-import ru.ama.ottest.domain.entity.Level
 
 class ChooseLevelFragment : Fragment() {
 
@@ -23,25 +22,17 @@ class ChooseLevelFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        with(binding) {
-            buttonLevelTest.setOnClickListener {
-                launchGameFragment(Level.TEST)
+      
+            bindingbuttonLevelTest.setOnClickListener {
+                launchGameFragment()
             }
-            buttonLevelEasy.setOnClickListener {
-                launchGameFragment(Level.EASY)
-            }
-            buttonLevelNormal.setOnClickListener {
-                launchGameFragment(Level.NORMAL)
-            }
-            buttonLevelHard.setOnClickListener {
-                launchGameFragment(Level.HARD)
-            }
-        }
+            
+        
     }
 
-    private fun launchGameFragment(level: Level) {
+    private fun launchGameFragment() {
         requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.main_container, GameFragment.newInstance(level))
+            .replace(R.id.main_container, GameFragment.newInstance())
             .addToBackStack(GameFragment.NAME)
             .commit()
     }

@@ -11,19 +11,18 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import ru.ama.ottest.R
 import ru.ama.ottest.databinding.FragmentGameBinding
-import ru.ama.ottest.domain.entity.Level
 
 class GameFragment : Fragment() {
 
     private lateinit var viewModel: GameViewModel
     private lateinit var binding: FragmentGameBinding
 
-    private lateinit var level: Level
-    private var optionsTextViews = mutableListOf<TextView>()
+    //private lateinit var level: Level
+   // private var optionsTextViews = mutableListOf<TextView>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        parseArgs()
+       // parseArgs()
     }
 
     override fun onCreateView(
@@ -42,11 +41,11 @@ class GameFragment : Fragment() {
         setupClickListenersToOptions()
         observeViewModel()
         if (savedInstanceState == null) {
-            viewModel.startGame(level)
+            viewModel.startGame()
         }
     }
 
-    private fun parseArgs() {
+   /* private fun parseArgs() {
         val args = requireArguments()
         if (!args.containsKey(ARG_LEVEL)) {
             throw RuntimeException("Required param level is absent")
@@ -54,25 +53,30 @@ class GameFragment : Fragment() {
         args.getParcelable<Level>(ARG_LEVEL)?.let {
             level = it
         }
-    }
+    }*/
 
     private fun getTextViewsOptions() {
-        with(binding) {
+		
+      /*  with(binding) {
             optionsTextViews.add(tvOption1)
             optionsTextViews.add(tvOption2)
             optionsTextViews.add(tvOption3)
             optionsTextViews.add(tvOption4)
             optionsTextViews.add(tvOption5)
             optionsTextViews.add(tvOption6)
-        }
+        }*/
     }
 
     private fun setupClickListenersToOptions() {
-        for (textView in optionsTextViews) {
+		binding.lv_answers.setOnItemClickListener { parent, view, position, id -> 
+    val element = adapter.getItemAtPosition(position)
+     viewModel.chooseAnswer(position)
+}
+        /*for (textView in optionsTextViews) {
             textView.setOnClickListener {
                 viewModel.chooseAnswer(textView.text.toString().toInt())
             }
-        }
+        }*/
     }
 
     private fun observeViewModel() {
@@ -80,7 +84,10 @@ class GameFragment : Fragment() {
             with(binding) {
                 tvSum.text = it.sum.toString()
                 tvLeftNumber.text = it.visibleNumber.toString()
-                setupTextToOptions(it.answers)
+				val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, 
+				it.answers )
+				lv_answers.adapter = adapter
+                //setupTextToOptions(it.answers)
             }
         }
         viewModel.leftFormattedTime.observe(viewLifecycleOwner) {
@@ -103,11 +110,11 @@ class GameFragment : Fragment() {
         }
     }
 
-    private fun setupTextToOptions(answers: List<Int>) {
+    /*private fun setupTextToOptions(answers: List<Int>) {
         for (i in answers.indices) {
             optionsTextViews[i].text = answers[i].toString()
         }
-    }
+    }*/
 
     private fun setupProgressColorByState(enoughPercentage: Boolean) {
         val colorResId = if (enoughPercentage) {
@@ -124,12 +131,12 @@ class GameFragment : Fragment() {
         private const val ARG_LEVEL = "level"
         const val NAME = "GameFragment"
 
-        fun newInstance(level: Level): GameFragment {
-            return GameFragment().apply {
+        fun newInstance(): GameFragment {
+            return GameFragment()/*.apply {
                 arguments = Bundle().apply {
                     putParcelable(ARG_LEVEL, level)
                 }
-            }
+            }*/
         }
     }
 }

@@ -3,15 +3,11 @@ package ru.ama.ottest.domain.repository
 import ru.ama.ottest.domain.entity.GameSettings
 import ru.ama.ottest.domain.entity.Level
 import ru.ama.ottest.domain.entity.Question
+import ru.ama.ottest.domain.entity.Questions
 
 interface GameRepository {
 
-    fun generateQuestion(
-        maxValue: Int,
-        minSumValue: Int,
-        minAnswerValue: Int,
-        countOfOptions: Int
-    ): Question
+    fun generateQuestion(): Questions
 
-    fun getGameSettings(level: Level): GameSettings
+    fun getGameSettings(): GameSettings
 }

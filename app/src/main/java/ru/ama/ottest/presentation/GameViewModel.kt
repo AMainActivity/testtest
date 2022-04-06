@@ -8,8 +8,7 @@ import androidx.lifecycle.ViewModel
 import ru.ama.ottest.data.GameRepositoryImpl
 import ru.ama.ottest.domain.entity.GameResult
 import ru.ama.ottest.domain.entity.GameSettings
-import ru.ama.ottest.domain.entity.Level
-import ru.ama.ottest.domain.entity.Question
+import ru.ama.ottest.domain.entity.Questions
 import ru.ama.ottest.domain.usecase.GenerateQuestionUseCase
 import ru.ama.ottest.domain.usecase.GetGameSettingsUseCase
 
@@ -21,7 +20,6 @@ class GameViewModel : ViewModel() {
     private val getGameSettingsUseCase = GetGameSettingsUseCase(repository)
 
     private lateinit var gameSettings: GameSettings
-    private lateinit var level: Level
 
     private val _minPercentOfRightAnswers = MutableLiveData<Int>()
     val minPercentOfRightAnswers: LiveData<Int>
@@ -31,8 +29,8 @@ class GameViewModel : ViewModel() {
     val leftFormattedTime: LiveData<String>
         get() = _leftFormattedTime
 
-    private val _question = MutableLiveData<Question>()
-    val question: LiveData<Question>
+    private val _question = MutableLiveData<Questions>()
+    val question: LiveData<Questions>
         get() = _question
 
     private val _gameResult = MutableLiveData<GameResult>()
@@ -51,8 +49,8 @@ class GameViewModel : ViewModel() {
     private var countOfRightAnswers = 0
     private var countOfWrongAnswers = 0
 
-    fun startGame(level: Level) {
-        setupGameSettings(level)
+    fun startGame() {
+        setupGameSettings()
         startTimer()
         generateQuestion()
     }
@@ -66,15 +64,14 @@ class GameViewModel : ViewModel() {
         generateQuestion()
     }
 
-    private fun setupGameSettings(level: Level) {
-        this.level = level
-        gameSettings = getGameSettingsUseCase(level)
+    private fun setupGameSettings() {
+        gameSettings = getGameSettingsUseCase()
         _minPercentOfRightAnswers.value = gameSettings.minPercentOfRightAnswers
     }
 
     private fun checkAnswer(answer: Int) {
         val rightAnswer = question.value
-        if (answer == rightAnswer?.rightAnswer) {
+        if (answer == rightAnswer!!.correct[0]) {
             countOfRightAnswers++
         } else {
             countOfWrongAnswers++
@@ -83,7 +80,7 @@ class GameViewModel : ViewModel() {
 
     private fun startTimer() {
         timer = object : CountDownTimer(
-            gameSettings.gameTimeInSeconds * MILLIS_IN_SECONDS,
+            gameSettings.testTimeInSeconds * MILLIS_IN_SECONDS,
             MILLIS_IN_SECONDS
         ) {
             override fun onTick(millisUntilFinished: Long) {
@@ -98,7 +95,7 @@ class GameViewModel : ViewModel() {
     }
 
     private fun generateQuestion() {
-        _question.value = generateQuestionUseCase(gameSettings.maxValue)
+        _question.value = generateQuestionUseCase()
     }
 
     private fun finishGame() {
