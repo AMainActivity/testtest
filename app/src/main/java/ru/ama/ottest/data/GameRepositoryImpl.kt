@@ -33,13 +33,24 @@ object GameRepositoryImpl : GameRepository {
         }
         return Question(sum, visibleNumber, options.toList())
     }  */
-	
+
+	override fun getCurrentNoOfQuestion(): Int {
+		return countOfQuestion
+	}
+
+	override fun getTestInfo(): MainTest {
+		return mainTest
+	}
+
 	override fun generateQuestion(): Questions {
 	/*if (countOfQuestion==-1)
 	{
 		readQuestions()
 	}*/
-	countOfQuestion++
+		if (countOfQuestion==mainTest.questions.size-1)
+					countOfQuestion=-1
+
+		countOfQuestion++
 	val number=questions[countOfQuestion].number
 	val question=questions[countOfQuestion].question
 	val imageUrl=questions[countOfQuestion].imageUrl
@@ -99,7 +110,7 @@ object GameRepositoryImpl : GameRepository {
 "mainImageUrl": "",
 "minCountOfRightAnswers":8,
 "minPercentOfRightAnswers":80,
-"testTimeInSeconds":10,
+"testTimeInSeconds":30,
 "questions":
 [
  {

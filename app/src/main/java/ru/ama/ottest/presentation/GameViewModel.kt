@@ -1,6 +1,7 @@
 package ru.ama.ottest.presentation
 
 import android.os.CountDownTimer
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -8,9 +9,12 @@ import androidx.lifecycle.ViewModel
 import ru.ama.ottest.data.GameRepositoryImpl
 import ru.ama.ottest.domain.entity.GameResult
 import ru.ama.ottest.domain.entity.GameSettings
+import ru.ama.ottest.domain.entity.MainTest
 import ru.ama.ottest.domain.entity.Questions
 import ru.ama.ottest.domain.usecase.GenerateQuestionUseCase
+import ru.ama.ottest.domain.usecase.GetCurrentNoOfQuestion
 import ru.ama.ottest.domain.usecase.GetGameSettingsUseCase
+import ru.ama.ottest.domain.usecase.GetTestInfo
 
 class GameViewModel : ViewModel() {
 
@@ -18,8 +22,12 @@ class GameViewModel : ViewModel() {
 
     private val generateQuestionUseCase = GenerateQuestionUseCase(repository)
     private val getGameSettingsUseCase = GetGameSettingsUseCase(repository)
+    private val getTestInfoUserCase = GetTestInfo(repository)
+    private val getCurrentNoOfQuestionUserCase = GetCurrentNoOfQuestion(repository)
 
     private lateinit var gameSettings: GameSettings
+    private lateinit var testInfo: MainTest
+    private var currentNoOfQuestion: Int=-1
 
     private val _minPercentOfRightAnswers = MutableLiveData<Int>()
     val minPercentOfRightAnswers: LiveData<Int>
@@ -53,6 +61,7 @@ class GameViewModel : ViewModel() {
         setupGameSettings()
         startTimer()
         generateQuestion()
+        currentNoOfQuestion=0
     }
 
     fun chooseAnswer(answer: Int) {
@@ -62,10 +71,12 @@ class GameViewModel : ViewModel() {
         checkAnswer(answer)
         getPercentOfRightAnswers()
         generateQuestion()
+        currentNoOfQuestion=getCurrentNoOfQuestionUserCase()
     }
 
     private fun setupGameSettings() {
         gameSettings = getGameSettingsUseCase()
+        testInfo=getTestInfoUserCase()
         _minPercentOfRightAnswers.value = gameSettings.minPercentOfRightAnswers
     }
 
@@ -95,7 +106,11 @@ class GameViewModel : ViewModel() {
     }
 
     private fun generateQuestion() {
+        Log.e("generateQuestion","cur: $currentNoOfQuestion, size: ${testInfo.questions.size-1}")
+        if (currentNoOfQuestion<testInfo.questions.size-1)
         _question.value = generateQuestionUseCase()
+        else
+            finishGame()
     }
 
     private fun finishGame() {
