@@ -22,12 +22,12 @@ class GameViewModel : ViewModel() {
     private val shuffleListOfQuestionsUserCase = ShuffleListOfQuestions(repository)
 
     private lateinit var gameSettings: GameSettings
-    private lateinit var testInfo: MainTest
+     lateinit var testInfo: MainTest
     //private var currentNoOfQuestion: Int=-1
 
 	private var _currentNoOfQuestion = MutableLiveData<Int>()
-    /*val currentNoOfQuestion: LiveData<Int>
-    get() = _currentNoOfQuestion*/
+    val currentNoOfQuestion: LiveData<Int>
+    get() = _currentNoOfQuestion
 
     private val _minPercentOfRightAnswers = MutableLiveData<Int>()
     val minPercentOfRightAnswers: LiveData<Int>

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -83,12 +84,15 @@ class GameFragment : Fragment() {
     private fun observeViewModel() {
         viewModel.question.observe(viewLifecycleOwner) {
             with(binding) {
-                tvQuestion.text = it.question
+                tvQuestion.text = "${it.number} ${it.question}"
 				val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1,
 				it.answers )
 				lvAnswers.adapter = adapter
                 //setupTextToOptions(it.answers)
             }
+        }
+        viewModel.currentNoOfQuestion.observe(viewLifecycleOwner) {
+            Toast.makeText(requireContext(), "${it+1}/${viewModel.testInfo.countOfQuestions} ",Toast.LENGTH_SHORT).show()
         }
         viewModel.leftFormattedTime.observe(viewLifecycleOwner) {
             binding.tvTimer.text = it
