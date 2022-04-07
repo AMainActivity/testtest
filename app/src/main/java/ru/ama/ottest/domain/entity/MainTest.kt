@@ -8,5 +8,6 @@ data class MainTest(
   @SerializedName("minCountOfRightAnswers") var minCountOfRightAnswers: Int,
   @SerializedName("minPercentOfRightAnswers") var minPercentOfRightAnswers: Int,
   @SerializedName("testTimeInSeconds") var testTimeInSeconds: Int,
+  @SerializedName("countOfQuestions") var countOfQuestions: Int,
   @SerializedName("questions") var questions: List<Questions>
 )

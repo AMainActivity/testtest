@@ -4,9 +4,11 @@ import ru.ama.ottest.domain.entity.*
 
 interface GameRepository {
 
-    fun generateQuestion(): Questions
+    fun generateQuestion(questionNo:Int): Questions
 
     fun getGameSettings(): GameSettings
+	
     fun getTestInfo(): MainTest
-    fun getCurrentNoOfQuestion(): Int
+	
+    fun shuffleListOfQuestions()
 }

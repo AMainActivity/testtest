@@ -7,5 +7,5 @@ class GenerateQuestionUseCase(
     private val gameRepository: GameRepository
 ) {
 
-    operator fun invoke(): Questions = gameRepository.generateQuestion()
+    operator fun invoke(questionNo:Int): Questions = gameRepository.generateQuestion(questionNo)
 }

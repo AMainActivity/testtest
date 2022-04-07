@@ -18,17 +18,26 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="00:00" />
 
-
+	<TextView
+        android:id="@+id/tv_question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:layout_constraintBottom_toTopOf="@id/lv_answers"
+        app:layout_constraintEnd_toEndOf="@id/tv_timer"
+        app:layout_constraintStart_toStartOf="@id/tv_timer"
+        app:layout_constraintTop_toBottomOf="@id/tv_timer"
+        tools:text="вопрос" />
 
 
     <ListView
         android:id="@+id/lv_answers"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/progressBar"
-        app:layout_constraintEnd_toEndOf="@id/tv_timer"
-        app:layout_constraintStart_toStartOf="@id/tv_timer"
-        app:layout_constraintTop_toBottomOf="@id/tv_timer" />
+        app:layout_constraintBottom_toTopOf="@id/progressBar"
+        app:layout_constraintEnd_toEndOf="@id/tv_question"
+        app:layout_constraintStart_toStartOf="@id/tv_question"
+        app:layout_constraintTop_toBottomOf="@id/tv_question" />
 
     <ProgressBar
         android:id="@+id/progressBar"

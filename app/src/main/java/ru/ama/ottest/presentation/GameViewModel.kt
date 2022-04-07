@@ -11,23 +11,23 @@ import ru.ama.ottest.domain.entity.GameResult
 import ru.ama.ottest.domain.entity.GameSettings
 import ru.ama.ottest.domain.entity.MainTest
 import ru.ama.ottest.domain.entity.Questions
-import ru.ama.ottest.domain.usecase.GenerateQuestionUseCase
-import ru.ama.ottest.domain.usecase.GetCurrentNoOfQuestion
-import ru.ama.ottest.domain.usecase.GetGameSettingsUseCase
-import ru.ama.ottest.domain.usecase.GetTestInfo
+import ru.ama.ottest.domain.usecase.*
 
 class GameViewModel : ViewModel() {
 
     private val repository = GameRepositoryImpl
-
     private val generateQuestionUseCase = GenerateQuestionUseCase(repository)
     private val getGameSettingsUseCase = GetGameSettingsUseCase(repository)
     private val getTestInfoUserCase = GetTestInfo(repository)
-    private val getCurrentNoOfQuestionUserCase = GetCurrentNoOfQuestion(repository)
+    private val shuffleListOfQuestionsUserCase = ShuffleListOfQuestions(repository)
 
     private lateinit var gameSettings: GameSettings
     private lateinit var testInfo: MainTest
-    private var currentNoOfQuestion: Int=-1
+    //private var currentNoOfQuestion: Int=-1
+
+	private var _currentNoOfQuestion = MutableLiveData<Int>()
+    /*val currentNoOfQuestion: LiveData<Int>
+    get() = _currentNoOfQuestion*/
 
     private val _minPercentOfRightAnswers = MutableLiveData<Int>()
     val minPercentOfRightAnswers: LiveData<Int>
@@ -60,8 +60,9 @@ class GameViewModel : ViewModel() {
     fun startGame() {
         setupGameSettings()
         startTimer()
-        generateQuestion()
-        currentNoOfQuestion=0
+        shuffleListOfQuestionsUserCase()
+        _currentNoOfQuestion.value=0
+        generateQuestion(_currentNoOfQuestion.value!!)
     }
 
     fun chooseAnswer(answer: Int) {
@@ -70,8 +71,8 @@ class GameViewModel : ViewModel() {
         }
         checkAnswer(answer)
         getPercentOfRightAnswers()
-        generateQuestion()
-        currentNoOfQuestion=getCurrentNoOfQuestionUserCase()
+		_currentNoOfQuestion.value=_currentNoOfQuestion.value!!+1
+        generateQuestion(_currentNoOfQuestion.value!!)
     }
 
     private fun setupGameSettings() {
@@ -105,10 +106,10 @@ class GameViewModel : ViewModel() {
         timer?.start()
     }
 
-    private fun generateQuestion() {
-        Log.e("generateQuestion","cur: $currentNoOfQuestion, size: ${testInfo.questions.size-1}")
-        if (currentNoOfQuestion<testInfo.questions.size-1)
-        _question.value = generateQuestionUseCase()
+    private fun generateQuestion(questionNo:Int) {
+        Log.e("generateQuestion","cur: $questionNo, size: ${testInfo.countOfQuestions}")
+        if (questionNo<testInfo.countOfQuestions)
+        _question.value = generateQuestionUseCase(questionNo)
         else
             finishGame()
     }
@@ -116,11 +117,12 @@ class GameViewModel : ViewModel() {
     private fun finishGame() {
         _leftFormattedTime.value = getFormattedLeftTime(0)
         _gameResult.value = getGameResult()
+		shuffleListOfQuestionsUserCase()
     }
 
     private fun getGameResult(): GameResult {
         val percentOfRightAnswers = getPercentOfRightAnswers()
-        val enoughPercentage = percentOfRightAnswers > gameSettings.minPercentOfRightAnswers
+        val enoughPercentage = percentOfRightAnswers >= gameSettings.minPercentOfRightAnswers
         val enoughRightAnswers = countOfRightAnswers >= gameSettings.minCountOfRightAnswers
         val winner = enoughPercentage && enoughRightAnswers
         val countOfQuestions = countOfRightAnswers + countOfWrongAnswers

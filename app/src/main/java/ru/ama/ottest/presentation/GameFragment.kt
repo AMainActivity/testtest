@@ -83,6 +83,7 @@ class GameFragment : Fragment() {
     private fun observeViewModel() {
         viewModel.question.observe(viewLifecycleOwner) {
             with(binding) {
+                tvQuestion.text = it.question
 				val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1,
 				it.answers )
 				lvAnswers.adapter = adapter

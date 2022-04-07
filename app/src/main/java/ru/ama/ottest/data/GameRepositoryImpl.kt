@@ -12,9 +12,11 @@ import kotlin.random.Random
 
 object GameRepositoryImpl : GameRepository {
 
-	var countOfQuestion=-1
 	val mainTest by lazy{ Gson().fromJson(txt, MainTest::class.java)}
-    val questions: List<Questions> by lazy {mainTest.questions}
+    val questionsAll: List<Questions> by lazy {mainTest.questions}
+    lateinit var questionsForTest: List<Questions> /*by lazy {
+		 randomElementsFromQuestionsList(questionsAll,mainTest.countOfQuestions)
+    }*/
     /*override fun generateQuestion1(
         maxValue: Int,
         minSumValue: Int,
@@ -34,83 +36,54 @@ object GameRepositoryImpl : GameRepository {
         return Question(sum, visibleNumber, options.toList())
     }  */
 
-	override fun getCurrentNoOfQuestion(): Int {
-		return countOfQuestion
-	}
+	
 
 	override fun getTestInfo(): MainTest {
 		return mainTest
 	}
 
-	override fun generateQuestion(): Questions {
-	/*if (countOfQuestion==-1)
-	{
-		readQuestions()
-	}*/
-		if (countOfQuestion==mainTest.questions.size-1)
-					countOfQuestion=-1
 
-		countOfQuestion++
-	val number=questions[countOfQuestion].number
-	val question=questions[countOfQuestion].question
-	val imageUrl=questions[countOfQuestion].imageUrl
-	val answers=questions[countOfQuestion].answers
-	val correct=questions[countOfQuestion].correct
+override fun shuffleListOfQuestions()
+{
+	questionsForTest = randomElementsFromQuestionsList(questionsAll,mainTest.countOfQuestions)
+}
+
+private fun randomElementsFromQuestionsList(list: List<Questions>, randCount:Int):List<Questions> {
+    return list.asSequence().shuffled().take(randCount).toList()
+}
+
+
+	override fun generateQuestion(questionNo:Int): Questions {
+	
+
+	val number=questionsForTest[questionNo].number
+	val question=questionsForTest[questionNo].question
+	val imageUrl=questionsForTest[questionNo].imageUrl
+	val answers=questionsForTest[questionNo].answers
+	val correct=questionsForTest[questionNo].correct
 	
 	return Questions(number, question, imageUrl,answers,correct)
     }  
 	
-	/*fun readQuestions(): MainTest {
-        val gson = Gson()
-		mainTest = Gson().fromJson(txt, MainTest::class.java)
-		questions: List<Questions>=mainTest.questions
-		//val mainTestType = object: TypeToken<List<MainTest>>(){}.type
-		//var persons: List<Person> = gson.fromJson(txt, listPersonType)
-    }*/
+	
 
     override fun getGameSettings(): GameSettings {
-		//if (mainTest==null)
-		//readQuestions()
+	
         return GameSettings(
                 mainTest.minCountOfRightAnswers,
 				mainTest.minPercentOfRightAnswers,
 				mainTest.testTimeInSeconds
             )
-		/*when (level) {
-            Level.EASY   -> GameSettings(
-                10,
-                20,
-                80,
-                60
-            )
-            Level.NORMAL -> GameSettings(
-                20,
-                20,
-                85,
-                40
-            )
-            Level.HARD   -> GameSettings(
-                30,
-                20,
-                90,
-                30
-            )
-            Level.TEST   -> GameSettings(
-                10,
-                3,
-                50,
-                8
-            )*/
-        //}
     }
 	
 	val txt:String="""
 	{
 "title": "Тест по охране труда",
 "mainImageUrl": "",
-"minCountOfRightAnswers":8,
-"minPercentOfRightAnswers":80,
+"minCountOfRightAnswers":3,
+"minPercentOfRightAnswers":60,
 "testTimeInSeconds":30,
+"countOfQuestions":5,
 "questions":
 [
  {
