@@ -2,8 +2,9 @@ package ru.ama.ottest.domain.usecase
 
 import ru.ama.ottest.domain.entity.Questions
 import ru.ama.ottest.domain.repository.GameRepository
+import javax.inject.Inject
 
-class GenerateQuestionUseCase(
+class GenerateQuestionUseCase  @Inject constructor(
     private val gameRepository: GameRepository
 ) {
 

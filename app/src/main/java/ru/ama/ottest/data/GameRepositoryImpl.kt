@@ -1,18 +1,22 @@
 package ru.ama.ottest.data
 
+import android.content.Context
 import com.google.gson.Gson
 import ru.ama.ottest.domain.repository.GameRepository
 import ru.ama.ottest.domain.entity.GameSettings
 import ru.ama.ottest.domain.entity.MainTest
 import ru.ama.ottest.domain.entity.Question
 import ru.ama.ottest.domain.entity.Questions
+import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
 import kotlin.random.Random
 
-object GameRepositoryImpl : GameRepository {
-
-	val mainTest by lazy{ Gson().fromJson(txt, MainTest::class.java)}
+class GameRepositoryImpl @Inject constructor(
+	private val localDataSource: ExampleLocalDataSource) : GameRepository {
+//private val assetProvider: AssetProvider
+	//private val context: Context
+	val mainTest by lazy{ Gson().fromJson(getDescription(), MainTest::class.java)}
     val questionsAll: List<Questions> by lazy {mainTest.questions}
     lateinit var questionsForTest: List<Questions> /*by lazy {
 		 randomElementsFromQuestionsList(questionsAll,mainTest.countOfQuestions)
@@ -36,7 +40,14 @@ object GameRepositoryImpl : GameRepository {
         return Question(sum, visibleNumber, options.toList())
     }  */
 
-	
+
+private fun getDescription(): String
+{ 
+	return localDataSource.method()
+//assetProvider.getDescription()
+//context.assets.open("ot.json").bufferedReader().readText()
+}
+
 
 	override fun getTestInfo(): MainTest {
 		return mainTest

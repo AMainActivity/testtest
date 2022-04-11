@@ -1,5 +1,6 @@
 package ru.ama.ottest.presentation
 
+import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,14 +14,27 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import ru.ama.ottest.R
 import ru.ama.ottest.databinding.FragmentGameBinding
+import javax.inject.Inject
 
 class GameFragment : Fragment() {
 
+   // @Inject
     private lateinit var viewModel: GameViewModel
+	  private val component by lazy {
+        (requireActivity().application as MyApplication).component
+    }
+	@Inject
+    lateinit var viewModelFactory: ViewModelFactory
     private lateinit var binding: FragmentGameBinding
 
     //private lateinit var level: Level
    // private var optionsTextViews = mutableListOf<TextView>()
+
+ override fun onAttach(context: Context) {
+        component.inject(this)
+
+        super.onAttach(context)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +52,9 @@ class GameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this)[GameViewModel::class.java]
+      
+        viewModel = ViewModelProvider(this, viewModelFactory)[GameViewModel::class.java]
+	  //  viewModel = ViewModelProvider(this)[GameViewModel::class.java]
         getTextViewsOptions()
         setupClickListenersToOptions()
         observeViewModel()

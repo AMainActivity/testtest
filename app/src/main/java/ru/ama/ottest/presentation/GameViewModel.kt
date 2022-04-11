@@ -1,5 +1,6 @@
 package ru.ama.ottest.presentation
 
+import android.content.Context
 import android.os.CountDownTimer
 import android.util.Log
 import androidx.lifecycle.LiveData
@@ -11,11 +12,13 @@ import ru.ama.ottest.domain.entity.GameResult
 import ru.ama.ottest.domain.entity.GameSettings
 import ru.ama.ottest.domain.entity.MainTest
 import ru.ama.ottest.domain.entity.Questions
+import ru.ama.ottest.domain.repository.GameRepository
 import ru.ama.ottest.domain.usecase.*
+import javax.inject.Inject
 
-class GameViewModel : ViewModel() {
+class GameViewModel @Inject constructor(private val repository1: GameRepository): ViewModel() {
 
-    private val repository = GameRepositoryImpl
+    private val repository = repository1//GameRepositoryImpl()
     private val generateQuestionUseCase = GenerateQuestionUseCase(repository)
     private val getGameSettingsUseCase = GetGameSettingsUseCase(repository)
     private val getTestInfoUserCase = GetTestInfo(repository)
@@ -56,6 +59,9 @@ class GameViewModel : ViewModel() {
     private var timer: CountDownTimer? = null
     private var countOfRightAnswers = 0
     private var countOfWrongAnswers = 0
+
+
+
 
     fun startGame() {
         setupGameSettings()
