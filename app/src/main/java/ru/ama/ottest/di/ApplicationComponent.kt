@@ -5,7 +5,7 @@ import dagger.BindsInstance
 import dagger.Component
 import ru.ama.ottest.presentation.GameFragment
 
-//@ApplicationScope
+@ApplicationScope
 @Component(modules = [DomainModule::class,ViewModelModule::class,DataModule::class])
 interface ApplicationComponent {
 

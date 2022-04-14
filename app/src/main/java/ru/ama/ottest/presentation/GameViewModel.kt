@@ -16,9 +16,14 @@ import ru.ama.ottest.domain.repository.GameRepository
 import ru.ama.ottest.domain.usecase.*
 import javax.inject.Inject
 
-class GameViewModel @Inject constructor(private val repository1: GameRepository): ViewModel() {
+class GameViewModel @Inject constructor(
+    private val repository:GameRepository
+    /*private val generateQuestionUseCase : GenerateQuestionUseCase,
+        private val getGameSettingsUseCase : GetGameSettingsUseCase,
+        private val getTestInfoUserCase : GetTestInfo,
+        private val shuffleListOfQuestionsUserCase: ShuffleListOfQuestions*/): ViewModel() {
 
-    private val repository = repository1//GameRepositoryImpl()
+    /*private val repository = repository1//GameRepositoryImpl()*/
     private val generateQuestionUseCase = GenerateQuestionUseCase(repository)
     private val getGameSettingsUseCase = GetGameSettingsUseCase(repository)
     private val getTestInfoUserCase = GetTestInfo(repository)

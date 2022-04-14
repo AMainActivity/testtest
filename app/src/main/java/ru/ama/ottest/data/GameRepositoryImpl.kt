@@ -1,6 +1,7 @@
 package ru.ama.ottest.data
 
 import android.content.Context
+import android.util.Log
 import com.google.gson.Gson
 import ru.ama.ottest.domain.repository.GameRepository
 import ru.ama.ottest.domain.entity.GameSettings
@@ -42,7 +43,8 @@ class GameRepositoryImpl @Inject constructor(
 
 
 private fun getDescription(): String
-{ 
+{
+	//Log.e("getDescription",localDataSource.method())
 	return localDataSource.method()
 //assetProvider.getDescription()
 //context.assets.open("ot.json").bufferedReader().readText()

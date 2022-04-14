@@ -11,7 +11,7 @@ class ExampleDatabase @Inject constructor(
 
     fun method(): String {
         val ss=context.assets.open("ot.json").bufferedReader().readText()
-        Log.d(LOG_TAG, "ExampleDatabase $ss")
+      //  Log.d(LOG_TAG, "ExampleDatabase $ss")
     return ss
     }
 
