@@ -2,20 +2,35 @@ package ru.ama.ottest.presentation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import ru.ama.ottest.R
 import ru.ama.ottest.databinding.ActivityMainBinding
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+   // private lateinit var binding: ActivityMainBinding
+    private lateinit var viewModel: GameViewModel
 
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val binding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
+
+    private val component by lazy {
+        (application as MyApplication).component
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
+        component.inject(this)
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
+     //   binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         if (savedInstanceState == null) {
             launchFirstScreen()
         }
+        viewModel = ViewModelProvider(this, viewModelFactory)[GameViewModel::class.java]
     }
 
     private fun launchFirstScreen() {

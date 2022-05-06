@@ -26,6 +26,9 @@ class GameFragment : Fragment() {
 	@Inject
     lateinit var viewModelFactory: ViewModelFactory
     private lateinit var binding: FragmentGameBinding
+	/*  private val binding by lazy {
+        FragmentGameBinding.inflate(layoutInflater)
+    }*/
 
     //private lateinit var level: Level
    // private var optionsTextViews = mutableListOf<TextView>()
@@ -53,6 +56,25 @@ class GameFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
       
+	  /*
+	   val adapter = QuestionsAdapter(this)
+        adapter.onQuestionClickListener = object : QuestionsAdapter.OnQuestionClickListener {
+            override fun onQuestionClick(coinPriceInfo: TestQuestion) {
+             
+            }
+        }
+        binding.rvCoinPriceList.adapter = adapter
+        binding.rvCoinPriceList.itemAnimator = null
+        viewModel = ViewModelProvider(this, viewModelFactory)[CoinViewModel::class.java]
+        viewModel.coinInfoList.observe(this) {
+            adapter.submitList(it)
+        }
+       viewModel.testInfo?.value.let{ viewModel.testInfo?.observe(this){
+            Log.e("testInfo",it.toString())
+        }
+	  */
+	  
+	  
         viewModel = ViewModelProvider(this, viewModelFactory)[GameViewModel::class.java]
 	  //  viewModel = ViewModelProvider(this)[GameViewModel::class.java]
         getTextViewsOptions()
@@ -108,7 +130,7 @@ class GameFragment : Fragment() {
             }
         }
         viewModel.currentNoOfQuestion.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), "${it+1}/${viewModel.testInfo.countOfQuestions} ",Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "${it+1}/${viewModel.testInfo.value!![0].countOfQuestions} ",Toast.LENGTH_SHORT).show()
         }
         viewModel.leftFormattedTime.observe(viewLifecycleOwner) {
             binding.tvTimer.text = it

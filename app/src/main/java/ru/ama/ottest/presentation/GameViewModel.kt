@@ -1,36 +1,36 @@
 package ru.ama.ottest.presentation
 
-import android.content.Context
 import android.os.CountDownTimer
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import ru.ama.ottest.data.GameRepositoryImpl
-import ru.ama.ottest.domain.entity.GameResult
-import ru.ama.ottest.domain.entity.GameSettings
-import ru.ama.ottest.domain.entity.MainTest
-import ru.ama.ottest.domain.entity.Questions
-import ru.ama.ottest.domain.repository.GameRepository
+import ru.ama.ottest.domain.entity.*
 import ru.ama.ottest.domain.usecase.*
 import javax.inject.Inject
 
 class GameViewModel @Inject constructor(
-    private val repository:GameRepository
-    /*private val generateQuestionUseCase : GenerateQuestionUseCase,
+   // private val repository:GameRepository
+    private val generateQuestionUseCase : GenerateQuestionUseCase,
         private val getGameSettingsUseCase : GetGameSettingsUseCase,
-        private val getTestInfoUserCase : GetTestInfo,
-        private val shuffleListOfQuestionsUserCase: ShuffleListOfQuestions*/): ViewModel() {
+       // private val getTestInfoUserCase : GetTestInfo,
+        private val shuffleListOfQuestionsUserCase: ShuffleListOfQuestions,
+		  private val getQuestionsListUseCase: GetQuestionsListUseCase,
+    private val loadDataUseCase: LoadDataUseCase,
+    private val getTestInfoUseCase: GetTestInfoUseCase): ViewModel() {
+
+  init {
+        loadDataUseCase()
+    }
+
+
 
     /*private val repository = repository1//GameRepositoryImpl()*/
-    private val generateQuestionUseCase = GenerateQuestionUseCase(repository)
-    private val getGameSettingsUseCase = GetGameSettingsUseCase(repository)
-    private val getTestInfoUserCase = GetTestInfo(repository)
-    private val shuffleListOfQuestionsUserCase = ShuffleListOfQuestions(repository)
+
 
     private lateinit var gameSettings: GameSettings
-     lateinit var testInfo: MainTest
+     lateinit var testInfo: LiveData<List<TestInfo>>
     //private var currentNoOfQuestion: Int=-1
 
 	private var _currentNoOfQuestion = MutableLiveData<Int>()
@@ -88,7 +88,7 @@ class GameViewModel @Inject constructor(
 
     private fun setupGameSettings() {
         gameSettings = getGameSettingsUseCase()
-        testInfo=getTestInfoUserCase()
+        testInfo=getTestInfoUseCase()
         _minPercentOfRightAnswers.value = gameSettings.minPercentOfRightAnswers
     }
 
@@ -118,8 +118,8 @@ class GameViewModel @Inject constructor(
     }
 
     private fun generateQuestion(questionNo:Int) {
-        Log.e("generateQuestion","cur: $questionNo, size: ${testInfo.countOfQuestions}")
-        if (questionNo<testInfo.countOfQuestions)
+        Log.e("generateQuestion","cur: $questionNo, size: ${testInfo.value!![0].countOfQuestions}")
+        if (questionNo<testInfo.value!![0].countOfQuestions)
         _question.value = generateQuestionUseCase(questionNo)
         else
             finishGame()
