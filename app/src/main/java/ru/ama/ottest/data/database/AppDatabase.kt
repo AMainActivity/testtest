@@ -25,6 +25,7 @@ abstract class AppDatabase : RoomDatabase() {
                         DB_NAME
                     )
                         .fallbackToDestructiveMigration()
+                        .allowMainThreadQueries()
                         .build()
                 db = instance
                 return instance

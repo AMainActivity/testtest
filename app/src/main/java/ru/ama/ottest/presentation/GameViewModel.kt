@@ -24,13 +24,13 @@ class GameViewModel @Inject constructor(
         loadDataUseCase()
     }
 
-
-
+    val testInfo = getTestInfoUseCase(1)
+    val testQuestion = getQuestionsListUseCase(1)
     /*private val repository = repository1//GameRepositoryImpl()*/
 
 
-    private lateinit var gameSettings: GameSettings
-     lateinit var testInfo: LiveData<List<TestInfo>>
+    private val gameSettings: GameSettings=GameSettings(testInfo.minCountOfRightAnswers,testInfo.minPercentOfRightAnswers,testInfo.testTimeInSeconds)
+    // lateinit var testInfo: LiveData<List<TestInfo>>
     //private var currentNoOfQuestion: Int=-1
 
 	private var _currentNoOfQuestion = MutableLiveData<Int>()
@@ -45,8 +45,8 @@ class GameViewModel @Inject constructor(
     val leftFormattedTime: LiveData<String>
         get() = _leftFormattedTime
 
-    private val _question = MutableLiveData<Questions>()
-    val question: LiveData<Questions>
+    private val _question = MutableLiveData<TestQuestion>()
+    val question: LiveData<TestQuestion>
         get() = _question
 
     private val _gameResult = MutableLiveData<GameResult>()
@@ -71,7 +71,7 @@ class GameViewModel @Inject constructor(
     fun startGame() {
         setupGameSettings()
         startTimer()
-        shuffleListOfQuestionsUserCase()
+       // shuffleListOfQuestionsUserCase()
         _currentNoOfQuestion.value=0
         generateQuestion(_currentNoOfQuestion.value!!)
     }
@@ -87,8 +87,8 @@ class GameViewModel @Inject constructor(
     }
 
     private fun setupGameSettings() {
-        gameSettings = getGameSettingsUseCase()
-        testInfo=getTestInfoUseCase()
+        //gameSettings = getGameSettingsUseCase()
+        //testInfo=getTestInfoUseCase()
         _minPercentOfRightAnswers.value = gameSettings.minPercentOfRightAnswers
     }
 
@@ -118,9 +118,9 @@ class GameViewModel @Inject constructor(
     }
 
     private fun generateQuestion(questionNo:Int) {
-        Log.e("generateQuestion","cur: $questionNo, size: ${testInfo.value!![0].countOfQuestions}")
-        if (questionNo<testInfo.value!![0].countOfQuestions)
-        _question.value = generateQuestionUseCase(questionNo)
+        Log.e("generateQuestion","cur: $questionNo, size: ${testInfo.countOfQuestions}")
+        if (questionNo<testInfo.countOfQuestions)
+        _question.value = testQuestion[questionNo]
         else
             finishGame()
     }
@@ -128,7 +128,7 @@ class GameViewModel @Inject constructor(
     private fun finishGame() {
         _leftFormattedTime.value = getFormattedLeftTime(0)
         _gameResult.value = getGameResult()
-		shuffleListOfQuestionsUserCase()
+		//shuffleListOfQuestionsUserCase()
     }
 
     private fun getGameResult(): GameResult {

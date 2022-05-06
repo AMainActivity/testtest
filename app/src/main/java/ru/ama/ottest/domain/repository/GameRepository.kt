@@ -13,9 +13,9 @@ interface GameRepository {
 	
     fun shuffleListOfQuestions()
 	
-    fun getQuestionsInfoList(): LiveData<List<TestQuestion>>
+    fun getQuestionsInfoList(testId:Int): List<TestQuestion>
 
-    fun getTestInfo():LiveData<List<TestInfo>>
+    fun getTestInfo(testId:Int):TestInfo
 
     fun loadData()
 }

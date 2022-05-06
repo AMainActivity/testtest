@@ -130,7 +130,7 @@ class GameFragment : Fragment() {
             }
         }
         viewModel.currentNoOfQuestion.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), "${it+1}/${viewModel.testInfo.value!![0].countOfQuestions} ",Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "${it+1}/${viewModel.testInfo.countOfQuestions} ",Toast.LENGTH_SHORT).show()
         }
         viewModel.leftFormattedTime.observe(viewLifecycleOwner) {
             binding.tvTimer.text = it

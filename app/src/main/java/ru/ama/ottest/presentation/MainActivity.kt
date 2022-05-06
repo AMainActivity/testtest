@@ -1,6 +1,7 @@
 package ru.ama.ottest.presentation
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import ru.ama.ottest.R
@@ -30,7 +31,14 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             launchFirstScreen()
         }
-        viewModel = ViewModelProvider(this, viewModelFactory)[GameViewModel::class.java]
+        try {
+
+            viewModel = ViewModelProvider(this, viewModelFactory)[GameViewModel::class.java]
+            /*viewModel.testInfo.let{ viewModel.testInfo?.observe(this){
+                Log.e("coinInfoList11",it.toString())
+            }}*/
+        }catch (e:Exception){}
+
     }
 
     private fun launchFirstScreen() {

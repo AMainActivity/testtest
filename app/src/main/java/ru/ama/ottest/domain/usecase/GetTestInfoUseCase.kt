@@ -7,5 +7,5 @@ class GetTestInfoUseCase @Inject constructor(
     private val repository: GameRepository
 ) {
 
-    operator fun invoke() = repository.getTestInfo()
+    operator fun invoke(testId:Int) = repository.getTestInfo(testId)
 }

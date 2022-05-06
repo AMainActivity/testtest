@@ -8,6 +8,7 @@ import androidx.lifecycle.Transformations
 import androidx.work.ExistingWorkPolicy
 import androidx.work.WorkManager
 import com.google.gson.Gson
+import kotlinx.coroutines.delay
 import ru.ama.ottest.data.database.TestInfoDao
 import ru.ama.ottest.data.database.TestQuestionsDao
 import ru.ama.ottest.data.mapper.TestMapper
@@ -26,9 +27,9 @@ class GameRepositoryImpl @Inject constructor(
     private val application: Application
 ) : GameRepository {
 	
-	val mainTest by lazy{ getTestInfo()}
+	/*val mainTest by lazy{ getTestInfo()}
     val questionsAll by lazy { getQuestionsInfoList() }
-    lateinit var questionsForTest: List<TestQuestion>
+    lateinit var questionsForTest: List<TestQuestion>*/
 	/*by lazy {
 		 randomElementsFromQuestionsList(questionsAll,mainTest.countOfQuestions)
     }*/
@@ -51,7 +52,16 @@ class GameRepositoryImpl @Inject constructor(
         return Question(sum, visibleNumber, options.toList())
     }  */
 
-    override fun getQuestionsInfoList(): LiveData<List<TestQuestion>> {
+    override fun getQuestionsInfoList(testId: Int): List<TestQuestion>{
+        var rl:MutableList<TestQuestion> = mutableListOf<TestQuestion>()
+        for (l in testQuestionsDao.getQuestionListByTestId(testId))
+        {
+            rl.add(mapper.mapDbModelToEntity(l))
+        }
+        return rl
+
+    }
+     fun getQuestionsInfoList2(): LiveData<List<TestQuestion>> {
         return Transformations.map(testQuestionsDao.getQuestionList()) {
             it.map {
                 mapper.mapDbModelToEntity(it)
@@ -59,12 +69,11 @@ class GameRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getTestInfo(): LiveData<List<TestInfo>> {
-        Log.e("getTestInfo",testInfoDao.getTestInfo().value.toString())
+    override fun getTestInfo(testId:Int): TestInfo {
+        Log.e("getTestInfo1",testInfoDao.toString())
+        Log.e("getTestInfo",testInfoDao.getTestInfo(testId).toString())
        // if(testInfoDao.getTestInfo().value!=null)
-        return  Transformations.map(testInfoDao.getTestInfo()) {
-            it.map {  mapper.mapDataDbModelToEntity(it)}
-        }
+        return  mapper.mapDataDbModelToEntity(testInfoDao.getTestInfo(testId))
     }
 
     override fun loadData() {
@@ -87,7 +96,7 @@ class GameRepositoryImpl @Inject constructor(
 
 override fun shuffleListOfQuestions()
 {
-	questionsForTest = randomElementsFromQuestionsList(questionsAll.value!!,mainTest.value!![0].countOfQuestions)
+	//questionsForTest = randomElementsFromQuestionsList(questionsAll.value!!,mainTest.value!![0].countOfQuestions)
 }
 
 private fun randomElementsFromQuestionsList(list: List<TestQuestion>, randCount:Int):List<TestQuestion> {
@@ -96,26 +105,26 @@ private fun randomElementsFromQuestionsList(list: List<TestQuestion>, randCount:
 
 
 	override fun generateQuestion(questionNo:Int): Questions {
-	
 
-	val number=questionsAll.value!![questionNo].number
+
+	/*val number=questionsAll.value!![questionNo].number
 	val question=questionsAll.value!![questionNo].question
 	val imageUrl=questionsAll.value!![questionNo].imageUrl
 	val answers=questionsAll.value!![questionNo].answers
 	val correct=questionsAll.value!![questionNo].correct
-	
-	return Questions(number, question, imageUrl,answers,correct)
-    }  
-	
-	
+	*/
+	return Questions(1, "", "r", listOf(), listOf())
+    }
+
+
 
     override fun getGameSettings(): GameSettings {
-	
-        return GameSettings(
-                mainTest.value!![0].minCountOfRightAnswers,
+	//Log.e("getGameSettings",mainTest.value.toString())
+        return GameSettings(1,1,1
+                /*mainTest.value!![0].minCountOfRightAnswers,
 				mainTest.value!![0].minPercentOfRightAnswers,
-				mainTest.value!![0].testTimeInSeconds
+				mainTest.value!![0].testTimeInSeconds*/
             )
     }
-	
+
 }

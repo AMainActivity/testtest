@@ -1,6 +1,7 @@
 package ru.ama.ottest.data.workers
 
 import android.content.Context
+import android.util.Log
 import androidx.work.*
 import ru.ama.ottest.data.database.TestInfoDao
 import ru.ama.ottest.data.database.TestQuestionsDao
@@ -25,6 +26,7 @@ class TestRefreshDataWorker(
             if (!getJson.error) {
                 val dbModelInfo = mapper.mapDataDtoToDbModel(getJson.testData)
                 testInfoDao.insertTestInfo(dbModelInfo)
+                Log.e("insertTestInfo",dbModelInfo.toString())
                 val questionsDtoList = getJson.testData.questions
                 val dbModelList = questionsDtoList.map {
                     mapper.mapDtoToDbModel(
@@ -33,6 +35,7 @@ class TestRefreshDataWorker(
                     )
                 }
                 testQuestionsDao.insertQuestionList(dbModelList)
+                        Log.e("insertQuestionList",dbModelList.toString())
             }
         return Result.success()
               } catch (e: Exception) {return Result.failure()

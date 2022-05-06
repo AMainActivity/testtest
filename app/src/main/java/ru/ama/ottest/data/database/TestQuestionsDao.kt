@@ -14,5 +14,8 @@ interface TestQuestionsDao {
 //SELECT  * FROM slova where _id in (SELECT _id FROM slova ORDER BY random() limit 50) order by slovo  COLLATE localized asc
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertQuestionList(priceList: List<TestQuestionsDbModel>)
+
+    @Query("SELECT * FROM test_questions where ownerTestId=:testId and number in (select number from test_questions order by random() limit 20) ORDER BY number asc")
+    fun getQuestionListByTestId(testId:Int): List<TestQuestionsDbModel>
 }
 
