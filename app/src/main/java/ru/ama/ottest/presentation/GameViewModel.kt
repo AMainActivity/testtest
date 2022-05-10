@@ -11,11 +11,6 @@ import ru.ama.ottest.domain.usecase.*
 import javax.inject.Inject
 
 class GameViewModel @Inject constructor(
-   // private val repository:GameRepository
-    private val generateQuestionUseCase : GenerateQuestionUseCase,
-        private val getGameSettingsUseCase : GetGameSettingsUseCase,
-       // private val getTestInfoUserCase : GetTestInfo,
-        private val shuffleListOfQuestionsUserCase: ShuffleListOfQuestions,
 		  private val getQuestionsListUseCase: GetQuestionsListUseCase,
     private val loadDataUseCase: LoadDataUseCase,
     private val getTestInfoUseCase: GetTestInfoUseCase): ViewModel() {

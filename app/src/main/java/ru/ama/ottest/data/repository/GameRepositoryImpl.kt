@@ -94,37 +94,12 @@ class GameRepositoryImpl @Inject constructor(
 	}*/
 
 
-override fun shuffleListOfQuestions()
-{
-	//questionsForTest = randomElementsFromQuestionsList(questionsAll.value!!,mainTest.value!![0].countOfQuestions)
-}
 
 private fun randomElementsFromQuestionsList(list: List<TestQuestion>, randCount:Int):List<TestQuestion> {
     return list.asSequence().shuffled().take(randCount).toList()
 }
 
 
-	override fun generateQuestion(questionNo:Int): Questions {
 
-
-	/*val number=questionsAll.value!![questionNo].number
-	val question=questionsAll.value!![questionNo].question
-	val imageUrl=questionsAll.value!![questionNo].imageUrl
-	val answers=questionsAll.value!![questionNo].answers
-	val correct=questionsAll.value!![questionNo].correct
-	*/
-	return Questions(1, "", "r", listOf(), listOf())
-    }
-
-
-
-    override fun getGameSettings(): GameSettings {
-	//Log.e("getGameSettings",mainTest.value.toString())
-        return GameSettings(1,1,1
-                /*mainTest.value!![0].minCountOfRightAnswers,
-				mainTest.value!![0].minPercentOfRightAnswers,
-				mainTest.value!![0].testTimeInSeconds*/
-            )
-    }
 
 }
