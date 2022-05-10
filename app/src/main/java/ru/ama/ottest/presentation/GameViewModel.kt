@@ -2,21 +2,39 @@ package ru.ama.ottest.presentation
 
 import android.os.CountDownTimer
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
 import ru.ama.ottest.domain.entity.*
 import ru.ama.ottest.domain.usecase.*
 import javax.inject.Inject
 
 class GameViewModel @Inject constructor(
-		  private val getQuestionsListUseCase: GetQuestionsListUseCase,
+    private val getQuestionsListUseCase: GetQuestionsListUseCase,
     private val loadDataUseCase: LoadDataUseCase,
-    private val getTestInfoUseCase: GetTestInfoUseCase): ViewModel() {
+    private val getTestInfoUseCase: GetTestInfoUseCase
+) : ViewModel() {
 
-  init {
+    init {
         loadDataUseCase()
+        getTInfo()
+    }
+
+    private fun getTInfo() {
+        viewModelScope.launch {
+            val d1 = viewModelScope.async {
+                val d = getTestInfoUseCase(1)
+                d
+            }
+            val d2 = viewModelScope.async {
+                val d = getQuestionsListUseCase(1)
+                d
+            }
+            val t1 = d1.await()
+            val q1 = d2.await()
+            Log.e("getTestInfoUseCase", t1.toString())
+            Log.e("getQuestionsListUseCase", q1.toString())
+        }
     }
 
     val testInfo = getTestInfoUseCase(1)
@@ -24,13 +42,17 @@ class GameViewModel @Inject constructor(
     /*private val repository = repository1//GameRepositoryImpl()*/
 
 
-    private val gameSettings: GameSettings=GameSettings(testInfo.minCountOfRightAnswers,testInfo.minPercentOfRightAnswers,testInfo.testTimeInSeconds)
+    private val gameSettings: GameSettings = GameSettings(
+        testInfo.minCountOfRightAnswers,
+        testInfo.minPercentOfRightAnswers,
+        testInfo.testTimeInSeconds
+    )
     // lateinit var testInfo: LiveData<List<TestInfo>>
     //private var currentNoOfQuestion: Int=-1
 
-	private var _currentNoOfQuestion = MutableLiveData<Int>()
+    private var _currentNoOfQuestion = MutableLiveData<Int>()
     val currentNoOfQuestion: LiveData<Int>
-    get() = _currentNoOfQuestion
+        get() = _currentNoOfQuestion
 
     private val _minPercentOfRightAnswers = MutableLiveData<Int>()
     val minPercentOfRightAnswers: LiveData<Int>
@@ -61,13 +83,11 @@ class GameViewModel @Inject constructor(
     private var countOfWrongAnswers = 0
 
 
-
-
     fun startGame() {
         setupGameSettings()
         startTimer()
-       // shuffleListOfQuestionsUserCase()
-        _currentNoOfQuestion.value=0
+        // shuffleListOfQuestionsUserCase()
+        _currentNoOfQuestion.value = 0
         generateQuestion(_currentNoOfQuestion.value!!)
     }
 
@@ -77,7 +97,7 @@ class GameViewModel @Inject constructor(
         }
         checkAnswer(answer)
         getPercentOfRightAnswers()
-		_currentNoOfQuestion.value=_currentNoOfQuestion.value!!+1
+        _currentNoOfQuestion.value = _currentNoOfQuestion.value!! + 1
         generateQuestion(_currentNoOfQuestion.value!!)
     }
 
@@ -112,10 +132,10 @@ class GameViewModel @Inject constructor(
         timer?.start()
     }
 
-    private fun generateQuestion(questionNo:Int) {
-        Log.e("generateQuestion","cur: $questionNo, size: ${testInfo.countOfQuestions}")
-        if (questionNo<testInfo.countOfQuestions)
-        _question.value = testQuestion[questionNo]
+    private fun generateQuestion(questionNo: Int) {
+        Log.e("generateQuestion", "cur: $questionNo, size: ${testInfo.countOfQuestions}")
+        if (questionNo < testInfo.countOfQuestions)
+            _question.value = testQuestion[questionNo]
         else
             finishGame()
     }
@@ -123,7 +143,7 @@ class GameViewModel @Inject constructor(
     private fun finishGame() {
         _leftFormattedTime.value = getFormattedLeftTime(0)
         _gameResult.value = getGameResult()
-		//shuffleListOfQuestionsUserCase()
+        //shuffleListOfQuestionsUserCase()
     }
 
     private fun getGameResult(): GameResult {
