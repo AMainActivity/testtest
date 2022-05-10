@@ -80,9 +80,9 @@ class GameFragment : Fragment() {
         getTextViewsOptions()
         setupClickListenersToOptions()
         observeViewModel()
-        if (savedInstanceState == null) {
+        /*if (savedInstanceState == null) {
             viewModel.startGame()
-        }
+        }*/
     }
 
    /* private fun parseArgs() {
@@ -120,6 +120,10 @@ class GameFragment : Fragment() {
     }
 
     private fun observeViewModel() {
+        viewModel.readyStart.observe(viewLifecycleOwner){
+            viewModel.startGame()
+        }
+
         viewModel.question.observe(viewLifecycleOwner) {
             with(binding) {
                 tvQuestion.text = "${it.number} ${it.question}"

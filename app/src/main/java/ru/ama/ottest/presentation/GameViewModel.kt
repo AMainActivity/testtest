@@ -3,7 +3,9 @@ package ru.ama.ottest.presentation
 import android.os.CountDownTimer
 import android.util.Log
 import androidx.lifecycle.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.ama.ottest.domain.entity.*
 import ru.ama.ottest.domain.usecase.*
@@ -19,34 +21,36 @@ class GameViewModel @Inject constructor(
         loadDataUseCase()
         getTInfo()
     }
+    private val _readyStart = MutableLiveData<Boolean>()
+    val readyStart: LiveData<Boolean>
+        get() = _readyStart
 
     private fun getTInfo() {
         viewModelScope.launch {
-            val d1 = viewModelScope.async {
-                val d = getTestInfoUseCase(1)
-                d
+            val d1 = viewModelScope.async(Dispatchers.IO) {
+                getTestInfoUseCase(1)
             }
-            val d2 = viewModelScope.async {
-                val d = getQuestionsListUseCase(1)
-                d
+            testInfo = d1.await()
+            val d2 = viewModelScope.async(Dispatchers.IO) {
+                 getQuestionsListUseCase(1,testInfo.countOfQuestions)
             }
-            val t1 = d1.await()
-            val q1 = d2.await()
-            Log.e("getTestInfoUseCase", t1.toString())
-            Log.e("getQuestionsListUseCase", q1.toString())
+            testQuestion = d2.await()
+            _readyStart.value=true
+            Log.e("getTestInfoUseCase", testInfo.toString())
+            Log.e("getQuestionsListUseCase", testQuestion[0].toString())
         }
     }
 
-    val testInfo = getTestInfoUseCase(1)
-    val testQuestion = getQuestionsListUseCase(1)
+    lateinit var testInfo:TestInfo //= getTestInfoUseCase(1)
+    lateinit var testQuestion :List<TestQuestion>//= getQuestionsListUseCase(1)
     /*private val repository = repository1//GameRepositoryImpl()*/
 
 
-    private val gameSettings: GameSettings = GameSettings(
+    private val gameSettings: GameSettings by lazy{ GameSettings(
         testInfo.minCountOfRightAnswers,
         testInfo.minPercentOfRightAnswers,
         testInfo.testTimeInSeconds
-    )
+    )}
     // lateinit var testInfo: LiveData<List<TestInfo>>
     //private var currentNoOfQuestion: Int=-1
 

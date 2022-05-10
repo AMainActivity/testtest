@@ -5,7 +5,7 @@ import ru.ama.ottest.domain.entity.*
 
 interface GameRepository {
 	
-    fun getQuestionsInfoList(testId:Int): List<TestQuestion>
+    fun getQuestionsInfoList(testId:Int,limit:Int): List<TestQuestion>
 
     fun getTestInfo(testId:Int):TestInfo
 
