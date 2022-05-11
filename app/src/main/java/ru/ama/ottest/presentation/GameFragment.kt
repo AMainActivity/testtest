@@ -77,7 +77,7 @@ class GameFragment : Fragment() {
 	  
         viewModel = ViewModelProvider(this, viewModelFactory)[GameViewModel::class.java]
 	  //  viewModel = ViewModelProvider(this)[GameViewModel::class.java]
-        getTextViewsOptions()
+      
         setupClickListenersToOptions()
         observeViewModel()
         /*if (savedInstanceState == null) {
@@ -95,50 +95,70 @@ class GameFragment : Fragment() {
         }
     }*/
 
-    private fun getTextViewsOptions() {
-		
-      /*  with(binding) {
-            optionsTextViews.add(tvOption1)
-            optionsTextViews.add(tvOption2)
-            optionsTextViews.add(tvOption3)
-            optionsTextViews.add(tvOption4)
-            optionsTextViews.add(tvOption5)
-            optionsTextViews.add(tvOption6)
-        }*/
-    }
 
     private fun setupClickListenersToOptions() {
 		binding.lvAnswers.setOnItemClickListener { parent, view, position, id ->
    // val element = adapter.getItemAtPosition(position)
      viewModel.chooseAnswer(position)
-}
-        /*for (textView in optionsTextViews) {
-            textView.setOnClickListener {
-                viewModel.chooseAnswer(textView.text.toString().toInt())
-            }
-        }*/
+}      
     }
 
     private fun observeViewModel() {
+		 viewModel.state.observe(viewLifecycleOwner) {
+            when (it) {
+                is ReadyStart -> {
+                    viewModel.startGame()
+                    //binding.progressBar.max=viewModel.testInfo.countOfQuestions
+                }
+               /* is CurrentNoOfQuestion -> {
+                     Toast.makeText(requireContext(), "${it.value+1}/${viewModel.testInfo.countOfQuestions} ",Toast.LENGTH_SHORT).show() 
+                }*/
+                is MinPercentOfRightAnswers -> {
+                    binding.progressBar.secondaryProgress =  it.value
+                }
+                /*is PercentOfRightAnswers -> {
+                         binding.progressBar.setProgress( it.value, true)
+                }*/
+                is LeftFormattedTime -> {
+                      binding.tvTimer.text = it.value
+                }
+               /* is Question -> {
+                     with(binding) {
+                tvQuestion.text = "${it.value.number} ${it.value.question}"
+				val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1,
+				it.value.answers )
+				lvAnswers.adapter = adapter
+            } 
+                }
+                is GameResult -> {
+                     requireActivity().supportFragmentManager.beginTransaction()
+                .replace(R.id.main_container, GameFinishedFragment.newInstance(it.value))
+                .addToBackStack(null)
+                .commit()
+                }*/
+            }
+        }
+							
+		/*
+		
         viewModel.readyStart.observe(viewLifecycleOwner){
             viewModel.startGame()
         }
-
+*/
         viewModel.question.observe(viewLifecycleOwner) {
             with(binding) {
                 tvQuestion.text = "${it.number} ${it.question}"
 				val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1,
 				it.answers )
 				lvAnswers.adapter = adapter
-                //setupTextToOptions(it.answers)
             }
         }
         viewModel.currentNoOfQuestion.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), "${it+1}/${viewModel.testInfo.countOfQuestions} ",Toast.LENGTH_SHORT).show()
-        }
+        }/*
         viewModel.leftFormattedTime.observe(viewLifecycleOwner) {
             binding.tvTimer.text = it
-        }
+        }*/
         viewModel.gameResult.observe(viewLifecycleOwner) {
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.main_container, GameFinishedFragment.newInstance(it))
@@ -151,16 +171,13 @@ class GameFragment : Fragment() {
         viewModel.enoughPercentage.observe(viewLifecycleOwner) {
             setupProgressColorByState(it)
         }
+		/*
         viewModel.minPercentOfRightAnswers.observe(viewLifecycleOwner) {
             binding.progressBar.secondaryProgress = it
-        }
+        }*/
     }
 
-    /*private fun setupTextToOptions(answers: List<Int>) {
-        for (i in answers.indices) {
-            optionsTextViews[i].text = answers[i].toString()
-        }
-    }*/
+   
 
     private fun setupProgressColorByState(enoughPercentage: Boolean) {
         val colorResId = if (enoughPercentage) {

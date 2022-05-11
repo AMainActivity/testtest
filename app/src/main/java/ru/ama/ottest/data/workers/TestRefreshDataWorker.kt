@@ -22,12 +22,25 @@ class TestRefreshDataWorker(
     override suspend fun doWork(): Result {
       //  while (true) {
              try {
-            val getJson = apiService.getTestList()
-            if (!getJson.error) {
-                val dbModelInfo = mapper.mapDataDtoToDbModel(getJson.testData)
-                testInfoDao.insertTestInfo(dbModelInfo)
-                Log.e("insertTestInfo",dbModelInfo.toString())
-                val questionsDtoList = getJson.testData.questions
+				 
+            val getJsonList = apiService.getTestList()
+				 if (!getJsonList.error)
+				 {
+					 val testDtoList = getJsonList.testListData					
+					val dbModelTestList = testDtoList.map {
+                    mapper.mapDataDtoToDbModel(it)
+                }
+					 testInfoDao.insertTestList(dbModelTestList)
+					 Log.e("insertTestInfo",dbModelTestList.toString())
+					 
+					    val getJson = apiService.getTestById()
+				if (!getJson.error) {
+               // val dbModelInfo = mapper.mapDataDtoToDbModel(getJsonList.TestListDataDto)
+               // testInfoDao.insertTestInfo(dbModelInfo)
+               // Log.e("insertTestInfo",dbModelInfo.toString())
+				
+				
+                val questionsDtoList = getJson.testData.questions					
                 val dbModelList = questionsDtoList.map {
                     mapper.mapDtoToDbModel(
                         it,
@@ -37,6 +50,8 @@ class TestRefreshDataWorker(
                 testQuestionsDao.insertQuestionList(dbModelList)
                         Log.e("insertQuestionList",dbModelList.toString())
             }
+					 
+				 }
         return Result.success()
               } catch (e: Exception) {return Result.failure()
              }

@@ -25,7 +25,7 @@ class WelcomeFragment : Fragment() {
         binding.buttonUnderstand.setOnClickListener {
             requireActivity().supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.main_container, ChooseLevelFragment.newInstance())
+                .replace(R.id.main_container, ChooseTestFragment.newInstance())
                 .addToBackStack(null)
                 .commit()
         }

@@ -12,8 +12,11 @@ interface TestInfoDao {
     fun getTestInfo(): LiveData<List<TestInfoDbModel>>*/
 
 @Query("SELECT * FROM test_info where testId= :testId ORDER BY testId asc limit 1")
-    fun getTestInfo(testId:Int): TestInfoDbModel
+    fun getTestInfo(testId:Int): List<TestInfoDbModel>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTestInfo(testInfo: TestInfoDbModel)
+	
+	@Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertTestList(testList: List<TestInfoDbModel>)
 }

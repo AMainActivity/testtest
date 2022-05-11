@@ -3,6 +3,7 @@ package ru.ama.ottest.data.mapper
 import ru.ama.ottest.data.database.TestInfoDbModel
 import ru.ama.ottest.data.database.TestQuestionsDbModel
 import ru.ama.ottest.data.network.model.TestDataDto
+import ru.ama.ottest.data.network.model.TestListDataDto
 import ru.ama.ottest.data.network.model.TestQuestionsDto
 import ru.ama.ottest.domain.entity.TestInfo
 import ru.ama.ottest.domain.entity.TestQuestion
@@ -26,7 +27,7 @@ class TestMapper @Inject constructor() {
         answers = dbModel.answers,
         correct =  dbModel.correct
     )
-    fun mapDataDtoToDbModel(dto: TestDataDto) = TestInfoDbModel(
+    fun mapDataDtoToDbModel(dto: TestListDataDto) = TestInfoDbModel(
          testId=dto.testId,
      title=dto.title,
      mainImageUrl=dto.mainImageUrl,
@@ -44,7 +45,25 @@ class TestMapper @Inject constructor() {
         testTimeInSeconds=dbModel.testTimeInSeconds,
         countOfQuestions=dbModel.countOfQuestions
     )
-
+/*
+fun mapJsonContainerToListCoinInfo(jsonContainer: CoinInfoJsonContainerDto): List<CoinInfoDto> {
+        val result = mutableListOf<CoinInfoDto>()
+        val jsonObject = jsonContainer.json ?: return result
+        val coinKeySet = jsonObject.keySet()
+        for (coinKey in coinKeySet) {
+            val currencyJson = jsonObject.getAsJsonObject(coinKey)
+            val currencyKeySet = currencyJson.keySet()
+            for (currencyKey in currencyKeySet) {
+                val priceInfo = Gson().fromJson(
+                    currencyJson.getAsJsonObject(currencyKey),
+                    CoinInfoDto::class.java
+                )
+                result.add(priceInfo)
+            }
+        }
+        return result
+    }
+*/
     companion object {
 
     }

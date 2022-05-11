@@ -3,10 +3,7 @@ package ru.ama.ottest.presentation
 import android.os.CountDownTimer
 import android.util.Log
 import androidx.lifecycle.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import ru.ama.ottest.domain.entity.*
 import ru.ama.ottest.domain.usecase.*
 import javax.inject.Inject
@@ -18,29 +15,36 @@ class GameViewModel @Inject constructor(
 ) : ViewModel() {
 
     init {
-        loadDataUseCase()
+      //  loadDataUseCase()
         getTInfo()
     }
-    private val _readyStart = MutableLiveData<Boolean>()
-    val readyStart: LiveData<Boolean>
-        get() = _readyStart
+   /* private val _readyStart = MutableLiveData<Unit>()
+    val readyStart: LiveData<Unit>
+        get() = _readyStart*/
 
     private fun getTInfo() {
+        val d1 = viewModelScope.async(Dispatchers.IO) {
+            getTestInfoUseCase(1)
+        }
+
         viewModelScope.launch {
-            val d1 = viewModelScope.async(Dispatchers.IO) {
+
+            /*val d1 = viewModelScope.async(Dispatchers.IO) {
                 getTestInfoUseCase(1)
-            }
-            testInfo = d1.await()
+            }*/
+            testInfo = d1.await()[0]
             val d2 = viewModelScope.async(Dispatchers.IO) {
-                 getQuestionsListUseCase(1,testInfo.countOfQuestions)
-            }
+            getQuestionsListUseCase(1,testInfo.countOfQuestions)
+        }
             testQuestion = d2.await()
-            _readyStart.value=true
+             _state.value=ReadyStart
             Log.e("getTestInfoUseCase", testInfo.toString())
             Log.e("getQuestionsListUseCase", testQuestion[0].toString())
         }
     }
 
+	val kolvoOfQuestions by lazy{ testInfo.countOfQuestions}
+	
     lateinit var testInfo:TestInfo //= getTestInfoUseCase(1)
     lateinit var testQuestion :List<TestQuestion>//= getQuestionsListUseCase(1)
     /*private val repository = repository1//GameRepositoryImpl()*/
@@ -54,10 +58,13 @@ class GameViewModel @Inject constructor(
     // lateinit var testInfo: LiveData<List<TestInfo>>
     //private var currentNoOfQuestion: Int=-1
 
-    private var _currentNoOfQuestion = MutableLiveData<Int>()
+private val _state = MutableLiveData<State>()
+    val state: LiveData<State>
+        get() = _state
+  private var _currentNoOfQuestion = MutableLiveData<Int>()
     val currentNoOfQuestion: LiveData<Int>
         get() = _currentNoOfQuestion
-
+ /*
     private val _minPercentOfRightAnswers = MutableLiveData<Int>()
     val minPercentOfRightAnswers: LiveData<Int>
         get() = _minPercentOfRightAnswers
@@ -65,7 +72,7 @@ class GameViewModel @Inject constructor(
     private val _leftFormattedTime = MutableLiveData<String>()
     val leftFormattedTime: LiveData<String>
         get() = _leftFormattedTime
-
+*/
     private val _question = MutableLiveData<TestQuestion>()
     val question: LiveData<TestQuestion>
         get() = _question
@@ -91,7 +98,7 @@ class GameViewModel @Inject constructor(
         setupGameSettings()
         startTimer()
         // shuffleListOfQuestionsUserCase()
-        _currentNoOfQuestion.value = 0
+        _currentNoOfQuestion.value=0
         generateQuestion(_currentNoOfQuestion.value!!)
     }
 
@@ -103,12 +110,14 @@ class GameViewModel @Inject constructor(
         getPercentOfRightAnswers()
         _currentNoOfQuestion.value = _currentNoOfQuestion.value!! + 1
         generateQuestion(_currentNoOfQuestion.value!!)
+        //_currentNoOfQuestion.value = _currentNoOfQuestion.value!! + 1
+        //generateQuestion(_currentNoOfQuestion.value!!)
     }
 
     private fun setupGameSettings() {
         //gameSettings = getGameSettingsUseCase()
         //testInfo=getTestInfoUseCase()
-        _minPercentOfRightAnswers.value = gameSettings.minPercentOfRightAnswers
+        _state.value=MinPercentOfRightAnswers(gameSettings.minPercentOfRightAnswers)
     }
 
     private fun checkAnswer(answer: Int) {
@@ -126,7 +135,7 @@ class GameViewModel @Inject constructor(
             MILLIS_IN_SECONDS
         ) {
             override fun onTick(millisUntilFinished: Long) {
-                _leftFormattedTime.value = getFormattedLeftTime(millisUntilFinished)
+               _state.value=LeftFormattedTime( getFormattedLeftTime(millisUntilFinished))
             }
 
             override fun onFinish() {
@@ -139,24 +148,24 @@ class GameViewModel @Inject constructor(
     private fun generateQuestion(questionNo: Int) {
         Log.e("generateQuestion", "cur: $questionNo, size: ${testInfo.countOfQuestions}")
         if (questionNo < testInfo.countOfQuestions)
-            _question.value = testQuestion[questionNo]
+            _question.value= testQuestion[questionNo]
         else
             finishGame()
     }
 
     private fun finishGame() {
-        _leftFormattedTime.value = getFormattedLeftTime(0)
-        _gameResult.value = getGameResult()
+        _state.value=LeftFormattedTime(getFormattedLeftTime(0))
+        _gameResult.value= getGameResult()
         //shuffleListOfQuestionsUserCase()
     }
 
-    private fun getGameResult(): GameResult {
+    private fun getGameResult(): ru.ama.ottest.domain.entity.GameResult {
         val percentOfRightAnswers = getPercentOfRightAnswers()
         val enoughPercentage = percentOfRightAnswers >= gameSettings.minPercentOfRightAnswers
         val enoughRightAnswers = countOfRightAnswers >= gameSettings.minCountOfRightAnswers
         val winner = enoughPercentage && enoughRightAnswers
         val countOfQuestions = countOfRightAnswers + countOfWrongAnswers
-        return GameResult(winner, countOfRightAnswers, countOfQuestions, gameSettings)
+        return ru.ama.ottest.domain.entity.GameResult(winner, countOfRightAnswers, countOfQuestions, gameSettings)
     }
 
     private fun getPercentOfRightAnswers(): Int {
@@ -166,13 +175,17 @@ class GameViewModel @Inject constructor(
         } else {
             0
         }
-        _percentOfRightAnswers.value = percentOfRightAnswers
+        _percentOfRightAnswers.value=percentOfRightAnswers
         return percentOfRightAnswers
     }
 
     private fun getFormattedLeftTime(millisUntilFinished: Long): String {
-        val seconds = (millisUntilFinished / MILLIS_IN_SECONDS).toInt()
-        val minutes = seconds / SECONDS_IN_MINUTE
+		/*
+		 val minutes = milliseconds / 1000 / 60
+    val seconds = milliseconds / 1000 % 60
+		*/		
+        val seconds = (millisUntilFinished / MILLIS_IN_SECONDS % SECONDS_IN_MINUTE).toInt()
+        val minutes = millisUntilFinished / MILLIS_IN_SECONDS / SECONDS_IN_MINUTE
         return String.format("%02d:%02d", minutes, seconds)
     }
 

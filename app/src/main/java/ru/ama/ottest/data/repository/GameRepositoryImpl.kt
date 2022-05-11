@@ -69,11 +69,17 @@ class GameRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getTestInfo(testId:Int): TestInfo {
+    override fun getTestInfo(testId:Int): List<TestInfo> {
         Log.e("getTestInfo1",testInfoDao.toString())
         Log.e("getTestInfo",testInfoDao.getTestInfo(testId).toString())
        // if(testInfoDao.getTestInfo().value!=null)
-        return  mapper.mapDataDbModelToEntity(testInfoDao.getTestInfo(testId))
+        var rl:MutableList<TestInfo> = mutableListOf<TestInfo>()
+        for (l in testInfoDao.getTestInfo(testId))
+        {
+            rl.add(mapper.mapDataDbModelToEntity(l))
+        }
+        return rl
+       // return  mapper.mapDataDbModelToEntity(testInfoDao.getTestInfo(testId))
     }
 
     override fun loadData() {

@@ -17,6 +17,7 @@ interface ApplicationComponent {
 
     fun inject(activity: MainActivity)
     fun inject(fragment: GameFragment)
+    fun inject(fragment: ChooseTestFragment)
   //  fun inject(activity: CoinPriceListActivity)
 
   //  fun inject(fragment: CoinDetailFragment)
