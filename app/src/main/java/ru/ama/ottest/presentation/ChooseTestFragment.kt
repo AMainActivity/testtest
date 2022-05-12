@@ -50,7 +50,7 @@ class ChooseTestFragment : Fragment() {
         adapter.onQuestionClickListener = object : QuestionsAdapter.OnQuestionClickListener {
             override fun onQuestionClick(tInfo: TestInfo) {
                 Log.e("tInfo",tInfo.toString())
-                launchGameFragment()
+                launchGameFragment(tInfo)
             }
         }
         binding.rvTestsList.adapter = adapter
@@ -62,9 +62,9 @@ class ChooseTestFragment : Fragment() {
         
     }
 
-    private fun launchGameFragment() {
+    private fun launchGameFragment(tInfo: TestInfo) {
         requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.main_container, GameFragment.newInstance())
+            .replace(R.id.main_container, GameFragment.newInstance(tInfo))
             .addToBackStack(GameFragment.NAME)
             .commit()
     }

@@ -15,64 +15,86 @@ class GameViewModel @Inject constructor(
 ) : ViewModel() {
 
     init {
-      //  loadDataUseCase()
-        getTInfo()
+        //  loadDataUseCase()
+        // getTInfo()
     }
-   /* private val _readyStart = MutableLiveData<Unit>()
-    val readyStart: LiveData<Unit>
-        get() = _readyStart*/
+    /* private val _readyStart = MutableLiveData<Unit>()
+     val readyStart: LiveData<Unit>
+         get() = _readyStart*/
 
     private fun getTInfo() {
-        val d1 = viewModelScope.async(Dispatchers.IO) {
-            getTestInfoUseCase(1)
-        }
+        /* val d1 = viewModelScope.async(Dispatchers.IO) {
+             getTestInfoUseCase(1)
+         }*/
 
-        viewModelScope.launch {
+        /*val d2 = viewModelScope.async(Dispatchers.IO) {
+            //testInfo = d1.await()[0]
+            getQuestionsListUseCase(1, testInfo.countOfQuestions)
 
-            /*val d1 = viewModelScope.async(Dispatchers.IO) {
-                getTestInfoUseCase(1)
-            }*/
-            testInfo = d1.await()[0]
-            val d2 = viewModelScope.async(Dispatchers.IO) {
-            getQuestionsListUseCase(1,testInfo.countOfQuestions)
         }
-            testQuestion = d2.await()
-             _state.value=ReadyStart
+        val dfd=viewModelScope.launch {
+
+            //val d1 = viewModelScope.async(Dispatchers.IO) {
+            //    getTestInfoUseCase(1)
+            //}
+val sdsd=d2.await()
+            Log.e("getQuestionssdsd", sdsd.toString())
+            testQuestion = sdsd
+
+        }*/
+        viewModelScope.launch(Dispatchers.IO) {
+           // dfd.join()
+            testQuestion=getQuestionsListUseCase(1, testInfo.countOfQuestions)
             Log.e("getTestInfoUseCase", testInfo.toString())
             Log.e("getQuestionsListUseCase", testQuestion[0].toString())
+            _state.postValue( ReadyStart)
         }
     }
 
-	val kolvoOfQuestions by lazy{ testInfo.countOfQuestions}
-	
-    lateinit var testInfo:TestInfo //= getTestInfoUseCase(1)
-    lateinit var testQuestion :List<TestQuestion>//= getQuestionsListUseCase(1)
+   /* private val parentJob = SupervisorJob()
+    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+        Log.d("coroutineScope", "Exception caught: $throwable")
+    }
+    private val coroutineScope = CoroutineScope(Dispatchers.IO + parentJob + exceptionHandler)
+*/
+
+    val kolvoOfQuestions by lazy { testInfo.countOfQuestions }
+
+    lateinit var testInfo: TestInfo //= getTestInfoUseCase(1)
+    lateinit var testQuestion: List<TestQuestion>//= getQuestionsListUseCase(1)
     /*private val repository = repository1//GameRepositoryImpl()*/
 
+    fun setParams(tInfo: TestInfo) {
+        testInfo = tInfo
+        getTInfo()
+    }
 
-    private val gameSettings: GameSettings by lazy{ GameSettings(
-        testInfo.minCountOfRightAnswers,
-        testInfo.minPercentOfRightAnswers,
-        testInfo.testTimeInSeconds
-    )}
+    private val gameSettings: GameSettings by lazy {
+        GameSettings(
+            testInfo.minCountOfRightAnswers,
+            testInfo.minPercentOfRightAnswers,
+            testInfo.testTimeInSeconds
+        )
+    }
     // lateinit var testInfo: LiveData<List<TestInfo>>
     //private var currentNoOfQuestion: Int=-1
 
-private val _state = MutableLiveData<State>()
+    private val _state = MutableLiveData<State>()
     val state: LiveData<State>
         get() = _state
-  private var _currentNoOfQuestion = MutableLiveData<Int>()
+    private var _currentNoOfQuestion = MutableLiveData<Int>()
     val currentNoOfQuestion: LiveData<Int>
         get() = _currentNoOfQuestion
- /*
-    private val _minPercentOfRightAnswers = MutableLiveData<Int>()
-    val minPercentOfRightAnswers: LiveData<Int>
-        get() = _minPercentOfRightAnswers
 
-    private val _leftFormattedTime = MutableLiveData<String>()
-    val leftFormattedTime: LiveData<String>
-        get() = _leftFormattedTime
-*/
+    /*
+       private val _minPercentOfRightAnswers = MutableLiveData<Int>()
+       val minPercentOfRightAnswers: LiveData<Int>
+           get() = _minPercentOfRightAnswers
+
+       private val _leftFormattedTime = MutableLiveData<String>()
+       val leftFormattedTime: LiveData<String>
+           get() = _leftFormattedTime
+   */
     private val _question = MutableLiveData<TestQuestion>()
     val question: LiveData<TestQuestion>
         get() = _question
@@ -98,7 +120,7 @@ private val _state = MutableLiveData<State>()
         setupGameSettings()
         startTimer()
         // shuffleListOfQuestionsUserCase()
-        _currentNoOfQuestion.value=0
+        _currentNoOfQuestion.value = 0
         generateQuestion(_currentNoOfQuestion.value!!)
     }
 
@@ -117,7 +139,7 @@ private val _state = MutableLiveData<State>()
     private fun setupGameSettings() {
         //gameSettings = getGameSettingsUseCase()
         //testInfo=getTestInfoUseCase()
-        _state.value=MinPercentOfRightAnswers(gameSettings.minPercentOfRightAnswers)
+        _state.value = MinPercentOfRightAnswers(gameSettings.minPercentOfRightAnswers)
     }
 
     private fun checkAnswer(answer: Int) {
@@ -135,7 +157,7 @@ private val _state = MutableLiveData<State>()
             MILLIS_IN_SECONDS
         ) {
             override fun onTick(millisUntilFinished: Long) {
-               _state.value=LeftFormattedTime( getFormattedLeftTime(millisUntilFinished))
+                _state.value = LeftFormattedTime(getFormattedLeftTime(millisUntilFinished))
             }
 
             override fun onFinish() {
@@ -148,14 +170,14 @@ private val _state = MutableLiveData<State>()
     private fun generateQuestion(questionNo: Int) {
         Log.e("generateQuestion", "cur: $questionNo, size: ${testInfo.countOfQuestions}")
         if (questionNo < testInfo.countOfQuestions)
-            _question.value= testQuestion[questionNo]
+            _question.value = testQuestion[questionNo]
         else
             finishGame()
     }
 
     private fun finishGame() {
-        _state.value=LeftFormattedTime(getFormattedLeftTime(0))
-        _gameResult.value= getGameResult()
+        _state.value = LeftFormattedTime(getFormattedLeftTime(0))
+        _gameResult.value = getGameResult()
         //shuffleListOfQuestionsUserCase()
     }
 
@@ -165,7 +187,12 @@ private val _state = MutableLiveData<State>()
         val enoughRightAnswers = countOfRightAnswers >= gameSettings.minCountOfRightAnswers
         val winner = enoughPercentage && enoughRightAnswers
         val countOfQuestions = countOfRightAnswers + countOfWrongAnswers
-        return ru.ama.ottest.domain.entity.GameResult(winner, countOfRightAnswers, countOfQuestions, gameSettings)
+        return ru.ama.ottest.domain.entity.GameResult(
+            winner,
+            countOfRightAnswers,
+            countOfQuestions,
+            gameSettings
+        )
     }
 
     private fun getPercentOfRightAnswers(): Int {
@@ -175,15 +202,15 @@ private val _state = MutableLiveData<State>()
         } else {
             0
         }
-        _percentOfRightAnswers.value=percentOfRightAnswers
+        _percentOfRightAnswers.value = percentOfRightAnswers
         return percentOfRightAnswers
     }
 
     private fun getFormattedLeftTime(millisUntilFinished: Long): String {
-		/*
-		 val minutes = milliseconds / 1000 / 60
+        /*
+         val minutes = milliseconds / 1000 / 60
     val seconds = milliseconds / 1000 % 60
-		*/		
+        */
         val seconds = (millisUntilFinished / MILLIS_IN_SECONDS % SECONDS_IN_MINUTE).toInt()
         val minutes = millisUntilFinished / MILLIS_IN_SECONDS / SECONDS_IN_MINUTE
         return String.format("%02d:%02d", minutes, seconds)
@@ -192,6 +219,7 @@ private val _state = MutableLiveData<State>()
     override fun onCleared() {
         super.onCleared()
         timer?.cancel()
+       // coroutineScope.cancel()
     }
 
     companion object {

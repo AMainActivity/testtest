@@ -1,14 +1,13 @@
 package ru.ama.ottest.data.repository
 
+import android.R.attr.tag
 import android.app.Application
-import android.content.Context
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.Observer
 import androidx.work.ExistingWorkPolicy
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import com.google.gson.Gson
-import kotlinx.coroutines.delay
+import com.google.common.util.concurrent.ListenableFuture
 import ru.ama.ottest.data.database.TestInfoDao
 import ru.ama.ottest.data.database.TestQuestionsDao
 import ru.ama.ottest.data.mapper.TestMapper
@@ -16,9 +15,7 @@ import ru.ama.ottest.data.workers.TestRefreshDataWorker
 import ru.ama.ottest.domain.entity.*
 import ru.ama.ottest.domain.repository.GameRepository
 import javax.inject.Inject
-import kotlin.math.max
-import kotlin.math.min
-import kotlin.random.Random
+
 
 class GameRepositoryImpl @Inject constructor(
     private val mapper: TestMapper,
@@ -27,30 +24,7 @@ class GameRepositoryImpl @Inject constructor(
     private val application: Application
 ) : GameRepository {
 	
-	/*val mainTest by lazy{ getTestInfo()}
-    val questionsAll by lazy { getQuestionsInfoList() }
-    lateinit var questionsForTest: List<TestQuestion>*/
-	/*by lazy {
-		 randomElementsFromQuestionsList(questionsAll,mainTest.countOfQuestions)
-    }*/
-    /*override fun generateQuestion1(
-        maxValue: Int,
-        minSumValue: Int,
-        minAnswerValue: Int,
-        countOfOptions: Int
-    ): Question {
-        val sum = Random.nextInt(minSumValue, maxValue + 1)
-        val visibleNumber = Random.nextInt(minAnswerValue, sum)
-        val options = HashSet<Int>()
-        val rightAnswer = sum - visibleNumber
-        options.add(rightAnswer)
-        val from = max(minAnswerValue, rightAnswer - countOfOptions)
-        val to = min(rightAnswer + countOfOptions, maxValue)
-        while (options.size < countOfOptions) {
-            options.add(Random.nextInt(from, to + 1))
-        }
-        return Question(sum, visibleNumber, options.toList())
-    }  */
+
 
     override fun getQuestionsInfoList(testId: Int,limit:Int): List<TestQuestion>{
         var rl:MutableList<TestQuestion> = mutableListOf<TestQuestion>()
@@ -58,16 +32,17 @@ class GameRepositoryImpl @Inject constructor(
         {
             rl.add(mapper.mapDbModelToEntity(l))
         }
+        Log.e("getQuestionsrl","${testId} ${limit} ${rl.toString()}")
         return rl
 
     }
-     fun getQuestionsInfoList2(): LiveData<List<TestQuestion>> {
+   /*  fun getQuestionsInfoList2(): LiveData<List<TestQuestion>> {
         return Transformations.map(testQuestionsDao.getQuestionList()) {
             it.map {
                 mapper.mapDbModelToEntity(it)
             }
         }
-    }
+    }*/
 
     override fun getTestInfo(testId:Int): List<TestInfo> {
         Log.e("getTestInfo1",testInfoDao.toString())
@@ -84,27 +59,36 @@ class GameRepositoryImpl @Inject constructor(
 
     override fun loadData() {
         val workManager = WorkManager.getInstance(application)
+                //ListenableFuture<List<WorkInfo>> statuses = instance.getWorkInfosByTag(tag);
+         //  val statuses :ListenableFuture<List<WorkInfo>> = workManager.getWorkInfosByTag(TestRefreshDataWorker.NAME)
+
         workManager.enqueueUniqueWork(
             TestRefreshDataWorker.NAME,
             ExistingWorkPolicy.REPLACE,
             TestRefreshDataWorker.makeRequest()
         )
+       /* val workInfo = workManager.getWorkInfoById(TestRefreshDataWorker.makeRequest().id).get()
+        val wasSuccess = workInfo.outputData.getBoolean("is_success", false)
+        Log.e("wasSuccess",wasSuccess.toString())*/
+      /*  WorkManager.getInstance(application)
+            // requestId is the WorkRequest id
+            .getWorkInfoByIdLiveData(TestRefreshDataWorker.makeRequest().id)
+            .observe(observer, Observer { workInfo: WorkInfo? ->
+                if (workInfo != null) {
+                    val progress = workInfo.progress
+                    val value = progress.getInt(Progress, 0)
+                    // Do something with progress information
+                }
+            })*/
+        /*workManager.getWorkInfoById(TestRefreshDataWorker.makeRequest().id)
+            .observe(application, Observer { info ->
+                if (info != null && info.state.isFinished) {
+                    val myResult = info.outputData.getBoolean("is_success",
+                        false)
+                    // ... do something with the result ...
+                }
+            })*/
     }
-
-
-
-
-
-	/*override fun getTestInfo(): MainTest {
-		return mainTest
-	}*/
-
-
-
-private fun randomElementsFromQuestionsList(list: List<TestQuestion>, randCount:Int):List<TestQuestion> {
-    return list.asSequence().shuffled().take(randCount).toList()
-}
-
 
 
 

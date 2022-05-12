@@ -14,11 +14,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import ru.ama.ottest.R
 import ru.ama.ottest.databinding.FragmentGameBinding
+import ru.ama.ottest.domain.entity.TestInfo
 import javax.inject.Inject
 
 class GameFragment : Fragment() {
 
    // @Inject
+   private lateinit var testInfo: TestInfo
     private lateinit var viewModel: GameViewModel
 	  private val component by lazy {
         (requireActivity().application as MyApplication).component
@@ -41,7 +43,7 @@ class GameFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-       // parseArgs()
+        parseArgs()
     }
 
     override fun onCreateView(
@@ -79,21 +81,22 @@ class GameFragment : Fragment() {
 	  //  viewModel = ViewModelProvider(this)[GameViewModel::class.java]
       
         setupClickListenersToOptions()
+		viewModel.setParams(testInfo)
         observeViewModel()
         /*if (savedInstanceState == null) {
             viewModel.startGame()
         }*/
     }
 
-   /* private fun parseArgs() {
+   private fun parseArgs() {
         val args = requireArguments()
-        if (!args.containsKey(ARG_LEVEL)) {
-            throw RuntimeException("Required param level is absent")
+        if (!args.containsKey(ARG_TEST_INFO)) {
+            throw RuntimeException("Required param TestInfo is absent")
         }
-        args.getParcelable<Level>(ARG_LEVEL)?.let {
-            level = it
+        args.getParcelable<TestInfo>(ARG_TEST_INFO)?.let {
+            testInfo = it
         }
-    }*/
+    }
 
 
     private fun setupClickListenersToOptions() {
@@ -191,15 +194,15 @@ class GameFragment : Fragment() {
 
     companion object {
 
-        private const val ARG_LEVEL = "level"
+        private const val ARG_TEST_INFO = "testInfo"
         const val NAME = "GameFragment"
 
-        fun newInstance(): GameFragment {
-            return GameFragment()/*.apply {
+        fun newInstance(testInfo:TestInfo): GameFragment {
+            return GameFragment().apply {
                 arguments = Bundle().apply {
-                    putParcelable(ARG_LEVEL, level)
+                    putParcelable(ARG_TEST_INFO, testInfo)
                 }
-            }*/
+            }
         }
     }
 }

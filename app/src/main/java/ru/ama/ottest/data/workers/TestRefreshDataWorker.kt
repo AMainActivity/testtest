@@ -52,8 +52,12 @@ class TestRefreshDataWorker(
             }
 					 
 				 }
-        return Result.success()
-              } catch (e: Exception) {return Result.failure()
+                 val outputData = workDataOf("is_success" to true)
+                 return Result.success(outputData)
+        //return Result.success()
+              } catch (e: Exception) {
+                 val outputData = workDataOf("is_success" to false)
+                  return Result.failure()
              }
           //      delay(10000)
         //}

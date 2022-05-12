@@ -26,8 +26,10 @@ class TestsViewModel @Inject constructor(
         }
 
         viewModelScope.launch {
-            d1.await()
-            _testInfo.value = d.await()
+            val f=d1.await()
+            val p=d.await()
+            Log.e("ppp",p.toString())
+            _testInfo.value = p
         }
     }
    private val _testInfo = MutableLiveData<List<TestInfo>>()
