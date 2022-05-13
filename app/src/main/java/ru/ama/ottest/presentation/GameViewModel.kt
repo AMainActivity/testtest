@@ -14,7 +14,10 @@ class GameViewModel @Inject constructor(
     private val getTestInfoUseCase: GetTestInfoUseCase
 ) : ViewModel() {
 
+    private var currentNoOfQuestion: Int = -1
+
     init {
+        currentNoOfQuestion = 0
         //  loadDataUseCase()
         // getTInfo()
     }
@@ -43,20 +46,20 @@ val sdsd=d2.await()
 
         }*/
         viewModelScope.launch(Dispatchers.IO) {
-           // dfd.join()
-            testQuestion=getQuestionsListUseCase(1, testInfo.countOfQuestions)
+            // dfd.join()
+            testQuestion = getQuestionsListUseCase(1, testInfo.countOfQuestions)
             Log.e("getTestInfoUseCase", testInfo.toString())
             Log.e("getQuestionsListUseCase", testQuestion[0].toString())
-            _state.postValue( ReadyStart)
+            _state.postValue(ReadyStart)
         }
     }
 
-   /* private val parentJob = SupervisorJob()
-    private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-        Log.d("coroutineScope", "Exception caught: $throwable")
-    }
-    private val coroutineScope = CoroutineScope(Dispatchers.IO + parentJob + exceptionHandler)
-*/
+    /* private val parentJob = SupervisorJob()
+     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+         Log.d("coroutineScope", "Exception caught: $throwable")
+     }
+     private val coroutineScope = CoroutineScope(Dispatchers.IO + parentJob + exceptionHandler)
+ */
 
     val kolvoOfQuestions by lazy { testInfo.countOfQuestions }
 
@@ -77,15 +80,15 @@ val sdsd=d2.await()
         )
     }
     // lateinit var testInfo: LiveData<List<TestInfo>>
-    //private var currentNoOfQuestion: Int=-1
 
     private val _state = MutableLiveData<State>()
     val state: LiveData<State>
         get() = _state
-    private var _currentNoOfQuestion = MutableLiveData<Int>()
-    val currentNoOfQuestion: LiveData<Int>
-        get() = _currentNoOfQuestion
 
+    /* private var _currentNoOfQuestion = MutableLiveData<Int>()
+     val currentNoOfQuestion: LiveData<Int>
+         get() = _currentNoOfQuestion
+ */
     /*
        private val _minPercentOfRightAnswers = MutableLiveData<Int>()
        val minPercentOfRightAnswers: LiveData<Int>
@@ -103,9 +106,9 @@ val sdsd=d2.await()
     val gameResult: LiveData<GameResult>
         get() = _gameResult
 
-    private val _percentOfRightAnswers = MutableLiveData<Int>()
-    val percentOfRightAnswers: LiveData<Int>
-        get() = _percentOfRightAnswers
+     private val _percentOfRightAnswers = MutableLiveData<Int>()
+      val percentOfRightAnswers: LiveData<Int>
+          get() = _percentOfRightAnswers
 
     val enoughPercentage: LiveData<Boolean> = Transformations.map(percentOfRightAnswers) {
         it >= gameSettings.minPercentOfRightAnswers
@@ -114,14 +117,14 @@ val sdsd=d2.await()
     private var timer: CountDownTimer? = null
     private var countOfRightAnswers = 0
     private var countOfWrongAnswers = 0
-
+    private var listResultOfTest: MutableList<ResultOfTest> = mutableListOf<ResultOfTest>()
 
     fun startGame() {
         setupGameSettings()
         startTimer()
         // shuffleListOfQuestionsUserCase()
-        _currentNoOfQuestion.value = 0
-        generateQuestion(_currentNoOfQuestion.value!!)
+        _state.value = CurrentNoOfQuestion(currentNoOfQuestion)
+        generateQuestion(currentNoOfQuestion/*_currentNoOfQuestion.value!!*/)
     }
 
     fun chooseAnswer(answer: Int) {
@@ -130,8 +133,10 @@ val sdsd=d2.await()
         }
         checkAnswer(answer)
         getPercentOfRightAnswers()
-        _currentNoOfQuestion.value = _currentNoOfQuestion.value!! + 1
-        generateQuestion(_currentNoOfQuestion.value!!)
+        currentNoOfQuestion++
+        _state.value = CurrentNoOfQuestion(currentNoOfQuestion)
+//        _currentNoOfQuestion.value = _currentNoOfQuestion.value!! + 1
+        generateQuestion(currentNoOfQuestion/*_currentNoOfQuestion.value!!*/)
         //_currentNoOfQuestion.value = _currentNoOfQuestion.value!! + 1
         //generateQuestion(_currentNoOfQuestion.value!!)
     }
@@ -144,11 +149,27 @@ val sdsd=d2.await()
 
     private fun checkAnswer(answer: Int) {
         val rightAnswer = question.value
-        if (answer == rightAnswer!!.correct[0]) {
+//        val rightAnswer2 = state.value as Question2
+        if (answer == rightAnswer!!.correct[0]) {        /////answer.startsWith("*")  верный ответ начинается на *
             countOfRightAnswers++
         } else {
             countOfWrongAnswers++
+            val rOt = ResultOfTest(
+                currentNoOfQuestion,
+                rightAnswer.question,
+                rightAnswer.imageUrl,
+                rightAnswer.answers.get(answer),
+                rightAnswer.answers.get(rightAnswer.correct[0])
+            )
+            listResultOfTest.add(rOt)
         }
+    }
+
+    /*
+    val list=listQuest = randomElementsFromAnswersList(questionsAll,mainTest.countOfQuestions)
+    */
+    private fun randomElementsFromAnswersList(list: List<String>, randCount: Int): List<String> {
+        return list.asSequence().shuffled().take(randCount).toList()
     }
 
     private fun startTimer() {
@@ -169,9 +190,14 @@ val sdsd=d2.await()
 
     private fun generateQuestion(questionNo: Int) {
         Log.e("generateQuestion", "cur: $questionNo, size: ${testInfo.countOfQuestions}")
-        if (questionNo < testInfo.countOfQuestions)
+        if (questionNo < testInfo.countOfQuestions) {
+            /*
+            val ans=testQuestion[questionNo].answers
+            val tempQuestion=testQuestion[questionNo].copy(answers=randomElementsFromAnswersList(ans,ans.size))
+             _question.value = tempQuestion
+            */
             _question.value = testQuestion[questionNo]
-        else
+        } else
             finishGame()
     }
 
@@ -191,7 +217,8 @@ val sdsd=d2.await()
             winner,
             countOfRightAnswers,
             countOfQuestions,
-            gameSettings
+            gameSettings,
+            listResultOfTest
         )
     }
 
@@ -219,7 +246,7 @@ val sdsd=d2.await()
     override fun onCleared() {
         super.onCleared()
         timer?.cancel()
-       // coroutineScope.cancel()
+        // coroutineScope.cancel()
     }
 
     companion object {

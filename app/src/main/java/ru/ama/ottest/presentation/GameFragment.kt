@@ -113,9 +113,9 @@ class GameFragment : Fragment() {
                     viewModel.startGame()
                     //binding.progressBar.max=viewModel.testInfo.countOfQuestions
                 }
-               /* is CurrentNoOfQuestion -> {
+                is CurrentNoOfQuestion -> {
                      Toast.makeText(requireContext(), "${it.value+1}/${viewModel.testInfo.countOfQuestions} ",Toast.LENGTH_SHORT).show() 
-                }*/
+                }
                 is MinPercentOfRightAnswers -> {
                     binding.progressBar.secondaryProgress =  it.value
                 }
@@ -156,9 +156,9 @@ class GameFragment : Fragment() {
 				lvAnswers.adapter = adapter
             }
         }
-        viewModel.currentNoOfQuestion.observe(viewLifecycleOwner) {
+       /* viewModel.currentNoOfQuestion.observe(viewLifecycleOwner) {
             Toast.makeText(requireContext(), "${it+1}/${viewModel.testInfo.countOfQuestions} ",Toast.LENGTH_SHORT).show()
-        }/*
+        }
         viewModel.leftFormattedTime.observe(viewLifecycleOwner) {
             binding.tvTimer.text = it
         }*/

@@ -9,8 +9,8 @@ import ru.ama.ottest.presentation.*
 @Component(
     modules = [
         DataModule::class,
-        ViewModelModule::class,
-        WorkerModule::class
+        ViewModelModule::class//,
+       // WorkerModule::class
     ]
 )
 interface ApplicationComponent {

@@ -11,7 +11,7 @@ import com.google.common.util.concurrent.ListenableFuture
 import ru.ama.ottest.data.database.TestInfoDao
 import ru.ama.ottest.data.database.TestQuestionsDao
 import ru.ama.ottest.data.mapper.TestMapper
-import ru.ama.ottest.data.workers.TestRefreshDataWorker
+import ru.ama.ottest.data.network.TestApiService
 import ru.ama.ottest.domain.entity.*
 import ru.ama.ottest.domain.repository.GameRepository
 import javax.inject.Inject
@@ -21,6 +21,7 @@ class GameRepositoryImpl @Inject constructor(
     private val mapper: TestMapper,
     private val testQuestionsDao: TestQuestionsDao,
     private val testInfoDao: TestInfoDao,
+    private val apiService: TestApiService,
     private val application: Application
 ) : GameRepository {
 	
@@ -57,37 +58,52 @@ class GameRepositoryImpl @Inject constructor(
        // return  mapper.mapDataDbModelToEntity(testInfoDao.getTestInfo(testId))
     }
 
-    override fun loadData() {
-        val workManager = WorkManager.getInstance(application)
-                //ListenableFuture<List<WorkInfo>> statuses = instance.getWorkInfosByTag(tag);
-         //  val statuses :ListenableFuture<List<WorkInfo>> = workManager.getWorkInfosByTag(TestRefreshDataWorker.NAME)
+    override suspend fun loadData():List<Int>  {
+        var listOfItems:MutableList<Int> = mutableListOf<Int>()
+		try {
+            val getJsonList = apiService.getTestList()
+				 if (!getJsonList.error)
+				{
+					val testDtoList = getJsonList.testListData					
+					val dbModelTestList = testDtoList.map {
+                    mapper.mapDataDtoToDbModel(it)
+                }
+					val testItemsCount= testInfoDao.insertTestList(dbModelTestList)
+					listOfItems.add(testItemsCount.size)
+					 Log.e("insertTestInfo",dbModelTestList.toString())
+					 
+					    val getJson = apiService.getTestById()
+				if (!getJson.error) {
+               // val dbModelInfo = mapper.mapDataDtoToDbModel(getJsonList.TestListDataDto)
+               // testInfoDao.insertTestInfo(dbModelInfo)
+               // Log.e("insertTestInfo",dbModelInfo.toString())
+				
+				
+                val questionsDtoList = getJson.testData.questions					
+                val dbModelList = questionsDtoList.map {
+                    mapper.mapDtoToDbModel(
+                        it,
+                        getJson.testData.testId.toString()
+                    )
+                }
+                val questionsItemsCount=testQuestionsDao.insertQuestionList(dbModelList)
+				listOfItems.add(questionsItemsCount.size)
+                        Log.e("insertQuestionList",dbModelList.toString())
+            }
+					 
+				 }
+                
+              } catch (e: Exception) {}
+			  return listOfItems
+		
+     /*   val workManager = WorkManager.getInstance(application)
 
         workManager.enqueueUniqueWork(
             TestRefreshDataWorker.NAME,
             ExistingWorkPolicy.REPLACE,
             TestRefreshDataWorker.makeRequest()
-        )
-       /* val workInfo = workManager.getWorkInfoById(TestRefreshDataWorker.makeRequest().id).get()
-        val wasSuccess = workInfo.outputData.getBoolean("is_success", false)
-        Log.e("wasSuccess",wasSuccess.toString())*/
-      /*  WorkManager.getInstance(application)
-            // requestId is the WorkRequest id
-            .getWorkInfoByIdLiveData(TestRefreshDataWorker.makeRequest().id)
-            .observe(observer, Observer { workInfo: WorkInfo? ->
-                if (workInfo != null) {
-                    val progress = workInfo.progress
-                    val value = progress.getInt(Progress, 0)
-                    // Do something with progress information
-                }
-            })*/
-        /*workManager.getWorkInfoById(TestRefreshDataWorker.makeRequest().id)
-            .observe(application, Observer { info ->
-                if (info != null && info.state.isFinished) {
-                    val myResult = info.outputData.getBoolean("is_success",
-                        false)
-                    // ... do something with the result ...
-                }
-            })*/
+        )*/
+     
     }
 
 

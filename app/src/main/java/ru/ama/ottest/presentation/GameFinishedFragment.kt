@@ -1,6 +1,7 @@
 package ru.ama.ottest.presentation
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,6 +46,7 @@ class GameFinishedFragment : Fragment() {
             goToStartGame()
         }
         with(gameResult) {
+			Log.e("resultOfTest",gameResult.resultOfTest.toString())
             val emojiResId = if (winner) {
                 R.drawable.ic_smile
             } else {

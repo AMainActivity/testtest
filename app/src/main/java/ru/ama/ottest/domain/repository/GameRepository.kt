@@ -9,5 +9,5 @@ interface GameRepository {
 
     fun getTestInfo(testId:Int):List<TestInfo>
 
-    fun loadData()
+    suspend fun loadData():List<Int>
 }

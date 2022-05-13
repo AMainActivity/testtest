@@ -18,5 +18,11 @@ interface TestInfoDao {
     suspend fun insertTestInfo(testInfo: TestInfoDbModel)
 	
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertTestList(testList: List<TestInfoDbModel>)
+    suspend fun insertTestList(testList: List<TestInfoDbModel>):List<Long>
 }
+
+/*
+@Transaction
+@Query(“SELECT * FROM test_info”)
+List<TestQuestionsDbModel> getTestInfo();
+*/

@@ -18,3 +18,14 @@ data class TestInfoDbModel(
   var testTimeInSeconds: Int,
   var countOfQuestions: Int
 )
+
+
+/*
+class TestAndQuestions {
+   @Embedded
+   var test: TestInfoDbModel? = null
+   @Relation(parentColumn = “testId”,
+             entityColumn = “ownerTestId”)
+   var questions: List<TestQuestionsDbModel> = ArrayList()
+}
+*/
