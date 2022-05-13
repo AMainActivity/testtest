@@ -19,4 +19,5 @@
     <string name="right_answers">Правильных ответов %s из %s необходимых</string>
     <string name="required_percentage">Необходимый процент правильных ответов: %s</string>
     <string name="required_score">Необходимое количество правильных ответов: %s</string>
+    <string name="sdsd">разбор ответов</string>
 </resources>

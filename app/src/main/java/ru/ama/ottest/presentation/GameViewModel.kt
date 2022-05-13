@@ -106,9 +106,9 @@ val sdsd=d2.await()
     val gameResult: LiveData<GameResult>
         get() = _gameResult
 
-     private val _percentOfRightAnswers = MutableLiveData<Int>()
-      val percentOfRightAnswers: LiveData<Int>
-          get() = _percentOfRightAnswers
+    private val _percentOfRightAnswers = MutableLiveData<Int>()
+    val percentOfRightAnswers: LiveData<Int>
+        get() = _percentOfRightAnswers
 
     val enoughPercentage: LiveData<Boolean> = Transformations.map(percentOfRightAnswers) {
         it >= gameSettings.minPercentOfRightAnswers
@@ -155,19 +155,18 @@ val sdsd=d2.await()
         } else {
             countOfWrongAnswers++
             val rOt = ResultOfTest(
-                currentNoOfQuestion,
+                currentNoOfQuestion+1,
                 rightAnswer.question,
                 rightAnswer.imageUrl,
-                rightAnswer.answers.get(answer),
-                rightAnswer.answers.get(rightAnswer.correct[0])
+                rightAnswer.answers,
+                answer,
+                rightAnswer.correct[0]
             )
             listResultOfTest.add(rOt)
         }
     }
 
-    /*
-    val list=listQuest = randomElementsFromAnswersList(questionsAll,mainTest.countOfQuestions)
-    */
+
     private fun randomElementsFromAnswersList(list: List<String>, randCount: Int): List<String> {
         return list.asSequence().shuffled().take(randCount).toList()
     }
@@ -191,12 +190,22 @@ val sdsd=d2.await()
     private fun generateQuestion(questionNo: Int) {
         Log.e("generateQuestion", "cur: $questionNo, size: ${testInfo.countOfQuestions}")
         if (questionNo < testInfo.countOfQuestions) {
+            val oldAnswerList=testQuestion[questionNo].answers
+            val oldCorrectAnswers=testQuestion[questionNo].correct
+            val oldCorrectAnswerString=oldAnswerList[oldCorrectAnswers[0]]
+            val newAnswerList=randomElementsFromAnswersList(oldAnswerList,oldAnswerList.size)
+            val newCorrectAnswerIndex=newAnswerList.indexOf(oldCorrectAnswerString)
+            val newQuestion=testQuestion[questionNo].copy(answers=newAnswerList, correct = listOf(newCorrectAnswerIndex))
             /*
-            val ans=testQuestion[questionNo].answers
             val tempQuestion=testQuestion[questionNo].copy(answers=randomElementsFromAnswersList(ans,ans.size))
              _question.value = tempQuestion
+              val list=listOf("один","два","три","четыре","пять")
+    val oldCorrect=listOf(2)
+    val oldCorrectAnswer=list[oldCorrect[0]]
+    val newList=randomElementsFromAnswersList(list,list.size)
+    val newCorect=newList.indexOf(oldCorrectAnswer)
             */
-            _question.value = testQuestion[questionNo]
+            _question.value = newQuestion
         } else
             finishGame()
     }

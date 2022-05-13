@@ -9,6 +9,7 @@ data class ResultOfTest(
     var number: Int,
     var question: String,
     var imageUrl : String? = null,
-    var answer: String,
-    var correct: String
+    var answers: List<String>,
+    var indexOfUserAnswer: Int,
+    var indexOfCorrect: Int
 ): Parcelable

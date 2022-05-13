@@ -1,11 +1,15 @@
 package ru.ama.ottest.domain.entity
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.android.parcel.Parcelize
 
-data class TestQuestion(
+@Parcelize
+data class TestQuestion
+(
     var number: Int,
     var question: String,
     var imageUrl : String? = null,
     var answers: List<String>,
     var correct: List<Int>
-)
+): Parcelable
