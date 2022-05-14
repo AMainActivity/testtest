@@ -197,7 +197,7 @@ class GameFragment : Fragment() {
         private const val ARG_TEST_INFO = "testInfo"
         const val NAME = "GameFragment"
 
-        fun newInstance(testInfo:TestInfo): GameFragment {
+        fun newInstance(testId:TestInfo): GameFragment {
             return GameFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(ARG_TEST_INFO, testInfo)

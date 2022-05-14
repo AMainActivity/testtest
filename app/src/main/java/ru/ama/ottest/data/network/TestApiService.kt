@@ -9,7 +9,7 @@ interface TestApiService {
 
     @GET("gettestbyid.php")
     suspend fun getTestById(
-        @Query(QUERY_PARAM_TEST_ID) tid: String = "1"
+        @Query(QUERY_PARAM_TEST_ID) tid: String
     ): TestJsonDto
 
     @GET("gettestlist.php")

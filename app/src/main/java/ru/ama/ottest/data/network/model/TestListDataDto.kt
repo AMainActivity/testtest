@@ -11,8 +11,6 @@ data class TestListDataDto(
   @Expose
   @SerializedName("mainImageUrl" ) var mainImageUrl : String? = null,
   @Expose
-  @SerializedName("minCountOfRightAnswers") var minCountOfRightAnswers: Int,
-  @Expose
   @SerializedName("minPercentOfRightAnswers") var minPercentOfRightAnswers: Int,
   @Expose
   @SerializedName("testTimeInSeconds") var testTimeInSeconds: Int,

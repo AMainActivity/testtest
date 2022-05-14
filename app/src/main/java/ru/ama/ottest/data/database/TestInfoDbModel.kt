@@ -13,7 +13,6 @@ data class TestInfoDbModel(
   var testId: Int,
   var title: String,
   var mainImageUrl : String? = null,
-  var minCountOfRightAnswers: Int,
   var minPercentOfRightAnswers: Int,
   var testTimeInSeconds: Int,
   var countOfQuestions: Int

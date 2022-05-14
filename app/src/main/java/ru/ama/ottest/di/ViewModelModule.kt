@@ -5,10 +5,16 @@ import ru.ama.ottest.presentation.GameViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
+import ru.ama.ottest.presentation.SplashViewModel
 import ru.ama.ottest.presentation.TestsViewModel
 
 @Module
 interface ViewModelModule {
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(SplashViewModel::class)
+    fun bindSplashViewModel(viewModel: SplashViewModel): ViewModel
 
     @Binds
     @IntoMap

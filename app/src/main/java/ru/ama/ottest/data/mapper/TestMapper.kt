@@ -2,7 +2,6 @@ package ru.ama.ottest.data.mapper
 
 import ru.ama.ottest.data.database.TestInfoDbModel
 import ru.ama.ottest.data.database.TestQuestionsDbModel
-import ru.ama.ottest.data.network.model.TestDataDto
 import ru.ama.ottest.data.network.model.TestListDataDto
 import ru.ama.ottest.data.network.model.TestQuestionsDto
 import ru.ama.ottest.domain.entity.TestInfo
@@ -31,7 +30,6 @@ class TestMapper @Inject constructor() {
          testId=dto.testId,
      title=dto.title,
      mainImageUrl=dto.mainImageUrl,
-     minCountOfRightAnswers=dto.minCountOfRightAnswers,
      minPercentOfRightAnswers=dto.minPercentOfRightAnswers,
      testTimeInSeconds=dto.testTimeInSeconds,
      countOfQuestions=dto.countOfQuestions
@@ -40,7 +38,6 @@ class TestMapper @Inject constructor() {
         testId=dbModel.testId,
         title=dbModel.title,
         mainImageUrl=dbModel.mainImageUrl,
-        minCountOfRightAnswers=dbModel.minCountOfRightAnswers,
         minPercentOfRightAnswers=dbModel.minPercentOfRightAnswers,
         testTimeInSeconds=dbModel.testTimeInSeconds,
         countOfQuestions=dbModel.countOfQuestions

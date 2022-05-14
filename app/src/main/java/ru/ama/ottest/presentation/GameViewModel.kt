@@ -74,7 +74,6 @@ val sdsd=d2.await()
 
     private val gameSettings: GameSettings by lazy {
         GameSettings(
-            testInfo.minCountOfRightAnswers,
             testInfo.minPercentOfRightAnswers,
             testInfo.testTimeInSeconds
         )
@@ -219,8 +218,8 @@ val sdsd=d2.await()
     private fun getGameResult(): ru.ama.ottest.domain.entity.GameResult {
         val percentOfRightAnswers = getPercentOfRightAnswers()
         val enoughPercentage = percentOfRightAnswers >= gameSettings.minPercentOfRightAnswers
-        val enoughRightAnswers = countOfRightAnswers >= gameSettings.minCountOfRightAnswers
-        val winner = enoughPercentage && enoughRightAnswers
+        //val enoughRightAnswers = countOfRightAnswers >= gameSettings.minCountOfRightAnswers
+        val winner = enoughPercentage //&& enoughRightAnswers
         val countOfQuestions = countOfRightAnswers + countOfWrongAnswers
         return ru.ama.ottest.domain.entity.GameResult(
             winner,

@@ -9,6 +9,6 @@ data class TestJsonDto(
     @Expose
     @SerializedName("message" ) var message : String,
     @Expose
-    @SerializedName("test"    ) var testData    : TestDataDto
+    @SerializedName("questions"    ) var questions    : List<TestQuestionsDto>
 
 )

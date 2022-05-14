@@ -12,6 +12,7 @@ import ru.ama.ottest.data.database.TestInfoDao
 import ru.ama.ottest.data.database.TestQuestionsDao
 import ru.ama.ottest.data.mapper.TestMapper
 import ru.ama.ottest.data.network.TestApiService
+import ru.ama.ottest.data.network.model.TestListDataDto
 import ru.ama.ottest.domain.entity.*
 import ru.ama.ottest.domain.repository.GameRepository
 import javax.inject.Inject
@@ -45,12 +46,12 @@ class GameRepositoryImpl @Inject constructor(
         }
     }*/
 
-    override fun getTestInfo(testId:Int): List<TestInfo> {
+    override fun getTestInfo(): List<TestInfo> {
         Log.e("getTestInfo1",testInfoDao.toString())
-        Log.e("getTestInfo",testInfoDao.getTestInfo(testId).toString())
+        Log.e("getTestInfo",testInfoDao.getTestInfo().toString())
        // if(testInfoDao.getTestInfo().value!=null)
         var rl:MutableList<TestInfo> = mutableListOf<TestInfo>()
-        for (l in testInfoDao.getTestInfo(testId))
+        for (l in testInfoDao.getTestInfo())
         {
             rl.add(mapper.mapDataDbModelToEntity(l))
         }
@@ -71,25 +72,27 @@ class GameRepositoryImpl @Inject constructor(
 					val testItemsCount= testInfoDao.insertTestList(dbModelTestList)
 					listOfItems.add(testItemsCount.size)
 					 Log.e("insertTestInfo",dbModelTestList.toString())
-					 
-					    val getJson = apiService.getTestById()
-				if (!getJson.error) {
-               // val dbModelInfo = mapper.mapDataDtoToDbModel(getJsonList.TestListDataDto)
-               // testInfoDao.insertTestInfo(dbModelInfo)
-               // Log.e("insertTestInfo",dbModelInfo.toString())
-				
-				
-                val questionsDtoList = getJson.testData.questions					
-                val dbModelList = questionsDtoList.map {
-                    mapper.mapDtoToDbModel(
-                        it,
-                        getJson.testData.testId.toString()
-                    )
-                }
-                val questionsItemsCount=testQuestionsDao.insertQuestionList(dbModelList)
-				listOfItems.add(questionsItemsCount.size)
-                        Log.e("insertQuestionList",dbModelList.toString())
-            }
+                    for ( testDto in testDtoList)
+                    {
+                        val getJson = apiService.getTestById(testDto.testId.toString())
+                        if (!getJson.error) {
+                            // val dbModelInfo = mapper.mapDataDtoToDbModel(getJsonList.TestListDataDto)
+                            // testInfoDao.insertTestInfo(dbModelInfo)
+                            // Log.e("insertTestInfo",dbModelInfo.toString())
+                            val questionsDtoList = getJson.questions
+                            val dbModelList = questionsDtoList.map {
+                                mapper.mapDtoToDbModel(
+                                    it,
+                                    testDto.testId.toString()
+                                )
+                            }
+                            val questionsItemsCount=testQuestionsDao.insertQuestionList(dbModelList)
+                            listOfItems.add(questionsItemsCount.size)
+                            Log.e("insertQuestionList",dbModelList.toString())
+                        }
+                    }
+
+
 					 
 				 }
                 

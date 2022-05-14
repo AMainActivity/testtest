@@ -10,38 +10,22 @@ import javax.inject.Inject
 
 class MainActivity : AppCompatActivity() {
 
-   // private lateinit var binding: ActivityMainBinding
-  //  private lateinit var viewModel: TestsViewModel
-
- //   @Inject
-  //  lateinit var viewModelFactory: ViewModelFactory
-
     private val binding by lazy {
         ActivityMainBinding.inflate(layoutInflater)
     }
 
-   /* private val component by lazy {
-        (application as MyApplication).component
-    }*/
-    override fun onCreate(savedInstanceState: Bundle?) {
-    //    component.inject(this)
+       override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-     //   binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    setContentView(binding.root)
         if (savedInstanceState == null) {
             launchFirstScreen()
         }
-      /*  try {
-
-            viewModel = ViewModelProvider(this, viewModelFactory)[TestsViewModel::class.java]
-        
-        }catch (e:Exception){}*/
 
     }
 
     private fun launchFirstScreen() {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.main_container, WelcomeFragment.newInstance())
+            .replace(R.id.main_container, ChooseTestFragment.newInstance())
             .commit()
     }
 }

@@ -79,10 +79,10 @@ class GameFinishedFragment : Fragment() {
                 getString(R.string.score_answers),
                 countOfRightAnswers
             )
-            binding.tvRequiredAnswers.text = String.format(
+           /* binding.tvRequiredAnswers.text = String.format(
                 getString(R.string.required_score),
                 gameSettings.minCountOfRightAnswers
-            )
+            )*/
             binding.tvRequiredPercentage.text = String.format(
                 getString(R.string.required_percentage),
                 gameSettings.minPercentOfRightAnswers
