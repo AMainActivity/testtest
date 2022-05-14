@@ -2,6 +2,13 @@
     <string name="app_name">ot test</string>
     <string name="question_mark">\?</string>
     <string name="welcome_title">тест по охране труда</string>
+
+    <string-array name="menu_main_activity">
+        <item>Помощь</item>
+        <item>О приложении</item>
+        <item>Поделиться</item>
+    </string-array>
+
     <string name="game_rules">
         Правила игры: выберите правильный ответ
     </string>

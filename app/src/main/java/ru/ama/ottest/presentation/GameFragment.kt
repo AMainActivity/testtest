@@ -200,7 +200,7 @@ class GameFragment : Fragment() {
         fun newInstance(testId:TestInfo): GameFragment {
             return GameFragment().apply {
                 arguments = Bundle().apply {
-                    putParcelable(ARG_TEST_INFO, testInfo)
+                    putParcelable(ARG_TEST_INFO, testId)
                 }
             }
         }
