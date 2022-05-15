@@ -45,10 +45,14 @@ val sdsd=d2.await()
             testQuestion = sdsd
 
         }*/
-        viewModelScope.launch(Dispatchers.IO) {
+        val d=viewModelScope.async(Dispatchers.IO) {
             // dfd.join()
-            testQuestion = getQuestionsListUseCase(1, testInfo.countOfQuestions)
-            Log.e("getTestInfoUseCase", testInfo.toString())
+            getQuestionsListUseCase(testInfo.testId, testInfo.countOfQuestions)
+
+        }
+        viewModelScope.launch {
+            testQuestion = d.await()
+                Log.e("getTestInfoUseCase", testInfo.toString())
             Log.e("getQuestionsListUseCase", testQuestion[0].toString())
             _state.postValue(ReadyStart)
         }

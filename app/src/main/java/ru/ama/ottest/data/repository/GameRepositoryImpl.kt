@@ -30,7 +30,9 @@ class GameRepositoryImpl @Inject constructor(
 
     override fun getQuestionsInfoList(testId: Int,limit:Int): List<TestQuestion>{
         var rl:MutableList<TestQuestion> = mutableListOf<TestQuestion>()
-        for (l in testQuestionsDao.getQuestionListByTestId(testId,limit))
+        val list=testQuestionsDao.getQuestionListByTestId(testId,limit)
+        Log.e("getQuestionsrl1","${testId} ${limit} ${list.toString()}")
+        for (l in list)
         {
             rl.add(mapper.mapDbModelToEntity(l))
         }

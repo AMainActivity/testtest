@@ -15,7 +15,7 @@ interface TestQuestionsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertQuestionList(priceList: List<TestQuestionsDbModel>):List<Long>
 
-    @Query("SELECT * FROM test_questions where ownerTestId=:testId and number in (select number from test_questions order by random() limit :limit) ORDER BY number asc")
+    @Query("SELECT * FROM test_questions where ownerTestId=:testId and number in (select number from test_questions  where ownerTestId=:testId order by random() limit :limit) ORDER BY number asc")
     fun getQuestionListByTestId(testId:Int,limit:Int): List<TestQuestionsDbModel>
 }
 
