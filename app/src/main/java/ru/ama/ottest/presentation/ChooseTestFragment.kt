@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import ru.ama.ottest.R
@@ -41,7 +42,8 @@ class ChooseTestFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-      
+
+        (requireActivity() as AppCompatActivity).supportActionBar?.title ="Список тестов"
         /*viewModel = ViewModelProvider(this, viewModelFactory)[TestsViewModel::class.java]
             binding.buttonLevelTest.setOnClickListener {
                 launchGameFragment()

@@ -9,9 +9,12 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.ActionBar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.squareup.picasso.Picasso
 import ru.ama.ottest.R
 import ru.ama.ottest.databinding.FragmentGameBinding
 import ru.ama.ottest.domain.entity.TestInfo
@@ -35,6 +38,11 @@ class GameFragment : Fragment() {
     //private lateinit var level: Level
    // private var optionsTextViews = mutableListOf<TextView>()
 
+private fun setActionBarSubTitle(txt:String)
+{
+    (requireActivity() as AppCompatActivity).supportActionBar?.subtitle =txt
+}
+
  override fun onAttach(context: Context) {
         component.inject(this)
 
@@ -57,7 +65,8 @@ class GameFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-      
+        (requireActivity() as AppCompatActivity).supportActionBar?.title =testInfo.title
+
 	  /*
 	   val adapter = QuestionsAdapter(this)
         adapter.onQuestionClickListener = object : QuestionsAdapter.OnQuestionClickListener {
@@ -113,7 +122,8 @@ class GameFragment : Fragment() {
                     viewModel.startGame()
                     //binding.progressBar.max=viewModel.testInfo.countOfQuestions
                 }
-                is CurrentNoOfQuestion -> {
+                is CurrentNoOfQuestion -> {					
+      setActionBarSubTitle("${it.value+1}/${viewModel.testInfo.countOfQuestions} ")
                      Toast.makeText(requireContext(), "${it.value+1}/${viewModel.testInfo.countOfQuestions} ",Toast.LENGTH_SHORT).show() 
                 }
                 is MinPercentOfRightAnswers -> {
@@ -150,7 +160,9 @@ class GameFragment : Fragment() {
 */
         viewModel.question.observe(viewLifecycleOwner) {
             with(binding) {
-                tvQuestion.text = "${it.number} ${it.question}"
+            val s=it.imageUrl
+                it.imageUrl?.let{ if (s?.length!!>0) Picasso.get().load(s).into(ivQuestion)}
+                tvQuestion.text = "${it.number}. ${it.question}"
 				val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1,
 				it.answers )
 				lvAnswers.adapter = adapter

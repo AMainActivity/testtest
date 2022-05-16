@@ -14,8 +14,8 @@ import com.google.gson.annotations.SerializedName
   ]
 )
 data class TestQuestionsDbModel(
-  @PrimaryKey
   var number: Int,
+  @PrimaryKey
   var question: String,
   var imageUrl : String? = null,
   var answers: List<String>,
