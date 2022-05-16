@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
@@ -39,6 +40,8 @@ class GameFinishedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (requireActivity() as AppCompatActivity).supportActionBar?.title ="Разбор ответов"
+		(requireActivity() as AppCompatActivity).supportActionBar?.subtitle =null
         activity?.onBackPressedDispatcher?.addCallback(
             viewLifecycleOwner,
             onBackPressedCallback
@@ -50,7 +53,7 @@ class GameFinishedFragment : Fragment() {
 			Log.e("resultOfTest",resultOfTest.toString())
             var html=""
               resultOfTest.forEach{
-                  html="$html  <br><br><br>  <b>${it.number.toString()}. ${it.question}</b><br>"
+                  html="$html  <br><br>${it.number.toString()}. ${it.question}</b><br>"
                   var ans=""
                   for( (index, element) in it.answers.withIndex()) {
                       ans = ans +"<br>"+ when (index) {

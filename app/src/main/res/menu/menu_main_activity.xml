@@ -4,9 +4,19 @@
     tools:context=".MainActivity">
 
     <item
-        android:id="@+id/menu_ma"
+        android:id="@+id/menu_help"
         android:icon="@drawable/ic_brain"
-        android:title="Меню"
-        app:showAsAction="always" />
+        android:title="Помощь"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_about"
+        android:icon="@drawable/ic_brain"
+        android:title="О приложении"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_share"
+        android:icon="@drawable/ic_brain"
+        android:title="Поделиться"
+        app:showAsAction="ifRoom" />
     
 </menu>

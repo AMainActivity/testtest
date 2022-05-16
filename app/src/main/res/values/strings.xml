@@ -9,6 +9,8 @@
         <item>Поделиться</item>
     </string-array>
 
+    <string name="test_info">Количество вопросов: %s \nВремя на тест: %s мин. \nПроцент для успеха: %s</string>
+	
     <string name="game_rules">
         Правила игры: выберите правильный ответ
     </string>

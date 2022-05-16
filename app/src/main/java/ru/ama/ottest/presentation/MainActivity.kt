@@ -42,9 +42,19 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
         return when (item.itemId) {
-               R.id.menu_ma -> {
-                   showPopupText(findViewById(R.id.menu_ma))
-                   true}
+               R.id.menu_help -> {
+                   //showPopupText(findViewById(R.id.menu_ma))
+				   Toast.makeText(this,  "menu_help", Toast.LENGTH_SHORT).show()
+                   true
+				   }
+               R.id.menu_about -> {
+				   Toast.makeText(this,  "menu_about", Toast.LENGTH_SHORT).show()
+                   true
+				   }
+               R.id.menu_share -> {
+				   Toast.makeText(this,  "menu_share", Toast.LENGTH_SHORT).show()
+                   true
+				   }
             else -> super.onOptionsItemSelected(item)
         }
     }

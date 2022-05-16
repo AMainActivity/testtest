@@ -105,6 +105,10 @@ val sdsd=d2.await()
     val question: LiveData<TestQuestion>
         get() = _question
 
+    private val _rightAnswerLD = MutableLiveData<Boolean>()
+    val rightAnswerLD: LiveData<Boolean>
+        get() = _rightAnswerLD
+
     private val _gameResult = MutableLiveData<GameResult>()
     val gameResult: LiveData<GameResult>
         get() = _gameResult
@@ -112,6 +116,9 @@ val sdsd=d2.await()
     private val _percentOfRightAnswers = MutableLiveData<Int>()
     val percentOfRightAnswers: LiveData<Int>
         get() = _percentOfRightAnswers
+    private val _percentOfRightAnswersStr = MutableLiveData<String>()
+    val percentOfRightAnswersStr: LiveData<String>
+        get() = _percentOfRightAnswersStr
 
     val enoughPercentage: LiveData<Boolean> = Transformations.map(percentOfRightAnswers) {
         it >= gameSettings.minPercentOfRightAnswers
@@ -147,12 +154,13 @@ val sdsd=d2.await()
     private fun setupGameSettings() {
         //gameSettings = getGameSettingsUseCase()
         //testInfo=getTestInfoUseCase()
-        _state.value = MinPercentOfRightAnswers(gameSettings.minPercentOfRightAnswers)
+       // _state.value = MinPercentOfRightAnswers(gameSettings.minPercentOfRightAnswers)
     }
 
     private fun checkAnswer(answer: Int) {
         val rightAnswer = question.value
 //        val rightAnswer2 = state.value as Question2
+        _rightAnswerLD.value=answer == rightAnswer!!.correct[0]
         if (answer == rightAnswer!!.correct[0]) {        /////answer.startsWith("*")  верный ответ начинается на *
             countOfRightAnswers++
         } else {
@@ -241,7 +249,8 @@ val sdsd=d2.await()
         } else {
             0
         }
-        _percentOfRightAnswers.value = percentOfRightAnswers
+        _percentOfRightAnswers.value =percentOfRightAnswers
+        _percentOfRightAnswersStr.value = "$percentOfRightAnswers/${testInfo.minPercentOfRightAnswers}"
         return percentOfRightAnswers
     }
 
