@@ -7,12 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import ru.ama.ottest.R
 import ru.ama.ottest.databinding.FragmentGameFinishedBinding
 import ru.ama.ottest.domain.entity.GameResult
+import ru.ama.ottest.presentation.adapters.ResultAdapter
 
 class GameFinishedFragment : Fragment() {
 
@@ -51,35 +53,32 @@ class GameFinishedFragment : Fragment() {
         }
         with(gameResult) {
             Log.e("resultOfTest", resultOfTest.toString())
-            var html = ""
-            resultOfTest.forEach {
-                html = "$html  <br><br><b>${it.number.toString()}. ${it.question}</b>"
-                var ans = ""
-                for ((index, element) in it.answers.withIndex()) {
-                    val ss=(if (index==0) "" else "<br>")
-                    ans = ans+ss+ when (index) {
-                        it.indexOfUserAnswer ->
-                            "<font color=red>- ${element}</font>"
-                        it.indexOfCorrect ->
-                            "<font color=green>- ${element}</font>"
-                        else ->
-                            "<font color=gray>- ${element}</font>"
-                    }
-                    //println("$index: $element")
-                }
-                html = "$html <br> $ans"
-                //  "<font color=red>${it.answer}</font> <br><br><font color=green>${it.correct}</font>"
-                binding.tvResQuestions.text =
-                    HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_LEGACY)
-
+       
+			
+			//********** tvResultQuestion tvResultAnswers
+            val adapter = ResultAdapter(requireContext())
+        /*adapter.onResultClickListener = object : ResultAdapter.onResultClickListener {
+            override fun onResultClick(resultOfTest: ResultOfTest) {
+                Log.e("tInfo",resultOfTest.toString())
             }
+        }*/
+        binding.rvResultList.adapter = adapter
+       // binding.rvResultList.itemAnimator = null
+          adapter.submitList(resultOfTest)        
+            
+			
+		
+			
+			//**********
 
             val emojiResId = if (winner) {
-                R.drawable.ic_smile
+                binding.tvZacet.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.result_zacet))
+                "Тест сдан"
             } else {
-                R.drawable.ic_sad
+                binding.tvZacet.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.result_nezacet))
+                "Тест не сдан"
             }
-            binding.emojiResult.setImageResource(emojiResId)
+            binding.tvZacet.text=emojiResId
             binding.tvScoreAnswers.text = String.format(
                 getString(R.string.score_answers),
                 countOfRightAnswers,
