@@ -15,10 +15,13 @@ import com.google.gson.annotations.SerializedName
 )
 data class TestQuestionsDbModel(
   var number: Int,
-  @PrimaryKey
+  //@PrimaryKey
   var question: String,
   var imageUrl : String? = null,
   var answers: List<String>,
   var correct: List<Int>,
   var ownerTestId: Int
-)
+){
+    @PrimaryKey(autoGenerate = true)
+    var _id: Long = 0
+}

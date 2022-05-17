@@ -40,8 +40,8 @@ class GameFinishedFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (requireActivity() as AppCompatActivity).supportActionBar?.title ="Разбор ответов"
-		(requireActivity() as AppCompatActivity).supportActionBar?.subtitle =null
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Разбор ответов"
+        (requireActivity() as AppCompatActivity).supportActionBar?.subtitle = null
         activity?.onBackPressedDispatcher?.addCallback(
             viewLifecycleOwner,
             onBackPressedCallback
@@ -50,27 +50,29 @@ class GameFinishedFragment : Fragment() {
             goToStartGame()
         }
         with(gameResult) {
-			Log.e("resultOfTest",resultOfTest.toString())
-            var html=""
-              resultOfTest.forEach{
-                  html="$html  <br><br>${it.number.toString()}. ${it.question}</b><br>"
-                  var ans=""
-                  for( (index, element) in it.answers.withIndex()) {
-                      ans = ans +"<br>"+ when (index) {
-                      it.indexOfUserAnswer ->
-                       "<font color=red>- ${element}</font>"
-                      it.indexOfCorrect->
-                       "<font color=green>- ${element}</font>"
-                      else ->
-                       "<font color=gray>- ${element}</font>"
-                  }
-                  //println("$index: $element")
-                  }
-                  html="$html <br> $ans"
+            Log.e("resultOfTest", resultOfTest.toString())
+            var html = ""
+            resultOfTest.forEach {
+                html = "$html  <br><br><b>${it.number.toString()}. ${it.question}</b>"
+                var ans = ""
+                for ((index, element) in it.answers.withIndex()) {
+                    val ss=(if (index==0) "" else "<br>")
+                    ans = ans+ss+ when (index) {
+                        it.indexOfUserAnswer ->
+                            "<font color=red>- ${element}</font>"
+                        it.indexOfCorrect ->
+                            "<font color=green>- ${element}</font>"
+                        else ->
+                            "<font color=gray>- ${element}</font>"
+                    }
+                    //println("$index: $element")
+                }
+                html = "$html <br> $ans"
                 //  "<font color=red>${it.answer}</font> <br><br><font color=green>${it.correct}</font>"
-                  binding.tvResQuestions.text=HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_LEGACY)
+                binding.tvResQuestions.text =
+                    HtmlCompat.fromHtml(html, HtmlCompat.FROM_HTML_MODE_LEGACY)
 
-              }
+            }
 
             val emojiResId = if (winner) {
                 R.drawable.ic_smile
@@ -80,12 +82,14 @@ class GameFinishedFragment : Fragment() {
             binding.emojiResult.setImageResource(emojiResId)
             binding.tvScoreAnswers.text = String.format(
                 getString(R.string.score_answers),
-                countOfRightAnswers
+                countOfRightAnswers,
+                countOfAnswers,
+                timeForTest
             )
-           /* binding.tvRequiredAnswers.text = String.format(
-                getString(R.string.required_score),
-                gameSettings.minCountOfRightAnswers
-            )*/
+            /* binding.tvRequiredAnswers.text = String.format(
+                 getString(R.string.required_score),
+                 gameSettings.minCountOfRightAnswers
+             )*/
             binding.tvRequiredPercentage.text = String.format(
                 getString(R.string.required_percentage),
                 gameSettings.minPercentOfRightAnswers

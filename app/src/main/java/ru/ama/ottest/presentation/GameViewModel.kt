@@ -18,33 +18,13 @@ class GameViewModel @Inject constructor(
 
     init {
         currentNoOfQuestion = 0
-        //  loadDataUseCase()
-        // getTInfo()
     }
     /* private val _readyStart = MutableLiveData<Unit>()
      val readyStart: LiveData<Unit>
          get() = _readyStart*/
 
     private fun getTInfo() {
-        /* val d1 = viewModelScope.async(Dispatchers.IO) {
-             getTestInfoUseCase(1)
-         }*/
-
-        /*val d2 = viewModelScope.async(Dispatchers.IO) {
-            //testInfo = d1.await()[0]
-            getQuestionsListUseCase(1, testInfo.countOfQuestions)
-
-        }
-        val dfd=viewModelScope.launch {
-
-            //val d1 = viewModelScope.async(Dispatchers.IO) {
-            //    getTestInfoUseCase(1)
-            //}
-val sdsd=d2.await()
-            Log.e("getQuestionssdsd", sdsd.toString())
-            testQuestion = sdsd
-
-        }*/
+     
         val d=viewModelScope.async(Dispatchers.IO) {
             // dfd.join()
             getQuestionsListUseCase(testInfo.testId, testInfo.countOfQuestions)
@@ -58,18 +38,11 @@ val sdsd=d2.await()
         }
     }
 
-    /* private val parentJob = SupervisorJob()
-     private val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-         Log.d("coroutineScope", "Exception caught: $throwable")
-     }
-     private val coroutineScope = CoroutineScope(Dispatchers.IO + parentJob + exceptionHandler)
- */
 
     val kolvoOfQuestions by lazy { testInfo.countOfQuestions }
 
-    lateinit var testInfo: TestInfo //= getTestInfoUseCase(1)
-    lateinit var testQuestion: List<TestQuestion>//= getQuestionsListUseCase(1)
-    /*private val repository = repository1//GameRepositoryImpl()*/
+    lateinit var testInfo: TestInfo 
+    lateinit var testQuestion: List<TestQuestion>
 
     fun setParams(tInfo: TestInfo) {
         testInfo = tInfo
@@ -82,36 +55,25 @@ val sdsd=d2.await()
             testInfo.testTimeInSeconds
         )
     }
-    // lateinit var testInfo: LiveData<List<TestInfo>>
 
     private val _state = MutableLiveData<State>()
     val state: LiveData<State>
         get() = _state
-
-    /* private var _currentNoOfQuestion = MutableLiveData<Int>()
-     val currentNoOfQuestion: LiveData<Int>
-         get() = _currentNoOfQuestion
- */
-    /*
-       private val _minPercentOfRightAnswers = MutableLiveData<Int>()
-       val minPercentOfRightAnswers: LiveData<Int>
-           get() = _minPercentOfRightAnswers
-
-       private val _leftFormattedTime = MutableLiveData<String>()
-       val leftFormattedTime: LiveData<String>
-           get() = _leftFormattedTime
-   */
+   
+  
     private val _question = MutableLiveData<TestQuestion>()
     val question: LiveData<TestQuestion>
         get() = _question
 
-    private val _rightAnswerLD = MutableLiveData<Boolean>()
+   /* private val _rightAnswerLD = MutableLiveData<Boolean>()
     val rightAnswerLD: LiveData<Boolean>
-        get() = _rightAnswerLD
+        get() = _rightAnswerLD*/
 
     private val _gameResult = MutableLiveData<GameResult>()
     val gameResult: LiveData<GameResult>
         get() = _gameResult
+		
+    private var millisAfterStart = 0L
 
     private val _percentOfRightAnswers = MutableLiveData<Int>()
     val percentOfRightAnswers: LiveData<Int>
@@ -130,11 +92,9 @@ val sdsd=d2.await()
     private var listResultOfTest: MutableList<ResultOfTest> = mutableListOf<ResultOfTest>()
 
     fun startGame() {
-        setupGameSettings()
         startTimer()
-        // shuffleListOfQuestionsUserCase()
         _state.value = CurrentNoOfQuestion(currentNoOfQuestion)
-        generateQuestion(currentNoOfQuestion/*_currentNoOfQuestion.value!!*/)
+        generateQuestion(currentNoOfQuestion)
     }
 
     fun chooseAnswer(answer: Int) {
@@ -145,23 +105,14 @@ val sdsd=d2.await()
         getPercentOfRightAnswers()
         currentNoOfQuestion++
         _state.value = CurrentNoOfQuestion(currentNoOfQuestion)
-//        _currentNoOfQuestion.value = _currentNoOfQuestion.value!! + 1
-        generateQuestion(currentNoOfQuestion/*_currentNoOfQuestion.value!!*/)
-        //_currentNoOfQuestion.value = _currentNoOfQuestion.value!! + 1
-        //generateQuestion(_currentNoOfQuestion.value!!)
+        generateQuestion(currentNoOfQuestion)
     }
 
-    private fun setupGameSettings() {
-        //gameSettings = getGameSettingsUseCase()
-        //testInfo=getTestInfoUseCase()
-       // _state.value = MinPercentOfRightAnswers(gameSettings.minPercentOfRightAnswers)
-    }
 
     private fun checkAnswer(answer: Int) {
         val rightAnswer = question.value
-//        val rightAnswer2 = state.value as Question2
-        _rightAnswerLD.value=answer == rightAnswer!!.correct[0]
-        if (answer == rightAnswer!!.correct[0]) {        /////answer.startsWith("*")  верный ответ начинается на *
+      //  _rightAnswerLD.value=answer == rightAnswer!!.correct[0]
+        if (answer == rightAnswer!!.correct[0]) {        
             countOfRightAnswers++
         } else {
             countOfWrongAnswers++
@@ -183,11 +134,13 @@ val sdsd=d2.await()
     }
 
     private fun startTimer() {
+		millisAfterStart=0L
         timer = object : CountDownTimer(
-            gameSettings.testTimeInSeconds * MILLIS_IN_SECONDS,
+            gameSettings.testTimeInSeconds * MILLIS_IN_SECONDS+MILLIS_IN_SECONDS,
             MILLIS_IN_SECONDS
         ) {
             override fun onTick(millisUntilFinished: Long) {
+				millisAfterStart=millisUntilFinished
                 _state.value = LeftFormattedTime(getFormattedLeftTime(millisUntilFinished))
             }
 
@@ -207,15 +160,7 @@ val sdsd=d2.await()
             val newAnswerList=randomElementsFromAnswersList(oldAnswerList,oldAnswerList.size)
             val newCorrectAnswerIndex=newAnswerList.indexOf(oldCorrectAnswerString)
             val newQuestion=testQuestion[questionNo].copy(answers=newAnswerList, correct = listOf(newCorrectAnswerIndex))
-            /*
-            val tempQuestion=testQuestion[questionNo].copy(answers=randomElementsFromAnswersList(ans,ans.size))
-             _question.value = tempQuestion
-              val list=listOf("один","два","три","четыре","пять")
-    val oldCorrect=listOf(2)
-    val oldCorrectAnswer=list[oldCorrect[0]]
-    val newList=randomElementsFromAnswersList(list,list.size)
-    val newCorect=newList.indexOf(oldCorrectAnswer)
-            */
+          
             _question.value = newQuestion
         } else
             finishGame()
@@ -224,16 +169,16 @@ val sdsd=d2.await()
     private fun finishGame() {
         _state.value = LeftFormattedTime(getFormattedLeftTime(0))
         _gameResult.value = getGameResult()
-        //shuffleListOfQuestionsUserCase()
     }
 
-    private fun getGameResult(): ru.ama.ottest.domain.entity.GameResult {
+    private fun getGameResult(): GameResult {
         val percentOfRightAnswers = getPercentOfRightAnswers()
         val enoughPercentage = percentOfRightAnswers >= gameSettings.minPercentOfRightAnswers
-        //val enoughRightAnswers = countOfRightAnswers >= gameSettings.minCountOfRightAnswers
-        val winner = enoughPercentage //&& enoughRightAnswers
+        val winner = enoughPercentage 
         val countOfQuestions = countOfRightAnswers + countOfWrongAnswers
-        return ru.ama.ottest.domain.entity.GameResult(
+        return GameResult(
+			getFormattedLeftTime(testInfo.testTimeInSeconds*MILLIS_IN_SECONDS+MILLIS_IN_SECONDS-millisAfterStart),
+			currentNoOfQuestion,
             winner,
             countOfRightAnswers,
             countOfQuestions,
@@ -255,10 +200,7 @@ val sdsd=d2.await()
     }
 
     private fun getFormattedLeftTime(millisUntilFinished: Long): String {
-        /*
-         val minutes = milliseconds / 1000 / 60
-    val seconds = milliseconds / 1000 % 60
-        */
+        
         val seconds = (millisUntilFinished / MILLIS_IN_SECONDS % SECONDS_IN_MINUTE).toInt()
         val minutes = millisUntilFinished / MILLIS_IN_SECONDS / SECONDS_IN_MINUTE
         return String.format("%02d:%02d", minutes, seconds)
@@ -267,7 +209,6 @@ val sdsd=d2.await()
     override fun onCleared() {
         super.onCleared()
         timer?.cancel()
-        // coroutineScope.cancel()
     }
 
     companion object {

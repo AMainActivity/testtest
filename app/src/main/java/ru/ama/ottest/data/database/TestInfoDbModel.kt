@@ -16,7 +16,10 @@ data class TestInfoDbModel(
   var minPercentOfRightAnswers: Int,
   var testTimeInSeconds: Int,
   var countOfQuestions: Int
-)
+){
+   // @PrimaryKey(autoGenerate = true)
+    //var _id: Long = 0
+}
 
 
 /*

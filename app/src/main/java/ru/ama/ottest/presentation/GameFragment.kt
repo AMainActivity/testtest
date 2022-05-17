@@ -31,12 +31,7 @@ class GameFragment : Fragment() {
 	@Inject
     lateinit var viewModelFactory: ViewModelFactory
     private lateinit var binding: FragmentGameBinding
-	/*  private val binding by lazy {
-        FragmentGameBinding.inflate(layoutInflater)
-    }*/
 
-    //private lateinit var level: Level
-   // private var optionsTextViews = mutableListOf<TextView>()
 
 private fun setActionBarSubTitle(txt:String)
 {
@@ -67,28 +62,10 @@ private fun setActionBarSubTitle(txt:String)
         super.onViewCreated(view, savedInstanceState)
         (requireActivity() as AppCompatActivity).supportActionBar?.title =testInfo.title
 
-	  /*
-	   val adapter = QuestionsAdapter(this)
-        adapter.onQuestionClickListener = object : QuestionsAdapter.OnQuestionClickListener {
-            override fun onQuestionClick(coinPriceInfo: TestQuestion) {
-             
-            }
-        }
-        binding.rvCoinPriceList.adapter = adapter
-        binding.rvCoinPriceList.itemAnimator = null
-        viewModel = ViewModelProvider(this, viewModelFactory)[CoinViewModel::class.java]
-        viewModel.coinInfoList.observe(this) {
-            adapter.submitList(it)
-        }
-       viewModel.testInfo?.value.let{ viewModel.testInfo?.observe(this){
-            Log.e("testInfo",it.toString())
-        }
-	  */
-	  
+  
 	  
         viewModel = ViewModelProvider(this, viewModelFactory)[GameViewModel::class.java]
-	  //  viewModel = ViewModelProvider(this)[GameViewModel::class.java]
-      
+
         setupClickListenersToOptions()
 		viewModel.setParams(testInfo)
         observeViewModel()
@@ -120,36 +97,15 @@ private fun setActionBarSubTitle(txt:String)
             when (it) {
                 is ReadyStart -> {
                     viewModel.startGame()
-                    //binding.progressBar.max=viewModel.testInfo.countOfQuestions
                 }
                 is CurrentNoOfQuestion -> {	
 if (it.value<viewModel.testInfo.countOfQuestions)
       setActionBarSubTitle("${it.value+1}/${viewModel.testInfo.countOfQuestions} ")
                      Toast.makeText(requireContext(), "${it.value+1}/${viewModel.testInfo.countOfQuestions} ",Toast.LENGTH_SHORT).show() 
                 }
-               /* is MinPercentOfRightAnswers -> {
-                    binding.progressBar.secondaryProgress =  it.value
-                }*/
-                /*is PercentOfRightAnswers -> {
-                         binding.progressBar.setProgress( it.value, true)
-                }*/
                 is LeftFormattedTime -> {
                       binding.tvTimer.text = it.value
                 }
-               /* is Question -> {
-                     with(binding) {
-                tvQuestion.text = "${it.value.number} ${it.value.question}"
-				val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1,
-				it.value.answers )
-				lvAnswers.adapter = adapter
-            } 
-                }
-                is GameResult -> {
-                     requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.main_container, GameFinishedFragment.newInstance(it.value))
-                .addToBackStack(null)
-                .commit()
-                }*/
             }
         }
 							
@@ -165,7 +121,7 @@ if (it.value<viewModel.testInfo.countOfQuestions)
               //  if (s?.length!!>0) Picasso.get().load(s).into(ivQuestion)
 						val isImage=s?.endsWith(".png")!! && s?.length!!>0
                  if (isImage)
-				 {Picasso.get().load(s).into(ivQuestion)	 
+				 {Picasso.get().load(s)/*.placeholder(R.drawable.ic_brain)*/.into(ivQuestion)
 					 ivQuestion.visibility=View.VISIBLE}
 				 else
 					 ivQuestion.visibility=View.GONE
@@ -175,12 +131,6 @@ if (it.value<viewModel.testInfo.countOfQuestions)
 				lvAnswers.adapter = adapter
             }
         }
-       /* viewModel.currentNoOfQuestion.observe(viewLifecycleOwner) {
-            Toast.makeText(requireContext(), "${it+1}/${viewModel.testInfo.countOfQuestions} ",Toast.LENGTH_SHORT).show()
-        }
-        viewModel.leftFormattedTime.observe(viewLifecycleOwner) {
-            binding.tvTimer.text = it
-        }*/
         viewModel.gameResult.observe(viewLifecycleOwner) {
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.main_container, GameFinishedFragment.newInstance(it))
@@ -189,15 +139,11 @@ if (it.value<viewModel.testInfo.countOfQuestions)
         }
         viewModel.percentOfRightAnswersStr.observe(viewLifecycleOwner) {
 				binding.tvPercentOfRight.text=it.toString()
-          //  binding.progressBar.setProgress(it, true)
         }
-        viewModel.rightAnswerLD.observe(viewLifecycleOwner) {
+        viewModel.enoughPercentage.observe(viewLifecycleOwner) {
             setupProgressColorByState(it)
         }
-		/*
-        viewModel.minPercentOfRightAnswers.observe(viewLifecycleOwner) {
-            binding.progressBar.secondaryProgress = it
-        }*/
+	
     }
 
    
@@ -209,7 +155,6 @@ if (it.value<viewModel.testInfo.countOfQuestions)
             android.R.color.holo_red_light
         }
         val color = ContextCompat.getColor(requireContext(), colorResId)
-        //binding.progressBar.progressTintList = ColorStateList.valueOf(color)
         binding.tvPercentOfRight.setBackgroundColor((color))
     }
 
