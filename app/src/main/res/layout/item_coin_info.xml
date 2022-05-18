@@ -5,11 +5,20 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="4dp">
-
-    <ListView
+    <TextView
+        android:id="@+id/tvMenuHelp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:textColor="#000"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        android:gravity="center"
+        tools:text="вопрос" />
+    <!--ListView
         android:id="@+id/rvMenuList"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/-->
 
 </androidx.cardview.widget.CardView>

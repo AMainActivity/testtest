@@ -101,7 +101,7 @@ private fun setActionBarSubTitle(txt:String)
                 is CurrentNoOfQuestion -> {	
 if (it.value<viewModel.testInfo.countOfQuestions)
       setActionBarSubTitle("${it.value+1}/${viewModel.testInfo.countOfQuestions} ")
-                     Toast.makeText(requireContext(), "${it.value+1}/${viewModel.testInfo.countOfQuestions} ",Toast.LENGTH_SHORT).show() 
+                   //  Toast.makeText(requireContext(), "${it.value+1}/${viewModel.testInfo.countOfQuestions} ",Toast.LENGTH_SHORT).show()
                 }
                 is LeftFormattedTime -> {
                       binding.tvTimer.text = it.value
@@ -125,7 +125,7 @@ if (it.value<viewModel.testInfo.countOfQuestions)
 					 ivQuestion.visibility=View.VISIBLE}
 				 else
 					 ivQuestion.visibility=View.GONE
-                tvQuestion.text = "${it.number}. ${it.question}"
+                tvQuestion.text = "${it.question}"
 				val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1,
 				it.answers )
 				lvAnswers.adapter = adapter

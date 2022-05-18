@@ -29,9 +29,9 @@ class QuestionsAdapter(
 
     override fun onBindViewHolder(holder: QuestionViewHolder, position: Int) {
         val test = getItem(position)
-        holder.binding.frgmntSotrButMap.setOnClickListener {
+        /*holder.binding.frgmntSotrButMap.setOnClickListener {
             Toast.makeText(holder.binding.frgmntSotrButMap.context,test.title,Toast.LENGTH_SHORT).show()
-        }
+        }*/
         with(holder.binding) {
             with(test) {
                 val testInfoTemplate = context.resources.getString(R.string.test_info)

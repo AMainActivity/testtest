@@ -24,7 +24,7 @@
     <string name="game_over">Game Over</string>
     <string name="score_answers">Ваш счет: %s\n всего ответов: %s\nвремя теста: %s</string>
     <string name="score_percentage">Процент правильных ответов: %s</string>
-    <string name="retry">Попробовать снова</string>
+    <string name="retry">Повторить?</string>
     <string name="right_answers">Правильных ответов %s из %s необходимых</string>
     <string name="required_percentage">Необходимый процент правильных ответов: %s</string>
     <string name="required_score">Необходимое количество правильных ответов: %s</string>

@@ -17,7 +17,7 @@
         android:orientation="vertical"
         android:layout_height="wrap_content">
 		
-   <com.google.android.material.floatingactionbutton.FloatingActionButton
+   <!--com.google.android.material.floatingactionbutton.FloatingActionButton
             app:srcCompat="@android:drawable/ic_menu_info_details"
             android:id="@+id/frgmnt_sotr_but_map"
             android:layout_width="wrap_content"
@@ -25,13 +25,14 @@
             android:layout_margin="3dp"
             app:fabSize="mini"
             android:layout_height="wrap_content"
-            />
+            /-->
 			
         <ImageView
             android:id="@+id/ivLogoTest"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-			android:visibility="gone"
+            android:adjustViewBounds="true"
+            android:visibility="gone"
             android:layout_margin="3dp"
             tools:src="@mipmap/ic_launcher" />
 

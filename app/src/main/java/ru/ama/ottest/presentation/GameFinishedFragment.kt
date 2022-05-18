@@ -62,6 +62,8 @@ class GameFinishedFragment : Fragment() {
                 Log.e("tInfo",resultOfTest.toString())
             }
         }*/
+            binding.rvResultList.setHasFixedSize(false)
+            binding.rvResultList.setNestedScrollingEnabled(false)
         binding.rvResultList.adapter = adapter
        // binding.rvResultList.itemAnimator = null
           adapter.submitList(resultOfTest)        
