@@ -5,16 +5,31 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="4dp">
+	 <ScrollView
+        android:layout_width="match_parent"
+    android:scrollbars="none"
+    android:layout_weight="1"
+    android:layout_marginBottom="1dp"
+        android:layout_height="wrap_content"
+    android:background="@android:color/transparent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+            android:gravity="center"
+            android:orientation="vertical" >
     <TextView
         android:id="@+id/tvMenuHelp"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:textColor="#000"
         android:textStyle="bold"
-        android:textSize="20dp"
         android:gravity="center"
         tools:text="вопрос" />
+		</LinearLayout>
+		 </ScrollView>
     <!--ListView
         android:id="@+id/rvMenuList"
         android:layout_width="wrap_content"

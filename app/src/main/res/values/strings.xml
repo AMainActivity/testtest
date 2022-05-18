@@ -29,4 +29,18 @@
     <string name="required_percentage">Необходимый процент правильных ответов: %s</string>
     <string name="required_score">Необходимое количество правильных ответов: %s</string>
     <string name="sdsd">разбор ответов</string>
+	
+	   <string name="ma_menu_about">
+  &lt;br>
+  Разработчик - Asylbaev Mikhail, &lt;a href=\'mailto:10ama@mail.ru\'> Обратная связь &lt;/a>
+				&lt;br>
+	Приложение \"Тесты\".
+ &lt;br>
+    </string>
+	 <string name="ma_menu_help">
+    \"&lt;font color=\'#03DAC5\'>&lt;b>  Список тестов &lt;/b> &lt;/font>\"  Выбрать тест, прости тест.&lt;br>
+    \"&lt;font color=\'#03DAC5\'>&lt;b>  Прохождение теста &lt;/b> &lt;/font>\"  Указать ответы на тест за отведенное время.&lt;br>
+   \"&lt;font color=\'#03DAC5\'>&lt;b>  Результаты теста &lt;/b> &lt;/font>\" - Показан результат прохождения теста с указанием неправильных ответов.
+
+	</string>
 </resources>

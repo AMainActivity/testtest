@@ -42,12 +42,16 @@ class QuestionsAdapter(
                     (testTimeInSeconds / 60).toString(),
                     minPercentOfRightAnswers.toString()
                 )
-				val isImage=(mainImageUrl?.endsWith(".png")!! && mainImageUrl?.length!!>0)
-                 if (isImage)
-				 {Picasso.get().load(mainImageUrl).into(ivLogoTest)			 
-					 ivLogoTest.visibility= View.VISIBLE}
-				 else
-					 ivLogoTest.visibility=View.GONE
+				//var isImage=false
+				mainImageUrl?.let{
+				 val isImage=(it.endsWith(".png") && it.length>0)
+                 if (isImage) Picasso.get().load(mainImageUrl).into(ivLogoTest)
+				 ivLogoTest.visibility = if (isImage) View.VISIBLE else View.GONE
+				}
+				//ivLogoTest.visibility=isImage?View.VISIBLE:View.GONE
+				 
+				 
+				 
                 root.setOnClickListener {
                     onQuestionClickListener?.onQuestionClick(this)
                 }
