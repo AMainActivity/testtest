@@ -6,21 +6,25 @@ import androidx.room.TypeConverters
 import ru.ama.ottest.data.network.model.TestQuestionsDto
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import ru.ama.ottest.data.database.TestInfoDbModel.Companion.tabTestInfo
 
-@Entity(tableName = "test_info")
+@Entity(tableName = tabTestInfo)
 data class TestInfoDbModel(
   @PrimaryKey
-  var testId: Int,
-  var title: String,
-  var mainImageUrl : String? = null,
-  var minPercentOfRightAnswers: Int,
-  var testTimeInSeconds: Int,
-  var countOfQuestions: Int
-){
-   // @PrimaryKey(autoGenerate = true)
-    //var _id: Long = 0
+  val testId: Int,
+  val title: String,
+  val mainImageUrl : String? = null,
+  val minPercentOfRightAnswers: Int,
+  val testTimeInSeconds: Int,
+  val countOfQuestions: Int
+)
+{
+	
+	
+	    companion object {
+        const val tabTestInfo = "test_info"
+		}
 }
-
 
 /*
 class TestAndQuestions {

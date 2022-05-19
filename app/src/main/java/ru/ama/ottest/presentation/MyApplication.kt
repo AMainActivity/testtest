@@ -6,8 +6,7 @@ import ru.ama.ottest.di.DaggerApplicationComponent
 import javax.inject.Inject
 
 class MyApplication : Application() {
- //@Inject
-   // lateinit var workerFactory: TestWorkerFactory
+
     val component by lazy {
         DaggerApplicationComponent.factory().create(this)
     }
@@ -17,9 +16,4 @@ class MyApplication : Application() {
         super.onCreate()
     }
 
-    /*override fun getWorkManagerConfiguration(): Configuration {
-        return Configuration.Builder()
-            .setWorkerFactory(workerFactory)
-            .build()
-    }*/
 }

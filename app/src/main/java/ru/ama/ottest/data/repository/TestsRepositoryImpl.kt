@@ -1,43 +1,43 @@
 package ru.ama.ottest.data.repository
 
-import android.R.attr.tag
 import android.app.Application
 import android.util.Log
-import androidx.lifecycle.Observer
-import androidx.work.ExistingWorkPolicy
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
-import com.google.common.util.concurrent.ListenableFuture
 import ru.ama.ottest.data.database.TestInfoDao
 import ru.ama.ottest.data.database.TestQuestionsDao
 import ru.ama.ottest.data.mapper.TestMapper
 import ru.ama.ottest.data.network.TestApiService
-import ru.ama.ottest.data.network.model.TestListDataDto
 import ru.ama.ottest.domain.entity.*
-import ru.ama.ottest.domain.repository.GameRepository
+import ru.ama.ottest.domain.repository.TestsRepository
 import javax.inject.Inject
 
 
-class GameRepositoryImpl @Inject constructor(
+class TestsRepositoryImpl @Inject constructor(
     private val mapper: TestMapper,
     private val testQuestionsDao: TestQuestionsDao,
     private val testInfoDao: TestInfoDao,
     private val apiService: TestApiService,
     private val application: Application
-) : GameRepository {
+) : TestsRepository {
 	
 
 
     override fun getQuestionsInfoList(testId: Int,limit:Int): List<TestQuestion>{
-        var rl:MutableList<TestQuestion> = mutableListOf<TestQuestion>()
+      ///  var rl:MutableList<TestQuestion> = mutableListOf<TestQuestion>()
         val list=testQuestionsDao.getQuestionListByTestId(testId,limit)
-        Log.e("getQuestionsrl1","${testId} ${limit} ${list.toString()}")
-        for (l in list)
-        {
-            rl.add(mapper.mapDbModelToEntity(l))
+     ///   Log.e("getQuestionsrl1","${testId} ${limit} ${list.toString()}")
+		val llist2=list.map {
+            mapper.mapDbModelToEntity(it)
         }
-        Log.e("getQuestionsrl","${testId} ${limit} ${rl.toString()}")
-        return rl
+
+     ///   for (l in list)
+     ///   {
+      ///      rl.add(mapper.mapDbModelToEntity(l))
+      ///  }
+      ///  Log.e("getQuestionsrl","${testId} ${limit} ${rl.toString()}")
+		
+		
+		
+        return llist2
 
     }
    /*  fun getQuestionsInfoList2(): LiveData<List<TestQuestion>> {
@@ -49,14 +49,17 @@ class GameRepositoryImpl @Inject constructor(
     }*/
 
     override fun getTestInfo(): List<TestInfo> {
-        Log.e("getTestInfo1",testInfoDao.toString())
+      /*  Log.e("getTestInfo1",testInfoDao.toString())
         Log.e("getTestInfo",testInfoDao.getTestInfo().toString())
        // if(testInfoDao.getTestInfo().value!=null)
         var rl:MutableList<TestInfo> = mutableListOf<TestInfo>()
         for (l in testInfoDao.getTestInfo())
         {
             rl.add(mapper.mapDataDbModelToEntity(l))
-        }
+        }*/
+		
+			val rl=(testInfoDao.getTestInfo()).map  {mapper.mapDataDbModelToEntity(it)}
+		
         return rl
        // return  mapper.mapDataDbModelToEntity(testInfoDao.getTestInfo(testId))
     }
@@ -78,9 +81,6 @@ class GameRepositoryImpl @Inject constructor(
                     {
                         val getJson = apiService.getTestById(testDto.testId.toString())
                         if (!getJson.error) {
-                            // val dbModelInfo = mapper.mapDataDtoToDbModel(getJsonList.TestListDataDto)
-                            // testInfoDao.insertTestInfo(dbModelInfo)
-                            // Log.e("insertTestInfo",dbModelInfo.toString())
                             val questionsDtoList = getJson.questions
                             val dbModelList = questionsDtoList.map {
                                 mapper.mapDtoToDbModel(
@@ -101,13 +101,7 @@ class GameRepositoryImpl @Inject constructor(
               } catch (e: Exception) {}
 			  return listOfItems
 		
-     /*   val workManager = WorkManager.getInstance(application)
-
-        workManager.enqueueUniqueWork(
-            TestRefreshDataWorker.NAME,
-            ExistingWorkPolicy.REPLACE,
-            TestRefreshDataWorker.makeRequest()
-        )*/
+ 
      
     }
 

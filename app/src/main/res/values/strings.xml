@@ -10,6 +10,20 @@
     </string-array>
 
     <string name="test_info">Количество вопросов: %s \nВремя на тест: %s мин. \nПроцент для успеха: %s</string>
+    <string name="questin_formatted">&lt;b>%s. %s&lt;/b></string>
+    <string name="questin_user_answer_id">&lt;font color=#c10000>- %s&lt;/font></string>
+    <string name="questin_user_correct_answer_id">&lt;font color=#009f00>- %s&lt;/font></string>
+    <string name="questin_user_another_id">&lt;font color=gray>- %s&lt;/font></string>
+    <string name="frgmnt_list_test_ab_title">Список тестов</string>
+    <string name="frgmnt_result_ab_title">Разбор ответов</string>
+    <string name="frgmnt_result_passed">Тест сдан</string>
+    <string name="frgmnt_result_missed">Тест не сдан</string>
+    <string name="frgmnt_menu_share_title">Поделиться</string>
+    <string name="frgmnt_menu_share_ne">не</string>
+    <string name="frgmnt_menu_share_success">успешно</string>
+    <string name="frgmnt_menu_share_mail">10ama@mail.ru</string>
+    <string name="frgmnt_menu_share_use">использовать</string>
+    <string name="frgmnt_menu_share_body">я %s прошел тест \"%s\" за %sминут, верно ответив на %s вопросов из %s (%s процентов верных ответов)</string>
 	
     <string name="game_rules">
         Правила игры: выберите правильный ответ

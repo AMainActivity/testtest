@@ -8,7 +8,7 @@ import ru.ama.ottest.domain.entity.*
 import ru.ama.ottest.domain.usecase.*
 import javax.inject.Inject
 
-class TestsViewModel @Inject constructor(
+class TestListViewModel @Inject constructor(
     private val getTestInfoUseCase: GetTestInfoUseCase
 ) : ViewModel() {
 

@@ -11,7 +11,6 @@ import javax.inject.Inject
 class TestMapper @Inject constructor() {
 
     fun mapDtoToDbModel(dto: TestQuestionsDto, test_id: String) = TestQuestionsDbModel(
-        //_id = dto._id!!,
         number = dto.number,
         question = dto.question,
         imageUrl  = if (dto.imageUrl?.length!!>0)  BASE_IMAGE_URL + dto.imageUrl else dto.imageUrl,
@@ -21,7 +20,6 @@ class TestMapper @Inject constructor() {
     )
 
     fun mapDbModelToEntity(dbModel: TestQuestionsDbModel) = TestQuestion(
-        //_id = dbModel._id,
         number = dbModel.number,
         question = dbModel.question,
         imageUrl  = dbModel.imageUrl,

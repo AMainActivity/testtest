@@ -5,15 +5,15 @@ import com.google.gson.annotations.SerializedName
 
 data class TestListDataDto(
   @Expose
-  @SerializedName("test_id") var testId: Int,
+  @SerializedName("test_id") val testId: Int,
   @Expose
-  @SerializedName("title") var title: String,
+  @SerializedName("title") val title: String,
   @Expose
-  @SerializedName("mainImageUrl" ) var mainImageUrl : String? = null,
+  @SerializedName("mainImageUrl" ) val mainImageUrl : String? = null,
   @Expose
-  @SerializedName("minPercentOfRightAnswers") var minPercentOfRightAnswers: Int,
+  @SerializedName("minPercentOfRightAnswers") val minPercentOfRightAnswers: Int,
   @Expose
-  @SerializedName("testTimeInSeconds") var testTimeInSeconds: Int,
+  @SerializedName("testTimeInSeconds") val testTimeInSeconds: Int,
   @Expose
-  @SerializedName("countOfQuestions") var countOfQuestions: Int
+  @SerializedName("countOfQuestions") val countOfQuestions: Int
 )

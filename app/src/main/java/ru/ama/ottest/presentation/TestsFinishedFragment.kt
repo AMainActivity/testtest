@@ -7,18 +7,17 @@ import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import ru.ama.ottest.R
-import ru.ama.ottest.databinding.FragmentGameFinishedBinding
-import ru.ama.ottest.domain.entity.GameResult
+import ru.ama.ottest.databinding.FragmentTestsFinishedBinding
+import ru.ama.ottest.domain.entity.TestsResult
 import ru.ama.ottest.presentation.adapters.ResultAdapter
 
-class GameFinishedFragment : Fragment() {
+class TestsFinishedFragment : Fragment() {
 
-    private lateinit var binding: FragmentGameFinishedBinding
-    private lateinit var gameResult: GameResult
+    private lateinit var binding: FragmentTestsFinishedBinding
+    private lateinit var testsResult: TestsResult
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             goToStartGame()
@@ -36,13 +35,13 @@ class GameFinishedFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentGameFinishedBinding.inflate(inflater, container, false)
+        binding = FragmentTestsFinishedBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (requireActivity() as AppCompatActivity).supportActionBar?.title = "Разбор ответов"
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = getString(R.string.frgmnt_result_ab_title) //"Разбор ответов"
         (requireActivity() as AppCompatActivity).supportActionBar?.subtitle = null
         activity?.onBackPressedDispatcher?.addCallback(
             viewLifecycleOwner,
@@ -51,34 +50,21 @@ class GameFinishedFragment : Fragment() {
         binding.buttonRetry.setOnClickListener {
             goToStartGame()
         }
-        with(gameResult) {
-            Log.e("resultOfTest", resultOfTest.toString())
-       
+        with(testsResult) {
+            Log.e("resultOfTest", answerOfTest.toString())
 			
-			//********** tvResultQuestion tvResultAnswers
             val adapter = ResultAdapter(requireContext())
-        /*adapter.onResultClickListener = object : ResultAdapter.onResultClickListener {
-            override fun onResultClick(resultOfTest: ResultOfTest) {
-                Log.e("tInfo",resultOfTest.toString())
-            }
-        }*/
             binding.rvResultList.setHasFixedSize(false)
             binding.rvResultList.isNestedScrollingEnabled = false
         binding.rvResultList.adapter = adapter
-       // binding.rvResultList.itemAnimator = null
-          adapter.submitList(resultOfTest)        
-            
-			
-		
-			
-			//**********
+          adapter.submitList(answerOfTest)
 
             val emojiResId = if (winner) {
                 binding.tvZacet.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.result_zacet))
-                "Тест сдан"
+                getString(R.string.frgmnt_result_passed)//"Тест сдан"
             } else {
                 binding.tvZacet.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.result_nezacet))
-                "Тест не сдан"
+                getString(R.string.frgmnt_result_missed)//"Тест не сдан"
             }
             binding.tvZacet.text=emojiResId
             binding.tvScoreAnswers.text = String.format(
@@ -88,20 +74,8 @@ class GameFinishedFragment : Fragment() {
 				countOfRightAnswers,
 				countOfQuestions,
 				percentageOfRightAnswers,
-                gameSettings.minPercentOfRightAnswers
+                testsSettings.minPercentOfRightAnswers
             )
-            /* binding.tvRequiredAnswers.text = String.format(
-                 getString(R.string.required_score),
-                 gameSettings.minCountOfRightAnswers
-             )*/
-           /* binding.tvRequiredPercentage.text = String.format(
-                getString(R.string.required_percentage),
-                gameSettings.minPercentOfRightAnswers
-            )
-            binding.tvScorePercentage.text = String.format(
-                getString(R.string.score_percentage),
-                percentageOfRightAnswers
-            )*/
         }
     }
 
@@ -110,14 +84,14 @@ class GameFinishedFragment : Fragment() {
         if (!args.containsKey(ARG_GAME_RESULT)) {
             throw RuntimeException("$this must contain argument $ARG_GAME_RESULT")
         }
-        args.getParcelable<GameResult>(ARG_GAME_RESULT)?.let {
-            gameResult = it
+        args.getParcelable<TestsResult>(ARG_GAME_RESULT)?.let {
+            testsResult = it
         }
     }
 
     private fun goToStartGame() {
         activity?.supportFragmentManager?.popBackStack(
-            GameFragment.NAME,
+            TestsFragment.NAME,
             FragmentManager.POP_BACK_STACK_INCLUSIVE
         )
     }
@@ -130,8 +104,17 @@ class GameFinishedFragment : Fragment() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_share -> {
-			val shareBody="я ${if (!gameResult.winner) "не " else "успешно " } прошел тест \"${gameResult.title}\" за ${gameResult.timeForTest}минут, верно ответив на ${gameResult.countOfRightAnswers} вопросов из ${gameResult.countOfQuestions} (${gameResult.percentageOfRightAnswers}% верных ответов)"
-				sharetext("Поделиться",shareBody,false)
+			val shareBody=
+			String.format(getString(R.string.frgmnt_menu_share_body),
+			if (!testsResult.winner) getString(R.string.frgmnt_menu_share_ne) else getString(R.string.frgmnt_menu_share_success) ,
+			testsResult.title,
+			testsResult.timeForTest,
+			testsResult.countOfRightAnswers,
+			testsResult.countOfQuestions,
+			testsResult.percentageOfRightAnswers
+			)
+		//	"я ${if (!gameResult.winner) "не " else "успешно " } прошел тест \"${gameResult.title}\" за ${gameResult.timeForTest}минут, верно ответив на ${gameResult.countOfRightAnswers} вопросов из ${gameResult.countOfQuestions} (${gameResult.percentageOfRightAnswers}% верных ответов)"
+				sharetext(getString(R.string.frgmnt_menu_share_title),shareBody,false)
                 return true
             }
 
@@ -152,11 +135,11 @@ private fun sharetext(
             if (isEmail) {
                 sharingIntent.putExtra(
                     Intent.EXTRA_EMAIL,
-                    arrayOf("10ama@mail.ru")
+                    arrayOf(getString(R.string.frgmnt_menu_share_mail))
                 )
-                sharingIntent.type = "message/rfc822"
+                sharingIntent.type = SHARE_MAIL_TYPE
             } else
-                sharingIntent.type = "text/plain"
+                sharingIntent.type = SHARE_TEXT_TYPE
 				sharingIntent.putExtra(
                 android.content.Intent.EXTRA_SUBJECT,
                 textZagol
@@ -167,7 +150,7 @@ private fun sharetext(
             )
             val d = Intent.createChooser(
                 sharingIntent,
-                "использовать"
+                getString(R.string.frgmnt_menu_share_use)//"использовать"
             )
             requireActivity().startActivity(d)
         }
@@ -175,11 +158,13 @@ private fun sharetext(
     companion object {
 
         private const val ARG_GAME_RESULT = "game_result"
+        private const val SHARE_MAIL_TYPE = "message/rfc822"
+        private const val SHARE_TEXT_TYPE = "text/plain"
 
-        fun newInstance(gameResult: GameResult): GameFinishedFragment {
-            return GameFinishedFragment().apply {
+        fun newInstance(testsResult: TestsResult): TestsFinishedFragment {
+            return TestsFinishedFragment().apply {
                 arguments = Bundle().apply {
-                    putParcelable(ARG_GAME_RESULT, gameResult)
+                    putParcelable(ARG_GAME_RESULT, testsResult)
                 }
             }
         }

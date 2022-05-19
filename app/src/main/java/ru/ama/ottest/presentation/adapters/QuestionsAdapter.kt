@@ -29,9 +29,6 @@ class QuestionsAdapter(
 
     override fun onBindViewHolder(holder: QuestionViewHolder, position: Int) {
         val test = getItem(position)
-        /*holder.binding.frgmntSotrButMap.setOnClickListener {
-            Toast.makeText(holder.binding.frgmntSotrButMap.context,test.title,Toast.LENGTH_SHORT).show()
-        }*/
         with(holder.binding) {
             with(test) {
                 val testInfoTemplate = context.resources.getString(R.string.test_info)
@@ -39,18 +36,14 @@ class QuestionsAdapter(
                 tvInfo.text=String.format(
                     testInfoTemplate,
                     countOfQuestions.toString(),
-                    (testTimeInSeconds / 60).toString(),
+                    (testTimeInSeconds / SECONDS_IN_MINUTE).toString(),
                     minPercentOfRightAnswers.toString()
                 )
-				//var isImage=false
 				mainImageUrl?.let{
-				 val isImage=(it.endsWith(".png") && it.length>0)
+				 val isImage=(it.endsWith(IMAGE_ENDS) && it.length>0)
                  if (isImage) Picasso.get().load(mainImageUrl).placeholder(R.drawable.preload).into(ivLogoTest)
 				 ivLogoTest.visibility = if (isImage) View.VISIBLE else View.GONE
-				}
-				//ivLogoTest.visibility=isImage?View.VISIBLE:View.GONE
-				 
-				 
+				} 				 
 				 
                 root.setOnClickListener {
                     onQuestionClickListener?.onQuestionClick(this)
@@ -58,7 +51,12 @@ class QuestionsAdapter(
             }
         }
     }
+companion object {
 
+        private const val IMAGE_ENDS = ".png"
+        private const val SECONDS_IN_MINUTE = 60
+    }
+	
     interface OnQuestionClickListener {
         fun onQuestionClick(testInfo: TestInfo)
     }

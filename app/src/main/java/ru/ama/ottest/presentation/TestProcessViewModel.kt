@@ -8,16 +8,16 @@ import ru.ama.ottest.domain.entity.*
 import ru.ama.ottest.domain.usecase.*
 import javax.inject.Inject
 
-class GameViewModel @Inject constructor(
+class TestProcessViewModel @Inject constructor(
     private val getQuestionsListUseCase: GetQuestionsListUseCase,
     private val loadDataUseCase: LoadDataUseCase,
     private val getTestInfoUseCase: GetTestInfoUseCase
 ) : ViewModel() {
 
-    private var currentNoOfQuestion: Int = -1
+    private var currentNoOfQuestion: Int = PARAMETER__MINUS_ODIN
 
     init {
-        currentNoOfQuestion = 0
+        currentNoOfQuestion = PARAMETER_ZERO
     }
     /* private val _readyStart = MutableLiveData<Unit>()
      val readyStart: LiveData<Unit>
@@ -33,13 +33,13 @@ class GameViewModel @Inject constructor(
         viewModelScope.launch {
             testQuestion = d.await()
                 Log.e("getTestInfoUseCase", testInfo.toString())
-            Log.e("getQuestionsListUseCase", testQuestion[0].toString())
+            Log.e("getQuestionsListUseCase", testQuestion[PARAMETER_ZERO].toString())
             _state.postValue(ReadyStart)
         }
     }
 
 
-    val kolvoOfQuestions by lazy { testInfo.countOfQuestions }
+    //val kolvoOfQuestions by lazy { testInfo.countOfQuestions }
 
     lateinit var testInfo: TestInfo 
     lateinit var testQuestion: List<TestQuestion>
@@ -49,8 +49,8 @@ class GameViewModel @Inject constructor(
         getTInfo()
     }
 
-    private val gameSettings: GameSettings by lazy {
-        GameSettings(
+    private val testsSettings: TestsSettings by lazy {
+        TestsSettings(
             testInfo.minPercentOfRightAnswers,
             testInfo.testTimeInSeconds
         )
@@ -73,7 +73,7 @@ class GameViewModel @Inject constructor(
     val gameResult: LiveData<GameResult>
         get() = _gameResult*/
 		
-    private var millisAfterStart = 0L
+    private var millisAfterStart = PARAMETER_ZERO_LONG
 
     private val _percentOfRightAnswers = MutableLiveData<Int>()
     val percentOfRightAnswers: LiveData<Int>
@@ -83,13 +83,13 @@ class GameViewModel @Inject constructor(
         get() = _percentOfRightAnswersStr
 
     val enoughPercentage: LiveData<Boolean> = Transformations.map(percentOfRightAnswers) {
-        it >= gameSettings.minPercentOfRightAnswers
+        it >= testsSettings.minPercentOfRightAnswers
     }
 
     private var timer: CountDownTimer? = null
-    private var countOfRightAnswers = 0
-    private var countOfWrongAnswers = 0
-    private var listResultOfTest: MutableList<ResultOfTest> = mutableListOf<ResultOfTest>()
+    private var countOfRightAnswers = PARAMETER_ZERO
+    private var countOfWrongAnswers = PARAMETER_ZERO
+    private var listAnswerOfTests: MutableList<AnswerOfTest> = mutableListOf<AnswerOfTest>()
 private lateinit var curQuestin:TestQuestion
     fun startGame() {
         startTimer()
@@ -112,19 +112,19 @@ private lateinit var curQuestin:TestQuestion
     private fun checkAnswer(answer: Int) {
         val rightAnswer = curQuestin//question.value
       //  _rightAnswerLD.value=answer == rightAnswer!!.correct[0]
-        if (answer == rightAnswer!!.correct[0]) {        
+        if (answer == rightAnswer!!.correct[PARAMETER_ZERO]) {        
             countOfRightAnswers++
         } else {
             countOfWrongAnswers++
-            val rOt = ResultOfTest(
+            val rOt = AnswerOfTest(
                 currentNoOfQuestion+1,
                 rightAnswer.question,
                 rightAnswer.imageUrl,
                 rightAnswer.answers,
                 answer,
-                rightAnswer.correct[0]
+                rightAnswer.correct[PARAMETER_ZERO]
             )
-            listResultOfTest.add(rOt)
+            listAnswerOfTests.add(rOt)
         }
     }
 
@@ -134,9 +134,9 @@ private lateinit var curQuestin:TestQuestion
     }
 
     private fun startTimer() {
-		millisAfterStart=0L
+		millisAfterStart=PARAMETER_ZERO_LONG
         timer = object : CountDownTimer(
-            gameSettings.testTimeInSeconds * MILLIS_IN_SECONDS+MILLIS_IN_SECONDS,
+            testsSettings.testTimeInSeconds * MILLIS_IN_SECONDS+MILLIS_IN_SECONDS,
             MILLIS_IN_SECONDS
         ) {
             override fun onTick(millisUntilFinished: Long) {
@@ -156,7 +156,7 @@ private lateinit var curQuestin:TestQuestion
         if (questionNo < testInfo.countOfQuestions) {
             val oldAnswerList=testQuestion[questionNo].answers
             val oldCorrectAnswers=testQuestion[questionNo].correct
-            val oldCorrectAnswerString=oldAnswerList[oldCorrectAnswers[0]]
+            val oldCorrectAnswerString=oldAnswerList[oldCorrectAnswers[PARAMETER_ZERO]]
             val newAnswerList=randomElementsFromAnswersList(oldAnswerList,oldAnswerList.size)
             val newCorrectAnswerIndex=newAnswerList.indexOf(oldCorrectAnswerString)
             val newQuestion=testQuestion[questionNo].copy(answers=newAnswerList, correct = listOf(newCorrectAnswerIndex))
@@ -168,33 +168,33 @@ private lateinit var curQuestin:TestQuestion
     }
 
     private fun finishGame() {
-        _state.value = LeftFormattedTime(getFormattedLeftTime(0))
+        _state.value = LeftFormattedTime(getFormattedLeftTime(PARAMETER_ZERO_LONG))
         _state.value = GameResultState(getGameResult())
     }
 
-    private fun getGameResult(): GameResult {
+    private fun getGameResult(): TestsResult {
         val percentOfRightAnswers = getPercentOfRightAnswers()
-        val enoughPercentage = percentOfRightAnswers >= gameSettings.minPercentOfRightAnswers
+        val enoughPercentage = percentOfRightAnswers >= testsSettings.minPercentOfRightAnswers
         val winner = enoughPercentage 
         val countOfQuestions = countOfRightAnswers + countOfWrongAnswers
-        return GameResult(
+        return TestsResult(
 		testInfo.title,
 			getFormattedLeftTime(testInfo.testTimeInSeconds*MILLIS_IN_SECONDS+MILLIS_IN_SECONDS-millisAfterStart),
 			currentNoOfQuestion,
             winner,
             countOfRightAnswers,
             countOfQuestions,
-            gameSettings,
-            listResultOfTest
+            testsSettings,
+            listAnswerOfTests
         )
     }
 
     private fun getPercentOfRightAnswers(): Int {
         val countOfQuestions = countOfRightAnswers + countOfWrongAnswers
-        val percentOfRightAnswers = if (countOfQuestions > 0) {
-            ((countOfRightAnswers / countOfQuestions.toDouble()) * 100).toInt()
+        val percentOfRightAnswers = if (countOfQuestions > PARAMETER_ZERO) {
+            ((countOfRightAnswers / countOfQuestions.toDouble()) * PARAMETER_STO).toInt()
         } else {
-            0
+            PARAMETER_ZERO
         }
         _percentOfRightAnswers.value =percentOfRightAnswers
         _percentOfRightAnswersStr.value = "$percentOfRightAnswers/${testInfo.minPercentOfRightAnswers}"
@@ -205,7 +205,7 @@ private lateinit var curQuestin:TestQuestion
         
         val seconds = (millisUntilFinished / MILLIS_IN_SECONDS % SECONDS_IN_MINUTE).toInt()
         val minutes = millisUntilFinished / MILLIS_IN_SECONDS / SECONDS_IN_MINUTE
-        return String.format("%02d:%02d", minutes, seconds)
+        return String.format(FORMATTED_STRING_MINUTE_SECOND, minutes, seconds)
     }
 
     override fun onCleared() {
@@ -217,5 +217,10 @@ private lateinit var curQuestin:TestQuestion
 
         private const val MILLIS_IN_SECONDS = 1000L
         private const val SECONDS_IN_MINUTE = 60
+        private const val PARAMETER_ZERO = 0
+        private const val PARAMETER_ZERO_LONG = 0L
+        private const val PARAMETER__MINUS_ODIN = -1
+        private const val PARAMETER_STO = 100
+        private const val FORMATTED_STRING_MINUTE_SECOND = "%02d:%02d"
     }
 }

@@ -5,13 +5,13 @@ import com.google.gson.annotations.SerializedName
 
 data class TestQuestionsDto(
   @Expose
-  @SerializedName("No.") var number: Int,
+  @SerializedName("No.") val number: Int,
   @Expose
-  @SerializedName("question") var question: String,
+  @SerializedName("question") val question: String,
   @Expose
-  @SerializedName("imageUrl" ) var imageUrl : String? = null,
+  @SerializedName("imageUrl" ) val imageUrl : String? = null,
   @Expose
-  @SerializedName("answers") var answers: List<String>,
+  @SerializedName("answers") val answers: List<String>,
   @Expose
-  @SerializedName("correct") var correct: List<Int>
+  @SerializedName("correct") val correct: List<Int>
 )

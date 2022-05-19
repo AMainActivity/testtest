@@ -1,36 +1,31 @@
 package ru.ama.ottest.presentation
 
 import android.content.Context
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.TextView
-import android.widget.Toast
-import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.squareup.picasso.Picasso
 import ru.ama.ottest.R
-import ru.ama.ottest.databinding.FragmentGameBinding
+import ru.ama.ottest.databinding.FragmentTestsBinding
 import ru.ama.ottest.domain.entity.TestInfo
 import javax.inject.Inject
 
-class GameFragment : Fragment() {
+class TestsFragment : Fragment() {
 
-   // @Inject
    private lateinit var testInfo: TestInfo
-    private lateinit var viewModel: GameViewModel
+    private lateinit var viewModel: TestProcessViewModel
 	  private val component by lazy {
         (requireActivity().application as MyApplication).component
     }
 	@Inject
     lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var binding: FragmentGameBinding
+    private lateinit var binding: FragmentTestsBinding
 
 
 private fun setActionBarSubTitle(txt:String)
@@ -54,7 +49,7 @@ private fun setActionBarSubTitle(txt:String)
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentGameBinding.inflate(inflater, container, false)
+        binding = FragmentTestsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -64,14 +59,12 @@ private fun setActionBarSubTitle(txt:String)
 
   
 	  
-        viewModel = ViewModelProvider(this, viewModelFactory)[GameViewModel::class.java]
+        viewModel = ViewModelProvider(this, viewModelFactory)[TestProcessViewModel::class.java]
 
         setupClickListenersToOptions()
 		viewModel.setParams(testInfo)
         observeViewModel()
-        /*if (savedInstanceState == null) {
-            viewModel.startGame()
-        }*/
+     
     }
 
    private fun parseArgs() {
@@ -87,7 +80,6 @@ private fun setActionBarSubTitle(txt:String)
 
     private fun setupClickListenersToOptions() {
 		binding.lvAnswers.setOnItemClickListener { parent, view, position, id ->
-   // val element = adapter.getItemAtPosition(position)
      viewModel.chooseAnswer(position)
 }      
     }
@@ -101,7 +93,6 @@ private fun setActionBarSubTitle(txt:String)
                 is QuestionState -> {
                     with(binding) {
                         val s=it.value.imageUrl
-                        //  if (s?.length!!>0) Picasso.get().load(s).into(ivQuestion)
                         val isImage=s?.endsWith(".png")!! && s?.length!!>0
                         if (isImage)
                         {Picasso.get().load(s).placeholder(R.drawable.preload).into(ivQuestion)
@@ -116,14 +107,13 @@ private fun setActionBarSubTitle(txt:String)
                 }
                 is GameResultState -> {
                     requireActivity().supportFragmentManager.beginTransaction()
-                        .replace(R.id.main_container, GameFinishedFragment.newInstance(it.value))
+                        .replace(R.id.main_container, TestsFinishedFragment.newInstance(it.value))
                         .addToBackStack(null)
                         .commit()
                 }
                 is CurrentNoOfQuestion -> {	
 if (it.value<viewModel.testInfo.countOfQuestions)
       setActionBarSubTitle("${it.value+1}/${viewModel.testInfo.countOfQuestions} ")
-                   //  Toast.makeText(requireContext(), "${it.value+1}/${viewModel.testInfo.countOfQuestions} ",Toast.LENGTH_SHORT).show()
                 }
                 is LeftFormattedTime -> {
                       binding.tvTimer.text = it.value
@@ -185,8 +175,8 @@ if (it.value<viewModel.testInfo.countOfQuestions)
         private const val ARG_TEST_INFO = "testInfo"
         const val NAME = "GameFragment"
 
-        fun newInstance(testId:TestInfo): GameFragment {
-            return GameFragment().apply {
+        fun newInstance(testId:TestInfo): TestsFragment {
+            return TestsFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(ARG_TEST_INFO, testId)
                 }

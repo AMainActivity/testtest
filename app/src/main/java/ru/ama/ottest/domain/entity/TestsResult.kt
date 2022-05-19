@@ -4,20 +4,25 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class GameResult(
+data class TestsResult(
     val title: String,
     val timeForTest: String,
     val countOfAnswers: Int,
     val winner: Boolean,
     val countOfRightAnswers: Int,
     val countOfQuestions: Int,
-    val gameSettings: GameSettings,
-	val resultOfTest: List<ResultOfTest>
+    val testsSettings: TestsSettings,
+    val answerOfTest: List<AnswerOfTest>
 ) : Parcelable {
+	
+companion object {
 
+        private const val STO_PROCENTOV = 100
+    }
+	
     val percentageOfRightAnswers: Int
         get() = if (countOfQuestions > 0) {
-            ((countOfRightAnswers / countOfQuestions.toDouble()) * 100).toInt()
+            ((countOfRightAnswers / countOfQuestions.toDouble()) * STO_PROCENTOV).toInt()
         } else {
             0
         }

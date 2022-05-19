@@ -3,7 +3,7 @@ package ru.ama.ottest.domain.repository
 import androidx.lifecycle.LiveData
 import ru.ama.ottest.domain.entity.*
 
-interface GameRepository {
+interface TestsRepository {
 	
     fun getQuestionsInfoList(testId:Int,limit:Int): List<TestQuestion>
 
