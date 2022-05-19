@@ -61,17 +61,17 @@ class GameViewModel @Inject constructor(
         get() = _state
    
   
-    private val _question = MutableLiveData<TestQuestion>()
+    /*private val _question = MutableLiveData<TestQuestion>()
     val question: LiveData<TestQuestion>
-        get() = _question
+        get() = _question*/
 
    /* private val _rightAnswerLD = MutableLiveData<Boolean>()
     val rightAnswerLD: LiveData<Boolean>
         get() = _rightAnswerLD*/
 
-    private val _gameResult = MutableLiveData<GameResult>()
+    /*private val _gameResult = MutableLiveData<GameResult>()
     val gameResult: LiveData<GameResult>
-        get() = _gameResult
+        get() = _gameResult*/
 		
     private var millisAfterStart = 0L
 
@@ -90,7 +90,7 @@ class GameViewModel @Inject constructor(
     private var countOfRightAnswers = 0
     private var countOfWrongAnswers = 0
     private var listResultOfTest: MutableList<ResultOfTest> = mutableListOf<ResultOfTest>()
-
+private lateinit var curQuestin:TestQuestion
     fun startGame() {
         startTimer()
         _state.value = CurrentNoOfQuestion(currentNoOfQuestion)
@@ -98,9 +98,9 @@ class GameViewModel @Inject constructor(
     }
 
     fun chooseAnswer(answer: Int) {
-        if (gameResult.value != null) {
+       /* if (gameResult.value != null) {
             return
-        }
+        }*/
         checkAnswer(answer)
         getPercentOfRightAnswers()
         currentNoOfQuestion++
@@ -110,7 +110,7 @@ class GameViewModel @Inject constructor(
 
 
     private fun checkAnswer(answer: Int) {
-        val rightAnswer = question.value
+        val rightAnswer = curQuestin//question.value
       //  _rightAnswerLD.value=answer == rightAnswer!!.correct[0]
         if (answer == rightAnswer!!.correct[0]) {        
             countOfRightAnswers++
@@ -160,15 +160,16 @@ class GameViewModel @Inject constructor(
             val newAnswerList=randomElementsFromAnswersList(oldAnswerList,oldAnswerList.size)
             val newCorrectAnswerIndex=newAnswerList.indexOf(oldCorrectAnswerString)
             val newQuestion=testQuestion[questionNo].copy(answers=newAnswerList, correct = listOf(newCorrectAnswerIndex))
-          
-            _question.value = newQuestion
+          curQuestin=newQuestion
+            _state.value=QuestionState(newQuestion)
+            //_question.value = newQuestion
         } else
             finishGame()
     }
 
     private fun finishGame() {
         _state.value = LeftFormattedTime(getFormattedLeftTime(0))
-        _gameResult.value = getGameResult()
+        _state.value = GameResultState(getGameResult())
     }
 
     private fun getGameResult(): GameResult {
@@ -177,6 +178,7 @@ class GameViewModel @Inject constructor(
         val winner = enoughPercentage 
         val countOfQuestions = countOfRightAnswers + countOfWrongAnswers
         return GameResult(
+		testInfo.title,
 			getFormattedLeftTime(testInfo.testTimeInSeconds*MILLIS_IN_SECONDS+MILLIS_IN_SECONDS-millisAfterStart),
 			currentNoOfQuestion,
             winner,

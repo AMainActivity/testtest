@@ -45,7 +45,7 @@ class QuestionsAdapter(
 				//var isImage=false
 				mainImageUrl?.let{
 				 val isImage=(it.endsWith(".png") && it.length>0)
-                 if (isImage) Picasso.get().load(mainImageUrl).into(ivLogoTest)
+                 if (isImage) Picasso.get().load(mainImageUrl).placeholder(R.drawable.preload).into(ivLogoTest)
 				 ivLogoTest.visibility = if (isImage) View.VISIBLE else View.GONE
 				}
 				//ivLogoTest.visibility=isImage?View.VISIBLE:View.GONE

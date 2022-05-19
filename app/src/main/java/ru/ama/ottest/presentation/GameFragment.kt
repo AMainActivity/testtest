@@ -98,6 +98,28 @@ private fun setActionBarSubTitle(txt:String)
                 is ReadyStart -> {
                     viewModel.startGame()
                 }
+                is QuestionState -> {
+                    with(binding) {
+                        val s=it.value.imageUrl
+                        //  if (s?.length!!>0) Picasso.get().load(s).into(ivQuestion)
+                        val isImage=s?.endsWith(".png")!! && s?.length!!>0
+                        if (isImage)
+                        {Picasso.get().load(s).placeholder(R.drawable.preload).into(ivQuestion)
+                            ivQuestion.visibility=View.VISIBLE}
+                        else
+                            ivQuestion.visibility=View.GONE
+                        tvQuestion.text = "${it.value.question}"
+                        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1,
+                            it.value.answers )
+                        lvAnswers.adapter = adapter
+                    }
+                }
+                is GameResultState -> {
+                    requireActivity().supportFragmentManager.beginTransaction()
+                        .replace(R.id.main_container, GameFinishedFragment.newInstance(it.value))
+                        .addToBackStack(null)
+                        .commit()
+                }
                 is CurrentNoOfQuestion -> {	
 if (it.value<viewModel.testInfo.countOfQuestions)
       setActionBarSubTitle("${it.value+1}/${viewModel.testInfo.countOfQuestions} ")
@@ -115,13 +137,13 @@ if (it.value<viewModel.testInfo.countOfQuestions)
             viewModel.startGame()
         }
 */
-        viewModel.question.observe(viewLifecycleOwner) {
+       /* viewModel.question.observe(viewLifecycleOwner) {
             with(binding) {
             val s=it.imageUrl
               //  if (s?.length!!>0) Picasso.get().load(s).into(ivQuestion)
 						val isImage=s?.endsWith(".png")!! && s?.length!!>0
                  if (isImage)
-				 {Picasso.get().load(s)/*.placeholder(R.drawable.ic_brain)*/.into(ivQuestion)
+				 {Picasso.get().load(s).placeholder(R.drawable.preload).into(ivQuestion)
 					 ivQuestion.visibility=View.VISIBLE}
 				 else
 					 ivQuestion.visibility=View.GONE
@@ -130,13 +152,13 @@ if (it.value<viewModel.testInfo.countOfQuestions)
 				it.answers )
 				lvAnswers.adapter = adapter
             }
-        }
-        viewModel.gameResult.observe(viewLifecycleOwner) {
+        }*/
+      /*  viewModel.gameResult.observe(viewLifecycleOwner) {
             requireActivity().supportFragmentManager.beginTransaction()
                 .replace(R.id.main_container, GameFinishedFragment.newInstance(it))
                 .addToBackStack(null)
                 .commit()
-        }
+        }*/
         viewModel.percentOfRightAnswersStr.observe(viewLifecycleOwner) {
 				binding.tvPercentOfRight.text=it.toString()
         }

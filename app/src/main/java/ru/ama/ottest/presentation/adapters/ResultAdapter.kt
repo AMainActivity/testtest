@@ -59,7 +59,7 @@ class ResultAdapter(
 				Log.e("ResultAdapterURL",imageUrl!!)
 				val isImage=(imageUrl?.endsWith(".png")!! && imageUrl?.length!!>0)
                  if (isImage)
-				 {Picasso.get().load(imageUrl).into(ivResultQuestion)
+				 {Picasso.get().load(imageUrl).placeholder(R.drawable.preload).into(ivResultQuestion)
                      ivResultQuestion.visibility= View.VISIBLE}
 				 else
                      ivResultQuestion.visibility=View.GONE

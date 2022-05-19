@@ -5,6 +5,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class GameResult(
+    val title: String,
     val timeForTest: String,
     val countOfAnswers: Int,
     val winner: Boolean,

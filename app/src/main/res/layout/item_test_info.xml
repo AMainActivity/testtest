@@ -44,9 +44,10 @@
             android:padding="5dp"
             android:textColor="#000"
             android:textStyle="bold"
-            android:textSize="14sp"
+            android:textSize="20dp"
+            android:layout_gravity="center"
             android:gravity="center"
-            tools:text="назвние теста" />
+            tools:text="название теста" />
 
         <TextView
             android:id="@+id/tvInfo"

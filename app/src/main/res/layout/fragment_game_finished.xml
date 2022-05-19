@@ -46,11 +46,12 @@
             android:id="@+id/tv_score_answers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="7dp"
             android:text="@string/score_answers"
-            android:textSize="18sp"
+            android:textSize="18dp"
             />
 
-        <TextView
+        <!--TextView
             android:id="@+id/tv_required_percentage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -66,7 +67,7 @@
             android:layout_marginTop="16dp"
             android:text="@string/score_percentage"
             android:textSize="18sp"
-            />
+            /-->
 
          <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvResultList"

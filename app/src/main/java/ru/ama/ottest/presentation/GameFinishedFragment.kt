@@ -1,10 +1,9 @@
 package ru.ama.ottest.presentation
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -30,6 +29,7 @@ class GameFinishedFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         parseArgs()
+        setHasOptionsMenu(true)
     }
 
     override fun onCreateView(
@@ -63,7 +63,7 @@ class GameFinishedFragment : Fragment() {
             }
         }*/
             binding.rvResultList.setHasFixedSize(false)
-            binding.rvResultList.setNestedScrollingEnabled(false)
+            binding.rvResultList.isNestedScrollingEnabled = false
         binding.rvResultList.adapter = adapter
        // binding.rvResultList.itemAnimator = null
           adapter.submitList(resultOfTest)        
@@ -83,22 +83,25 @@ class GameFinishedFragment : Fragment() {
             binding.tvZacet.text=emojiResId
             binding.tvScoreAnswers.text = String.format(
                 getString(R.string.score_answers),
-                countOfRightAnswers,
-                countOfAnswers,
-                timeForTest
+				countOfAnswers,
+				timeForTest,
+				countOfRightAnswers,
+				countOfQuestions,
+				percentageOfRightAnswers,
+                gameSettings.minPercentOfRightAnswers
             )
             /* binding.tvRequiredAnswers.text = String.format(
                  getString(R.string.required_score),
                  gameSettings.minCountOfRightAnswers
              )*/
-            binding.tvRequiredPercentage.text = String.format(
+           /* binding.tvRequiredPercentage.text = String.format(
                 getString(R.string.required_percentage),
                 gameSettings.minPercentOfRightAnswers
             )
             binding.tvScorePercentage.text = String.format(
                 getString(R.string.score_percentage),
                 percentageOfRightAnswers
-            )
+            )*/
         }
     }
 
@@ -118,6 +121,56 @@ class GameFinishedFragment : Fragment() {
             FragmentManager.POP_BACK_STACK_INCLUSIVE
         )
     }
+
+
+ override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+        inflater.inflate(R.menu.menu_frgmnt_result, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_share -> {
+			val shareBody="я ${if (!gameResult.winner) "не " else "успешно " } прошел тест \"${gameResult.title}\" за ${gameResult.timeForTest}минут, верно ответив на ${gameResult.countOfRightAnswers} вопросов из ${gameResult.countOfQuestions} (${gameResult.percentageOfRightAnswers}% верных ответов)"
+				sharetext("Поделиться",shareBody,false)
+                return true
+            }
+
+
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
+
+
+private fun sharetext(
+            textZagol: String,
+            textBody: String,
+            isEmail: Boolean
+        ) {
+            val sharingIntent = Intent(Intent.ACTION_SEND)
+            //sharingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET)
+
+            if (isEmail) {
+                sharingIntent.putExtra(
+                    Intent.EXTRA_EMAIL,
+                    arrayOf("10ama@mail.ru")
+                )
+                sharingIntent.type = "message/rfc822"
+            } else
+                sharingIntent.type = "text/plain"
+				sharingIntent.putExtra(
+                android.content.Intent.EXTRA_SUBJECT,
+                textZagol
+            )
+            sharingIntent.putExtra(
+                android.content.Intent.EXTRA_TEXT, 
+                textBody
+            )
+            val d = Intent.createChooser(
+                sharingIntent,
+                "использовать"
+            )
+            requireActivity().startActivity(d)
+        }
 
     companion object {
 

@@ -7,10 +7,10 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class TestInfo(
-    var testId: Int,
-    var title: String,
-    var mainImageUrl : String? = null,
-    var minPercentOfRightAnswers: Int,
-    var testTimeInSeconds: Int,
-    var countOfQuestions: Int
+    val testId: Int,
+    val title: String,
+    val mainImageUrl : String? = null,
+    val minPercentOfRightAnswers: Int,
+    val testTimeInSeconds: Int,
+    val countOfQuestions: Int
 ) : Parcelable

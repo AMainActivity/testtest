@@ -24,7 +24,8 @@
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
             android:layout_margin="3dp"
-            tools:src="@mipmap/ic_launcher" />
+            android:minHeight="200dp"
+            tools:src="@drawable/preload" />
 
 
         <TextView
