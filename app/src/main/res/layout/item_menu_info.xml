@@ -25,15 +25,12 @@
         android:layout_height="wrap_content"
         android:padding="5dp"
         android:textColor="#000"
+		android:autoLink="email"
+		android:linksClickable="true"
         android:textStyle="bold"
         android:gravity="center"
         tools:text="вопрос" />
 		</LinearLayout>
 		 </ScrollView>
-    <!--ListView
-        android:id="@+id/rvMenuList"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/-->
 
 </androidx.cardview.widget.CardView>

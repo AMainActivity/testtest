@@ -112,7 +112,9 @@ class TestsFinishedFragment : Fragment() {
 			testsResult.countOfRightAnswers,
 			testsResult.countOfQuestions,
 			testsResult.percentageOfRightAnswers
-			)
+			)+"\n\n"+getString(R.string.app_url)
+
+
 		//	"я ${if (!gameResult.winner) "не " else "успешно " } прошел тест \"${gameResult.title}\" за ${gameResult.timeForTest}минут, верно ответив на ${gameResult.countOfRightAnswers} вопросов из ${gameResult.countOfQuestions} (${gameResult.percentageOfRightAnswers}% верных ответов)"
 				sharetext(getString(R.string.frgmnt_menu_share_title),shareBody,false)
                 return true

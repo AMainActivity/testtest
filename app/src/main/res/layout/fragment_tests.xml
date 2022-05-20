@@ -52,16 +52,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textSize="20dp"
+        android:textColor="@color/purple_700"
+        android:textSize="17dp"
         android:textStyle="bold"
         tools:text="вопрос" />
-    <!--ProgressBar
-        android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:max="100"
-        android:secondaryProgressTint="@android:color/background_dark" /-->
     <ListView
         android:id="@+id/lv_answers"
         android:layout_width="match_parent"

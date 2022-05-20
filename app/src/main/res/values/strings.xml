@@ -1,13 +1,7 @@
 <resources>
-    <string name="app_name">ot test</string>
-    <string name="question_mark">\?</string>
-    <string name="welcome_title">тест по охране труда</string>
+    <string name="app_name">Тесты</string>
+    <string name="app_url">https://play.google.com/store/apps/details?id=ru.ama.ottest</string>
 
-    <string-array name="menu_main_activity">
-        <item>Помощь</item>
-        <item>О приложении</item>
-        <item>Поделиться</item>
-    </string-array>
 
     <string name="test_info">Количество вопросов: %s \nВремя на тест: %s мин. \nПроцент для успеха: %s</string>
     <string name="questin_formatted">&lt;b>%s. %s&lt;/b></string>
@@ -24,37 +18,18 @@
     <string name="frgmnt_menu_share_mail">10ama@mail.ru</string>
     <string name="frgmnt_menu_share_use">использовать</string>
     <string name="frgmnt_menu_share_body">я %s прошел тест \"%s\" за %sминут, верно ответив на %s вопросов из %s (%s процентов верных ответов)</string>
-	
-    <string name="game_rules">
-        Правила игры: выберите правильный ответ
-    </string>
-    <string name="button_understand">Понятно</string>
-    <string name="welcome_logo">Welcome logo</string>
-    <string name="choose_level_title">Выберите уровень:</string>
-    <string name="easy_level">Easy</string>
-    <string name="normal_level">Normal</string>
-    <string name="hard_level">Hard</string>
-    <string name="test_level">Test</string>
-    <string name="game_over">Game Over</string>
+
     <string name="score_answers">дано %s ответов за %s минут\n%s верных ответов из %s\nнабрано %sпроцентов из %s, необходимых для успеха</string>
-    <string name="score_percentage">Процент правильных ответов: %s</string>
     <string name="retry">Повторить?</string>
     <string name="right_answers">Правильных ответов %s из %s необходимых</string>
-    <string name="required_percentage">Необходимый процент правильных ответов: %s</string>
-    <string name="required_score">Необходимое количество правильных ответов: %s</string>
     <string name="sdsd">разбор ответов</string>
 	
-	   <string name="ma_menu_about">
+	   <string name="ma_menu_help">
   &lt;br>
-  Разработчик - Asylbaev Mikhail, &lt;a href=\'mailto:10ama@mail.ru\'> Обратная связь &lt;/a>
+  Разработчик - Asylbaev Mikhail, &lt;a href=\'mailto:10ama@mail.ru\'>10ama@mail.ru&lt;/a>
 				&lt;br>
 	Приложение \"Тесты\".
- &lt;br>
+ &lt;br> Выбери тест и ответь на все вопросы за определенное время
     </string>
-	 <string name="ma_menu_help">
-    \"&lt;font color=\'#03DAC5\'>&lt;b>  Список тестов &lt;/b> &lt;/font>\"  Выбрать тест, прости тест.&lt;br>
-    \"&lt;font color=\'#03DAC5\'>&lt;b>  Прохождение теста &lt;/b> &lt;/font>\"  Указать ответы на тест за отведенное время.&lt;br>
-   \"&lt;font color=\'#03DAC5\'>&lt;b>  Результаты теста &lt;/b> &lt;/font>\" - Показан результат прохождения теста с указанием неправильных ответов.
 
-	</string>
 </resources>

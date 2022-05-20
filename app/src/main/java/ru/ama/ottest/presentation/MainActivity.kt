@@ -1,14 +1,11 @@
 package ru.ama.ottest.presentation
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.util.Linkify
 import android.view.*
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.PopupMenu
 import androidx.core.text.HtmlCompat
 import ru.ama.ottest.R
 import ru.ama.ottest.databinding.*
@@ -48,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun showPopupText(anchor: View, txt:String) {
         val popupWindow = PopupWindow(application)
-        popupWindow.animationStyle = R.style.dialog_animation_addslovoFU
+        popupWindow.animationStyle = R.style.dialog_animation
         val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
         val binding2= ItemMenuInfoBinding.inflate(layoutInflater)
