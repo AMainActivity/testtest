@@ -9,13 +9,12 @@ import ru.ama.ottest.presentation.*
 @Component(
     modules = [
         DataModule::class,
-        ViewModelModule::class//,
-       // WorkerModule::class
+        ViewModelModule::class
     ]
 )
 interface ApplicationComponent {
 
-    fun inject(fragment: GameFragment)
+    fun inject(fragment: TestsFragment)
     fun inject(fragment: ChooseTestFragment)
     fun inject(activity: SplashActivity)
 

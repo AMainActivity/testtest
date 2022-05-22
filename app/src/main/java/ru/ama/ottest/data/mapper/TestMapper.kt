@@ -13,7 +13,7 @@ class TestMapper @Inject constructor() {
     fun mapDtoToDbModel(dto: TestQuestionsDto, test_id: String) = TestQuestionsDbModel(
         number = dto.number,
         question = dto.question,
-        imageUrl  = dto.imageUrl,
+        imageUrl  = if (dto.imageUrl?.length!!>0)  BASE_IMAGE_URL + dto.imageUrl else dto.imageUrl,
         answers = dto.answers,
         correct =  dto.correct,
         ownerTestId = test_id.toInt()
@@ -29,7 +29,7 @@ class TestMapper @Inject constructor() {
     fun mapDataDtoToDbModel(dto: TestListDataDto) = TestInfoDbModel(
          testId=dto.testId,
      title=dto.title,
-     mainImageUrl=dto.mainImageUrl,
+     mainImageUrl= if (dto.mainImageUrl?.length!!>0)  BASE_IMAGE_URL + dto.mainImageUrl else dto.mainImageUrl,
      minPercentOfRightAnswers=dto.minPercentOfRightAnswers,
      testTimeInSeconds=dto.testTimeInSeconds,
      countOfQuestions=dto.countOfQuestions
@@ -42,26 +42,8 @@ class TestMapper @Inject constructor() {
         testTimeInSeconds=dbModel.testTimeInSeconds,
         countOfQuestions=dbModel.countOfQuestions
     )
-/*
-fun mapJsonContainerToListCoinInfo(jsonContainer: CoinInfoJsonContainerDto): List<CoinInfoDto> {
-        val result = mutableListOf<CoinInfoDto>()
-        val jsonObject = jsonContainer.json ?: return result
-        val coinKeySet = jsonObject.keySet()
-        for (coinKey in coinKeySet) {
-            val currencyJson = jsonObject.getAsJsonObject(coinKey)
-            val currencyKeySet = currencyJson.keySet()
-            for (currencyKey in currencyKeySet) {
-                val priceInfo = Gson().fromJson(
-                    currencyJson.getAsJsonObject(currencyKey),
-                    CoinInfoDto::class.java
-                )
-                result.add(priceInfo)
-            }
-        }
-        return result
-    }
-*/
-    companion object {
 
+    companion object {
+        const val BASE_IMAGE_URL = "https://kol.hhos.ru/test/tests/img/"
     }
 }

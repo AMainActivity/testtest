@@ -9,15 +9,15 @@ import ru.ama.ottest.data.database.TestInfoDao
 import ru.ama.ottest.data.database.TestQuestionsDao
 import ru.ama.ottest.data.network.TestApiFactory
 import ru.ama.ottest.data.network.TestApiService
-import ru.ama.ottest.data.repository.GameRepositoryImpl
-import ru.ama.ottest.domain.repository.GameRepository
+import ru.ama.ottest.data.repository.TestsRepositoryImpl
+import ru.ama.ottest.domain.repository.TestsRepository
 
 @Module
 interface DataModule {
 
     @Binds
     @ApplicationScope
-    fun bindCoinRepository(impl: GameRepositoryImpl): GameRepository
+    fun bindCoinRepository(impl: TestsRepositoryImpl): TestsRepository
 
     companion object {
 

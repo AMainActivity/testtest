@@ -6,18 +6,19 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import ru.ama.ottest.R
-import ru.ama.ottest.databinding.FragmentChooseLevelBinding
+import ru.ama.ottest.databinding.FragmentChooseTestsBinding
 import ru.ama.ottest.domain.entity.TestInfo
 import ru.ama.ottest.presentation.adapters.QuestionsAdapter
 import javax.inject.Inject
 
 class ChooseTestFragment : Fragment() {
 
-    private lateinit var binding: FragmentChooseLevelBinding
-  private lateinit var viewModel: TestsViewModel
+    private lateinit var binding: FragmentChooseTestsBinding
+  private lateinit var viewModel: TestListViewModel
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -35,17 +36,16 @@ class ChooseTestFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentChooseLevelBinding.inflate(inflater, container, false)
+        binding = FragmentChooseTestsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-      
-        /*viewModel = ViewModelProvider(this, viewModelFactory)[TestsViewModel::class.java]
-            binding.buttonLevelTest.setOnClickListener {
-                launchGameFragment()
-            }*/
+
+        (requireActivity() as AppCompatActivity).supportActionBar?.title =getString(R.string.frgmnt_list_test_ab_title)
+		(requireActivity() as AppCompatActivity).supportActionBar?.subtitle =null
+     
             val adapter = QuestionsAdapter(requireContext())
         adapter.onQuestionClickListener = object : QuestionsAdapter.OnQuestionClickListener {
             override fun onQuestionClick(tInfo: TestInfo) {
@@ -55,7 +55,7 @@ class ChooseTestFragment : Fragment() {
         }
         binding.rvTestsList.adapter = adapter
         binding.rvTestsList.itemAnimator = null
-        viewModel = ViewModelProvider(this, viewModelFactory)[TestsViewModel::class.java]
+        viewModel = ViewModelProvider(this, viewModelFactory)[TestListViewModel::class.java]
         viewModel.testInfo.observe(viewLifecycleOwner) {
             adapter.submitList(it)
         }
@@ -64,8 +64,8 @@ class ChooseTestFragment : Fragment() {
 
     private fun launchGameFragment(tInfo: TestInfo) {
         requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.main_container, GameFragment.newInstance(tInfo))
-            .addToBackStack(GameFragment.NAME)
+            .replace(R.id.main_container, TestsFragment.newInstance(tInfo))
+            .addToBackStack(TestsFragment.NAME)
             .commit()
     }
 

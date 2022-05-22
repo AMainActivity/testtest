@@ -3,10 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
 
+   
     <item
-        android:id="@+id/menu_ma"
-        android:icon="@drawable/ic_brain"
-        android:title="Меню"
+        android:id="@+id/menu_about"
+        android:icon="@android:drawable/ic_menu_info_details"
+        android:title="О приложении"
         app:showAsAction="always" />
     
 </menu>

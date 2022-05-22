@@ -7,9 +7,9 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class TestQuestion
 (
-    var number: Int,
-    var question: String,
-    var imageUrl : String? = null,
-    var answers: List<String>,
-    var correct: List<Int>
+    val number: Int,
+    val question: String,
+    val imageUrl : String? = null,
+    val answers: List<String>,
+    val correct: List<Int>
 ): Parcelable

@@ -8,11 +8,9 @@ import androidx.room.Query
 
 @Dao
 interface TestInfoDao {
-   /* @Query("SELECT * FROM test_info ORDER BY testId asc")
-    fun getTestInfo(): LiveData<List<TestInfoDbModel>>*/
 
 @Query("SELECT * FROM test_info  ORDER BY testId asc ")
-    fun getTestInfo(/*testId:Int*/): List<TestInfoDbModel>
+    fun getTestInfo(): List<TestInfoDbModel>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTestInfo(testInfo: TestInfoDbModel)
@@ -20,9 +18,3 @@ interface TestInfoDao {
 	@Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTestList(testList: List<TestInfoDbModel>):List<Long>
 }
-
-/*
-@Transaction
-@Query(“SELECT * FROM test_info”)
-List<TestQuestionsDbModel> getTestInfo();
-*/

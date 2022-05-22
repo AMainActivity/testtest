@@ -23,15 +23,4 @@ class AnswersConverter {
         val type = object : TypeToken<List<String>>() {}.type
         return gson.fromJson(value, type)
     }
-
-    /*@RequiresApi(Build.VERSION_CODES.N)
-    @TypeConverter
-    fun fromAnswers(answers: List<String?>): String? {
-        return answers.stream().collect(Collectors.joining(","))
-    }
-
-    @TypeConverter
-    fun toAnswers(data: String): List<String?>? {
-        return Arrays.asList(data.split(",").toTypedArray())
-    }*/
     }
