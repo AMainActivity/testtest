@@ -1,7 +1,6 @@
 package ru.ama.ottest.presentation.adapters
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,37 +31,50 @@ class ResultAdapter(
 
         with(holder.binding) {
             with(res) {
-				    // var html = ""
-            answers.forEach {
-              //  html = "<b>${number.toString()}. ${question}</b>"
-                var ans = ""
-                for ((index, element) in answers.withIndex()) {
-                    val ss=(if (index==0) EMPTY_STRING else PERENOS_STROKI_STRING)
-                    ans = ans+ss+ when (index) {
-                        indexOfUserAnswer ->
-                            String.format(context.getString(R.string.questin_user_answer_id),element)//"<font color=#c10000>- ${element}</font>"
-                        indexOfCorrect ->
-                            String.format(context.getString(R.string.questin_user_correct_answer_id),element)//"<font color=#009f00>- ${element}</font>"
-                        else ->
-                            String.format(context.getString(R.string.questin_user_another_id),element)//"<font color=gray>- ${element}</font>"
+                answers.forEach {
+                    var ans = EMPTY_STRING
+                    for ((index, element) in answers.withIndex()) {
+                        val ss = (if (index == 0) EMPTY_STRING else PERENOS_STROKI_STRING)
+                        ans = ans + ss + when (index) {
+                            indexOfUserAnswer ->
+                                String.format(
+                                    context.getString(R.string.questin_user_answer_id),
+                                    (index + 1).toString(),
+                                    element
+                                )
+                            indexOfCorrect ->
+                                String.format(
+                                    context.getString(R.string.questin_user_correct_answer_id),
+                                    (index + 1).toString(),
+                                    element
+                                )
+                            else ->
+                                String.format(
+                                    context.getString(R.string.questin_user_another_id),
+                                    (index + 1).toString(),
+                                    element
+                                )
+                        }
                     }
-                }
-              
-                tvResultQuestion.text =  HtmlCompat.fromHtml(String.format(
-                    context.getString(R.string.questin_formatted),
-                    number.toString(),
-                    question
-                ), HtmlCompat.FROM_HTML_MODE_LEGACY)
-                tvResultAnswers.text =  HtmlCompat.fromHtml(ans, HtmlCompat.FROM_HTML_MODE_LEGACY)
 
-            }				
-				Log.e("ResultAdapterURL",imageUrl!!)
-				val isImage=(imageUrl?.endsWith(IMAGE_ENDS)!! && imageUrl?.length!!>0)
-                 if (isImage)
-				 {Picasso.get().load(imageUrl).placeholder(R.drawable.preload).into(ivResultQuestion)
-                     ivResultQuestion.visibility= View.VISIBLE}
-				 else
-                     ivResultQuestion.visibility=View.GONE
+                    tvResultQuestion.text = HtmlCompat.fromHtml(
+                        String.format(
+                            context.getString(R.string.questin_formatted),
+                            number.toString(),
+                            question
+                        ), HtmlCompat.FROM_HTML_MODE_LEGACY
+                    )
+                    tvResultAnswers.text =
+                        HtmlCompat.fromHtml(ans, HtmlCompat.FROM_HTML_MODE_LEGACY)
+
+                }
+                val isImage = (imageUrl?.endsWith(IMAGE_ENDS)!! && imageUrl?.length!! > 0)
+                if (isImage) {
+                    Picasso.get().load(imageUrl).placeholder(R.drawable.preload)
+                        .into(ivResultQuestion)
+                    ivResultQuestion.visibility = View.VISIBLE
+                } else
+                    ivResultQuestion.visibility = View.GONE
                 root.setOnClickListener {
                     onResultClickListener?.onResultClick(this)
                 }
@@ -70,12 +82,12 @@ class ResultAdapter(
         }
     }
 
-companion object {
+    companion object {
 
         private const val EMPTY_STRING = ""
         private const val PERENOS_STROKI_STRING = "<br>"
         private const val IMAGE_ENDS = ".png"
-}
+    }
 
     interface OnResultClickListener {
         fun onResultClick(answerOfTest: AnswerOfTest)

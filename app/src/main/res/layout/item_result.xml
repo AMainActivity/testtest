@@ -19,7 +19,7 @@
 
 			
         <ImageView
-            android:id="@+id/ivResultQuestion"
+            android:id="@+id/iv_result_question"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:adjustViewBounds="true"
@@ -29,7 +29,7 @@
 
 
         <TextView
-            android:id="@+id/tvResultQuestion"
+            android:id="@+id/tv_result_question"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
@@ -37,16 +37,16 @@
             android:textStyle="bold"
             android:textSize="20dp"
             android:gravity="center"
-            tools:text="вопрос" />
+            tools:text="@string/frgmnt_test_title_question" />
 
         <TextView
-            android:id="@+id/tvResultAnswers"
+            android:id="@+id/tv_result_answers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="5dp"
             android:textColor="#000"
             android:textSize="17dp"
-            tools:text="ответы" />
+            tools:text="@string/frgmnt_test_answers" />
 
     </LinearLayout>
 

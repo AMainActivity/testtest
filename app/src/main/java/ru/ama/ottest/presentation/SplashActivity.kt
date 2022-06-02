@@ -4,26 +4,26 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import ru.ama.ottest.R
 import javax.inject.Inject
 
 class SplashActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: SplashViewModel
+    private lateinit var viewModel: ViewModelSplash
+
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
     private val component by lazy {
         (application as MyApplication).component
     }
 
-       override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-           component.inject(this)
-           viewModel = ViewModelProvider(this, viewModelFactory)[SplashViewModel::class.java]
-           viewModel.canStart.observe(this) {
-               startActivity(Intent(this,MainActivity::class.java))
-               finish()
-           }
+        component.inject(this)
+        viewModel = ViewModelProvider(this, viewModelFactory)[ViewModelSplash::class.java]
+        viewModel.canStart.observe(this) {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
     }
 
 

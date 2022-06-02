@@ -28,6 +28,7 @@ interface DataModule {
         ): TestQuestionsDao {
             return AppDatabase.getInstance(application).testQuestionsDao()
         }
+
         @Provides
         @ApplicationScope
         fun provideInfoDao(
@@ -35,6 +36,7 @@ interface DataModule {
         ): TestInfoDao {
             return AppDatabase.getInstance(application).testInfoDao()
         }
+
         @Provides
         @ApplicationScope
         fun provideApiService(): TestApiService {

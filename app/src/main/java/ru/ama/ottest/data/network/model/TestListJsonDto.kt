@@ -5,10 +5,10 @@ import com.google.gson.annotations.SerializedName
 
 data class TestListJsonDto(
     @Expose
-    @SerializedName("error"   ) val error   : Boolean,
+    @SerializedName("error") val error: Boolean,
     @Expose
-    @SerializedName("message" ) val message : String,
+    @SerializedName("message") val message: String,
     @Expose
-    @SerializedName("testList"    ) val testListData    : List<TestListDataDto>
+    @SerializedName("testList") val testListData: List<TestListDataDto>
 
 )

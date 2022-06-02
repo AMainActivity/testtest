@@ -13,34 +13,36 @@ class TestMapper @Inject constructor() {
     fun mapDtoToDbModel(dto: TestQuestionsDto, test_id: String) = TestQuestionsDbModel(
         number = dto.number,
         question = dto.question,
-        imageUrl  = if (dto.imageUrl?.length!!>0)  BASE_IMAGE_URL + dto.imageUrl else dto.imageUrl,
+        imageUrl = if (dto.imageUrl?.length!! > 0) BASE_IMAGE_URL + dto.imageUrl else dto.imageUrl,
         answers = dto.answers,
-        correct =  dto.correct,
+        correct = dto.correct,
         ownerTestId = test_id.toInt()
     )
 
     fun mapDbModelToEntity(dbModel: TestQuestionsDbModel) = TestQuestion(
         number = dbModel.number,
         question = dbModel.question,
-        imageUrl  = dbModel.imageUrl,
+        imageUrl = dbModel.imageUrl,
         answers = dbModel.answers,
-        correct =  dbModel.correct
+        correct = dbModel.correct
     )
+
     fun mapDataDtoToDbModel(dto: TestListDataDto) = TestInfoDbModel(
-         testId=dto.testId,
-     title=dto.title,
-     mainImageUrl= if (dto.mainImageUrl?.length!!>0)  BASE_IMAGE_URL + dto.mainImageUrl else dto.mainImageUrl,
-     minPercentOfRightAnswers=dto.minPercentOfRightAnswers,
-     testTimeInSeconds=dto.testTimeInSeconds,
-     countOfQuestions=dto.countOfQuestions
+        testId = dto.testId,
+        title = dto.title,
+        mainImageUrl = if (dto.mainImageUrl?.length!! > 0) BASE_IMAGE_URL + dto.mainImageUrl else dto.mainImageUrl,
+        minPercentOfRightAnswers = dto.minPercentOfRightAnswers,
+        testTimeInSeconds = dto.testTimeInSeconds,
+        countOfQuestions = dto.countOfQuestions
     )
+
     fun mapDataDbModelToEntity(dbModel: TestInfoDbModel) = TestInfo(
-        testId=dbModel.testId,
-        title=dbModel.title,
-        mainImageUrl=dbModel.mainImageUrl,
-        minPercentOfRightAnswers=dbModel.minPercentOfRightAnswers,
-        testTimeInSeconds=dbModel.testTimeInSeconds,
-        countOfQuestions=dbModel.countOfQuestions
+        testId = dbModel.testId,
+        title = dbModel.title,
+        mainImageUrl = dbModel.mainImageUrl,
+        minPercentOfRightAnswers = dbModel.minPercentOfRightAnswers,
+        testTimeInSeconds = dbModel.testTimeInSeconds,
+        countOfQuestions = dbModel.countOfQuestions
     )
 
     companion object {
