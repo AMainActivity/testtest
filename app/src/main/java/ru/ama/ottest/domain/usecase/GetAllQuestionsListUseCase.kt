@@ -7,5 +7,5 @@ class GetAllQuestionsListUseCase @Inject constructor(
     private val repository: TestsRepository
 ) {
 
-    operator fun invoke(testId:Int) = repository.getAllQuestionsListByTestId(testId)
+    operator fun invoke(testId: Int) = repository.getAllQuestionsListByTestId(testId)
 }

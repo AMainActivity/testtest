@@ -7,5 +7,5 @@ class GetQuestionsListUseCase @Inject constructor(
     private val repository: TestsRepository
 ) {
 
-    operator fun invoke(testId:Int,limit:Int) = repository.getQuestionsInfoList(testId,limit)
+    operator fun invoke(testId: Int, limit: Int) = repository.getQuestionsInfoList(testId, limit)
 }

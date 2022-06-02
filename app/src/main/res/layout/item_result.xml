@@ -37,7 +37,7 @@
             android:textStyle="bold"
             android:textSize="20dp"
             android:gravity="center"
-            tools:text="вопрос" />
+            tools:text="@string/frgmnt_test_title_question" />
 
         <TextView
             android:id="@+id/tv_result_answers"
@@ -46,7 +46,7 @@
             android:padding="5dp"
             android:textColor="#000"
             android:textSize="17dp"
-            tools:text="ответы" />
+            tools:text="@string/frgmnt_test_answers" />
 
     </LinearLayout>
 

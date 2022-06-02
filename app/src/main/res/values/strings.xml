@@ -3,11 +3,11 @@
     <string name="app_url">https://play.google.com/store/apps/details?id=ru.ama.ottest</string>
 
 
-    <string name="test_info">Количество вопросов: %s \nВремя на тест: %s мин. \nПроцент для успеха: %s</string>
+    <string name="test_info">Количество вопросов: %s \nВремя на тест: %s мин. \nДля успеха: %s%%</string>
     <string name="questin_formatted">&lt;b>%s. %s&lt;/b></string>
-    <string name="questin_user_answer_id">&lt;font color=#c10000>- %s&lt;/font></string>
-    <string name="questin_user_correct_answer_id">&lt;font color=#009f00>- %s&lt;/font></string>
-    <string name="questin_user_another_id">&lt;font color=gray>- %s&lt;/font></string>
+    <string name="questin_user_answer_id">&lt;font color=#c10000>%s). %s&lt;/font></string>
+    <string name="questin_user_correct_answer_id">&lt;font color=#009f00>%s). %s&lt;/font></string>
+    <string name="questin_user_another_id">&lt;font color=gray>%s). %s&lt;/font></string>
     <string name="frgmnt_list_test_ab_title">Список тестов</string>
     <string name="frgmnt_result_ab_title">Разбор ответов</string>
     <string name="frgmnt_result_passed">Тест сдан</string>
@@ -17,21 +17,25 @@
     <string name="frgmnt_menu_share_success">успешно</string>
     <string name="frgmnt_menu_share_mail">10ama@mail.ru</string>
     <string name="frgmnt_menu_share_use">использовать</string>
-    <string name="frgmnt_menu_share_body">я %s прошел тест \"%s\" за %sминут, верно ответив на %s вопросов из %s (%s процентов верных ответов)</string>
+    <string name="frgmnt_menu_share_body">я %s прошел тест \"%s\" за %sминут, верно ответив на %s вопросов из %s (%s%% верных ответов)</string>
 
-    <string name="score_answers">дано %s ответов за %s минут\n%s верных ответов из %s\nнабрано %sпроцентов из %s, необходимых для успеха</string>
-    <string name="retry">Повторить?</string>
+    <string name="score_answers">дано %s ответов за %s минут\n%s верных ответов из %s\nнабрано %s%% из %s, необходимых для успеха</string>
+    <string name="retry">Повторить</string>
     <string name="right_answers">Правильных ответов %s из %s необходимых</string>
     <string name="sdsd">разбор ответов</string>
-	
-	   <string name="ma_menu_help">
-  &lt;br>
+
+    <string name="ma_menu_help">
+  &lt;center>Приложение \"Тесты\".&lt;/center>&lt;br>
   Разработчик - Asylbaev Mikhail, &lt;a href=\'mailto:10ama@mail.ru\'>10ama@mail.ru&lt;/a>
-				&lt;br>
-	Приложение \"Тесты\".
  &lt;br> Выбери тест и ответь на все вопросы за определенное время
- &lt;br> Для добавления других тестов - пишите по почтовый ящик выше
+ &lt;br> Для добавления других тестов - пишите на почтовый ящик выше.
     </string>
     <string name="but_frgmnt_answer">Назад</string>
+    <string name="menu_about">О приложении</string>
+    <string name="frgmnt_test_time_elapsed">00:00</string>
+    <string name="frgmnt_test_percent_right_answers">100%</string>
+    <string name="frgmnt_test_title_question">вопрос</string>
+    <string name="frgmnt_finish_zachet">зачтено</string>
+    <string name="frgmnt_test_answers">ответы</string>
 
 </resources>

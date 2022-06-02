@@ -1,20 +1,23 @@
 package ru.ama.ottest.presentation
 
-import android.os.CountDownTimer
-import android.util.Log
-import androidx.lifecycle.*
-import kotlinx.coroutines.*
-import ru.ama.ottest.domain.entity.*
-import ru.ama.ottest.domain.usecase.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.launch
+import ru.ama.ottest.domain.entity.TestQuestion
+import ru.ama.ottest.domain.usecase.GetAllQuestionsListUseCase
 import javax.inject.Inject
 
 class ViewModelAnswers @Inject constructor(
     private val getAllQuestionsListUseCase: GetAllQuestionsListUseCase
 ) : ViewModel() {
 
-      fun getTestAnswers(testId:Int) {
-     
-        val d=viewModelScope.async(Dispatchers.IO) {
+    fun getTestAnswers(testId: Int) {
+
+        val d = viewModelScope.async(Dispatchers.IO) {
             getAllQuestionsListUseCase(testId)
 
         }
@@ -22,10 +25,8 @@ class ViewModelAnswers @Inject constructor(
             _listOfAnswers.postValue(d.await())
         }
     }
-	
-	
-	
-   private val _listOfAnswers = MutableLiveData<List<TestQuestion>>()
+
+    private val _listOfAnswers = MutableLiveData<List<TestQuestion>>()
     val listOfAnswers: LiveData<List<TestQuestion>>
         get() = _listOfAnswers
 

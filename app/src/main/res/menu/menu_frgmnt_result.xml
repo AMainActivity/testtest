@@ -7,7 +7,7 @@
     <item
         android:id="@+id/menu_share"
         android:icon="@android:drawable/ic_menu_share"
-        android:title="Поделиться"
+        android:title="@string/frgmnt_menu_share_title"
         app:showAsAction="always" />
     
 </menu>

@@ -4,17 +4,15 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.ListAdapter
 import com.squareup.picasso.Picasso
 import ru.ama.ottest.R
 import ru.ama.ottest.databinding.ItemTestInfoBinding
 import ru.ama.ottest.domain.entity.TestInfo
-import ru.ama.ottest.domain.entity.TestQuestion
 
 class QuestionsAdapter(
     private val context: Context
-) : ListAdapter<TestInfo, QuestionViewHolder>(TestDiffCallback) {
+) : ListAdapter<TestInfo, QuestionViewHolder>(QuestionDiffCallback) {
 
     var onQuestionClickListener: OnQuestionClickListener? = null
     var onButtonAnswersClickListener: OnButtonAnswersClickListener? = null

@@ -1,8 +1,8 @@
 package ru.ama.ottest.data.network
 
-import ru.ama.ottest.data.network.model.TestJsonDto
 import retrofit2.http.GET
 import retrofit2.http.Query
+import ru.ama.ottest.data.network.model.TestJsonDto
 import ru.ama.ottest.data.network.model.TestListJsonDto
 
 interface TestApiService {
@@ -14,7 +14,7 @@ interface TestApiService {
 
     @GET("gettestlist.php")
     suspend fun getTestList(): TestListJsonDto
-	
+
     companion object {
         private const val QUERY_PARAM_TEST_ID = "tid"
     }

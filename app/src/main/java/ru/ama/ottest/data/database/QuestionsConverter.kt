@@ -1,13 +1,9 @@
 package ru.ama.ottest.data.database
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.room.TypeConverter
-import ru.ama.ottest.data.network.model.TestQuestionsDto
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import java.util.*
-import java.util.stream.Collectors
+import ru.ama.ottest.data.network.model.TestQuestionsDto
 
 class QuestionsConverter {
 
@@ -26,4 +22,4 @@ class QuestionsConverter {
     }
 
 
-    }
+}

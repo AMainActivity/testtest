@@ -2,7 +2,6 @@ package ru.ama.ottest.presentation
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -14,9 +13,8 @@ import ru.ama.ottest.databinding.FragmentTestsFinishedBinding
 import ru.ama.ottest.domain.entity.TestsResult
 import ru.ama.ottest.presentation.adapters.ResultAdapter
 
-class TestsFinishedFragment : Fragment() {
+class FragmentTestFinish : Fragment() {
 
-    //private lateinit var binding: FragmentTestsFinishedBinding
     private var _binding: FragmentTestsFinishedBinding? = null
     private val binding: FragmentTestsFinishedBinding
         get() = _binding ?: throw RuntimeException("FragmentTestsFinishedBinding == null")
@@ -59,7 +57,6 @@ class TestsFinishedFragment : Fragment() {
             goToStartGame()
         }
         with(testsResult) {
-            Log.e("resultOfTest", answerOfTest.toString())
 			
             val adapter = ResultAdapter(requireContext())
             binding.rvResultList.setHasFixedSize(false)
@@ -69,10 +66,10 @@ class TestsFinishedFragment : Fragment() {
 
             val emojiResId = if (winner) {
                 binding.tvZacet.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.result_zacet))
-                getString(R.string.frgmnt_result_passed)//"Тест сдан"
+                getString(R.string.frgmnt_result_passed)
             } else {
                 binding.tvZacet.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.result_nezacet))
-                getString(R.string.frgmnt_result_missed)//"Тест не сдан"
+                getString(R.string.frgmnt_result_missed)
             }
             binding.tvZacet.text=emojiResId
             binding.tvScoreAnswers.text = String.format(
@@ -82,7 +79,7 @@ class TestsFinishedFragment : Fragment() {
 				countOfRightAnswers,
 				countOfQuestions,
 				percentageOfRightAnswers,
-                testsSettings.minPercentOfRightAnswers
+                minPercentOfRightAnswers
             )
         }
     }
@@ -99,7 +96,7 @@ class TestsFinishedFragment : Fragment() {
 
     private fun goToStartGame() {
         activity?.supportFragmentManager?.popBackStack(
-            TestsFragment.NAME,
+            FragmentTestProcess.NAME,
             FragmentManager.POP_BACK_STACK_INCLUSIVE
         )
     }
@@ -123,7 +120,6 @@ class TestsFinishedFragment : Fragment() {
 			)+"\n\n"+getString(R.string.app_url)
 
 
-		//	"я ${if (!gameResult.winner) "не " else "успешно " } прошел тест \"${gameResult.title}\" за ${gameResult.timeForTest}минут, верно ответив на ${gameResult.countOfRightAnswers} вопросов из ${gameResult.countOfQuestions} (${gameResult.percentageOfRightAnswers}% верных ответов)"
 				sharetext(getString(R.string.frgmnt_menu_share_title),shareBody,false)
                 return true
             }
@@ -140,7 +136,6 @@ private fun sharetext(
             isEmail: Boolean
         ) {
             val sharingIntent = Intent(Intent.ACTION_SEND)
-            //sharingIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET)
 
             if (isEmail) {
                 sharingIntent.putExtra(
@@ -160,7 +155,7 @@ private fun sharetext(
             )
             val d = Intent.createChooser(
                 sharingIntent,
-                getString(R.string.frgmnt_menu_share_use)//"использовать"
+                getString(R.string.frgmnt_menu_share_use)
             )
             requireActivity().startActivity(d)
         }
@@ -171,8 +166,8 @@ private fun sharetext(
         private const val SHARE_MAIL_TYPE = "message/rfc822"
         private const val SHARE_TEXT_TYPE = "text/plain"
 
-        fun newInstance(testsResult: TestsResult): TestsFinishedFragment {
-            return TestsFinishedFragment().apply {
+        fun newInstance(testsResult: TestsResult): FragmentTestFinish {
+            return FragmentTestFinish().apply {
                 arguments = Bundle().apply {
                     putParcelable(ARG_GAME_RESULT, testsResult)
                 }

@@ -7,14 +7,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@android:color/background_light"
-    tools:context=".presentation.TestsFinishedFragment"
+    tools:context=".presentation.FragmentTestFinish"
     >
 
     <TextView
         android:id="@+id/tv_zacet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="зачтено"
+        android:text="@string/frgmnt_finish_zachet"
         android:gravity="center"
         android:textColor="@color/black"
         android:textSize="18sp"
@@ -22,7 +22,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="wrap_content"
         android:layout_weight="1"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp">
 
 
 
@@ -54,6 +54,7 @@
     </androidx.core.widget.NestedScrollView>
     <Button
         android:id="@+id/button_retry"
+        android:layout_margin="3dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/retry"
