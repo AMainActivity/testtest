@@ -16,6 +16,7 @@ interface ApplicationComponent {
 
     fun inject(fragment: TestsFragment)
     fun inject(fragment: ChooseTestFragment)
+    fun inject(fragment: FragmentAnswers)
     fun inject(activity: SplashActivity)
 
     fun inject(application: MyApplication)

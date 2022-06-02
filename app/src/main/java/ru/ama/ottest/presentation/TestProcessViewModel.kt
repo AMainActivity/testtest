@@ -19,14 +19,13 @@ class TestProcessViewModel @Inject constructor(
     init {
         currentNoOfQuestion = PARAMETER_ZERO
     }
-    /* private val _readyStart = MutableLiveData<Unit>()
+     private val _readyStart = MutableLiveData<Unit>()
      val readyStart: LiveData<Unit>
-         get() = _readyStart*/
+         get() = _readyStart
 
     private fun getTInfo() {
      
         val d=viewModelScope.async(Dispatchers.IO) {
-            // dfd.join()
             getQuestionsListUseCase(testInfo.testId, testInfo.countOfQuestions)
 
         }
@@ -34,7 +33,7 @@ class TestProcessViewModel @Inject constructor(
             testQuestion = d.await()
                 Log.e("getTestInfoUseCase", testInfo.toString())
             Log.e("getQuestionsListUseCase", testQuestion[PARAMETER_ZERO].toString())
-            _state.postValue(ReadyStart)
+            _readyStart.postValue(Unit)
         }
     }
 
@@ -56,28 +55,33 @@ class TestProcessViewModel @Inject constructor(
         )
     }
 
-    private val _state = MutableLiveData<State>()
+  /*  private val _state = MutableLiveData<State>()
     val state: LiveData<State>
-        get() = _state
+        get() = _state*/
    
   
-    /*private val _question = MutableLiveData<TestQuestion>()
+    private val _question = MutableLiveData<TestQuestion>()
     val question: LiveData<TestQuestion>
-        get() = _question*/
+        get() = _question
+		
+    private val _leftFormattedTime = MutableLiveData<String>()
+    val leftFormattedTime: LiveData<String>
+        get() = _leftFormattedTime
 
-   /* private val _rightAnswerLD = MutableLiveData<Boolean>()
-    val rightAnswerLD: LiveData<Boolean>
-        get() = _rightAnswerLD*/
+    private val _curNumOfQuestion = MutableLiveData<Int>()
+    val curNumOfQuestion: LiveData<Int>
+        get() = _curNumOfQuestion
 
-    /*private val _gameResult = MutableLiveData<GameResult>()
-    val gameResult: LiveData<GameResult>
-        get() = _gameResult*/
+    private val _gameResult = MutableLiveData<TestsResult>()
+    val gameResult: LiveData<TestsResult>
+        get() = _gameResult
 		
     private var millisAfterStart = PARAMETER_ZERO_LONG
 
     private val _percentOfRightAnswers = MutableLiveData<Int>()
     val percentOfRightAnswers: LiveData<Int>
         get() = _percentOfRightAnswers
+		
     private val _percentOfRightAnswersStr = MutableLiveData<String>()
     val percentOfRightAnswersStr: LiveData<String>
         get() = _percentOfRightAnswersStr
@@ -90,10 +94,10 @@ class TestProcessViewModel @Inject constructor(
     private var countOfRightAnswers = PARAMETER_ZERO
     private var countOfWrongAnswers = PARAMETER_ZERO
     private var listAnswerOfTests: MutableList<AnswerOfTest> = mutableListOf<AnswerOfTest>()
-private lateinit var curQuestin:TestQuestion
+//private lateinit var curQuestin:TestQuestion
     fun startGame() {
         startTimer()
-        _state.value = CurrentNoOfQuestion(currentNoOfQuestion)
+        _curNumOfQuestion.value = currentNoOfQuestion
         generateQuestion(currentNoOfQuestion)
     }
 
@@ -104,13 +108,13 @@ private lateinit var curQuestin:TestQuestion
         checkAnswer(answer)
         getPercentOfRightAnswers()
         currentNoOfQuestion++
-        _state.value = CurrentNoOfQuestion(currentNoOfQuestion)
+        _curNumOfQuestion.value = currentNoOfQuestion
         generateQuestion(currentNoOfQuestion)
     }
 
 
     private fun checkAnswer(answer: Int) {
-        val rightAnswer = curQuestin//question.value
+        val rightAnswer = /*curQuestin*/question.value
       //  _rightAnswerLD.value=answer == rightAnswer!!.correct[0]
         if (answer == rightAnswer!!.correct[PARAMETER_ZERO]) {        
             countOfRightAnswers++
@@ -141,7 +145,7 @@ private lateinit var curQuestin:TestQuestion
         ) {
             override fun onTick(millisUntilFinished: Long) {
 				millisAfterStart=millisUntilFinished
-                _state.value = LeftFormattedTime(getFormattedLeftTime(millisUntilFinished))
+                _leftFormattedTime.value = getFormattedLeftTime(millisUntilFinished)
             }
 
             override fun onFinish() {
@@ -160,16 +164,16 @@ private lateinit var curQuestin:TestQuestion
             val newAnswerList=randomElementsFromAnswersList(oldAnswerList,oldAnswerList.size)
             val newCorrectAnswerIndex=newAnswerList.indexOf(oldCorrectAnswerString)
             val newQuestion=testQuestion[questionNo].copy(answers=newAnswerList, correct = listOf(newCorrectAnswerIndex))
-          curQuestin=newQuestion
-            _state.value=QuestionState(newQuestion)
+         // curQuestin=newQuestion
+            _question.value=newQuestion
             //_question.value = newQuestion
         } else
             finishGame()
     }
 
     private fun finishGame() {
-        _state.value = LeftFormattedTime(getFormattedLeftTime(PARAMETER_ZERO_LONG))
-        _state.value = GameResultState(getGameResult())
+        _leftFormattedTime.value = getFormattedLeftTime(PARAMETER_ZERO_LONG)
+        _gameResult.value = getGameResult()
     }
 
     private fun getGameResult(): TestsResult {

@@ -16,5 +16,8 @@ interface TestQuestionsDao {
 
     @Query("SELECT * FROM test_questions where ownerTestId=:testId and number in (select number from test_questions  where ownerTestId=:testId order by random() limit :limit) ORDER BY number asc")
     fun getQuestionListByTestId(testId:Int,limit:Int): List<TestQuestionsDbModel>
+    
+	@Query("SELECT * FROM test_questions where ownerTestId=:testId ORDER BY number asc")
+    fun getQuestionListByTestIdAnswers(testId:Int): List<TestQuestionsDbModel>
 }
 

@@ -7,6 +7,7 @@ import dagger.Module
 import dagger.multibindings.IntoMap
 import ru.ama.ottest.presentation.SplashViewModel
 import ru.ama.ottest.presentation.TestListViewModel
+import ru.ama.ottest.presentation.ViewModelAnswers
 
 @Module
 interface ViewModelModule {
@@ -25,4 +26,9 @@ interface ViewModelModule {
     @IntoMap
     @ViewModelKey(TestListViewModel::class)
     fun bindTestsViewModel(viewModel: TestListViewModel): ViewModel
+	
+    @Binds
+    @IntoMap
+    @ViewModelKey(ViewModelAnswers::class)
+    fun bindViewModelAnswers(viewModel: ViewModelAnswers): ViewModel
 }

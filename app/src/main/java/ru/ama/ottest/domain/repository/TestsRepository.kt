@@ -6,6 +6,8 @@ import ru.ama.ottest.domain.entity.*
 interface TestsRepository {
 	
     fun getQuestionsInfoList(testId:Int,limit:Int): List<TestQuestion>
+	
+    fun getAllQuestionsListByTestId(testId: Int): List<TestQuestion>	
 
     fun getTestInfo():List<TestInfo>
 

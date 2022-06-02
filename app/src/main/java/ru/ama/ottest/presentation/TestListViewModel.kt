@@ -15,8 +15,7 @@ class TestListViewModel @Inject constructor(
     init {
         val d=viewModelScope.async(Dispatchers.IO)
         {
-            val r=getTestInfoUseCase()
-            r
+           getTestInfoUseCase()
         }
 
         viewModelScope.launch {

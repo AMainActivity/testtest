@@ -25,7 +25,10 @@ class TestsFragment : Fragment() {
     }
 	@Inject
     lateinit var viewModelFactory: ViewModelFactory
-    private lateinit var binding: FragmentTestsBinding
+    //private lateinit var binding: FragmentTestsBinding
+    private var _binding: FragmentTestsBinding? = null
+    private val binding: FragmentTestsBinding
+        get() = _binding ?: throw RuntimeException("FragmentTestsBinding == null")
 
 
 private fun setActionBarSubTitle(txt:String)
@@ -44,12 +47,17 @@ private fun setActionBarSubTitle(txt:String)
         parseArgs()
     }
 
+  override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentTestsBinding.inflate(inflater, container, false)
+        _binding = FragmentTestsBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -85,7 +93,7 @@ private fun setActionBarSubTitle(txt:String)
     }
 
     private fun observeViewModel() {
-		 viewModel.state.observe(viewLifecycleOwner) {
+		/** viewModel.state.observe(viewLifecycleOwner) {
             when (it) {
                 is ReadyStart -> {
                     viewModel.startGame()
@@ -119,36 +127,35 @@ if (it.value<viewModel.testInfo.countOfQuestions)
                       binding.tvTimer.text = it.value
                 }
             }
-        }
+        }**/
 							
-		/*
+		
 		
         viewModel.readyStart.observe(viewLifecycleOwner){
             viewModel.startGame()
         }
-*/
-       /* viewModel.question.observe(viewLifecycleOwner) {
-            with(binding) {
-            val s=it.imageUrl
-              //  if (s?.length!!>0) Picasso.get().load(s).into(ivQuestion)
-						val isImage=s?.endsWith(".png")!! && s?.length!!>0
-                 if (isImage)
-				 {Picasso.get().load(s).placeholder(R.drawable.preload).into(ivQuestion)
-					 ivQuestion.visibility=View.VISIBLE}
-				 else
-					 ivQuestion.visibility=View.GONE
-                tvQuestion.text = "${it.question}"
-				val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1,
-				it.answers )
-				lvAnswers.adapter = adapter
-            }
-        }*/
-      /*  viewModel.gameResult.observe(viewLifecycleOwner) {
+
+        viewModel.question.observe(viewLifecycleOwner) {
+              with(binding) {
+                        val s=it.imageUrl
+                        val isImage=s?.endsWith(".png")!! && s?.length!!>0
+                        if (isImage)
+                        {Picasso.get().load(s).placeholder(R.drawable.preload).into(ivQuestion)
+                            ivQuestion.visibility=View.VISIBLE}
+                        else
+                            ivQuestion.visibility=View.GONE
+                        tvQuestion.text = "${it.question}"
+                        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1,
+                            it.answers )
+                        lvAnswers.adapter = adapter
+                    }
+        }
+        viewModel.gameResult.observe(viewLifecycleOwner) {
             requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.main_container, GameFinishedFragment.newInstance(it))
+                .replace(R.id.main_container, TestsFinishedFragment.newInstance(it))
                 .addToBackStack(null)
                 .commit()
-        }*/
+        }
         viewModel.percentOfRightAnswersStr.observe(viewLifecycleOwner) {
 				binding.tvPercentOfRight.text=it.toString()
         }
@@ -156,6 +163,14 @@ if (it.value<viewModel.testInfo.countOfQuestions)
             setupProgressColorByState(it)
         }
 	
+        viewModel.curNumOfQuestion.observe(viewLifecycleOwner) {
+		if (it<viewModel.testInfo.countOfQuestions)
+      setActionBarSubTitle("${it+1}/${viewModel.testInfo.countOfQuestions} ")
+        }
+		
+        viewModel.leftFormattedTime.observe(viewLifecycleOwner) {
+		   binding.tvTimer.text = it
+        }
     }
 
    

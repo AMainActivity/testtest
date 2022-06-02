@@ -17,7 +17,10 @@ import javax.inject.Inject
 
 class ChooseTestFragment : Fragment() {
 
-    private lateinit var binding: FragmentChooseTestsBinding
+   // private lateinit var binding: FragmentChooseTestsBinding
+	 private var _binding: FragmentChooseTestsBinding? = null
+    private val binding: FragmentChooseTestsBinding
+        get() = _binding ?: throw RuntimeException("FragmentChooseTestsBinding == null")
   private lateinit var viewModel: TestListViewModel
 
     @Inject
@@ -36,8 +39,13 @@ class ChooseTestFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentChooseTestsBinding.inflate(inflater, container, false)
+        _binding = FragmentChooseTestsBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+  override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -53,14 +61,29 @@ class ChooseTestFragment : Fragment() {
                 launchGameFragment(tInfo)
             }
         }
+		adapter.onButtonAnswersClickListener = object :
+            QuestionsAdapter.OnButtonAnswersClickListener {
+            override fun onButtonAnswersClick(testInfo: String, testId:Int) {
+                launchFragmentAnswers(testInfo,testId)
+            }
+        }
+		
         binding.rvTestsList.adapter = adapter
         binding.rvTestsList.itemAnimator = null
         viewModel = ViewModelProvider(this, viewModelFactory)[TestListViewModel::class.java]
-        viewModel.testInfo.observe(viewLifecycleOwner) {
+        viewModel.testInfo?.observe(viewLifecycleOwner) {
             adapter.submitList(it)
         }
         
     }
+
+    private fun launchFragmentAnswers(testInfo: String, testId:Int) {
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.main_container, FragmentAnswers.newInstance(testInfo,testId))
+            .addToBackStack(FragmentAnswers.NAME)
+            .commit()
+    }
+
 
     private fun launchGameFragment(tInfo: TestInfo) {
         requireActivity().supportFragmentManager.beginTransaction()

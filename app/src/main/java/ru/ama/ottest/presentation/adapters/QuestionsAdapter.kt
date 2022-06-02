@@ -17,6 +17,7 @@ class QuestionsAdapter(
 ) : ListAdapter<TestInfo, QuestionViewHolder>(TestDiffCallback) {
 
     var onQuestionClickListener: OnQuestionClickListener? = null
+    var onButtonAnswersClickListener: OnButtonAnswersClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuestionViewHolder {
         val binding = ItemTestInfoBinding.inflate(
@@ -45,6 +46,10 @@ class QuestionsAdapter(
 				 ivLogoTest.visibility = if (isImage) View.VISIBLE else View.GONE
 				} 				 
 				 
+				 frgmntTestAnswers.setOnClickListener {
+                    onButtonAnswersClickListener?.onButtonAnswersClick(title,testId)
+                }
+				 
                 root.setOnClickListener {
                     onQuestionClickListener?.onQuestionClick(this)
                 }
@@ -57,6 +62,10 @@ companion object {
         private const val SECONDS_IN_MINUTE = 60
     }
 	
+    interface OnButtonAnswersClickListener {
+        fun onButtonAnswersClick(testInfo: String, testId:Int)
+    }
+
     interface OnQuestionClickListener {
         fun onQuestionClick(testInfo: TestInfo)
     }

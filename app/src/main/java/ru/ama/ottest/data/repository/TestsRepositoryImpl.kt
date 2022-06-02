@@ -40,6 +40,16 @@ class TestsRepositoryImpl @Inject constructor(
         return llist2
 
     }
+	
+	   override fun getAllQuestionsListByTestId(testId: Int): List<TestQuestion>{
+        val list=testQuestionsDao.getQuestionListByTestIdAnswers(testId)
+		val llist2=list.map {
+            mapper.mapDbModelToEntity(it)
+        }		
+        return llist2
+    }
+	
+	
    /*  fun getQuestionsInfoList2(): LiveData<List<TestQuestion>> {
         return Transformations.map(testQuestionsDao.getQuestionList()) {
             it.map {
@@ -57,7 +67,7 @@ class TestsRepositoryImpl @Inject constructor(
         {
             rl.add(mapper.mapDataDbModelToEntity(l))
         }*/
-		
+
 			val rl=(testInfoDao.getTestInfo()).map  {mapper.mapDataDbModelToEntity(it)}
 		
         return rl

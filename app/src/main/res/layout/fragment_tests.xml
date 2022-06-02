@@ -40,7 +40,7 @@
 
 
   <ImageView
-            android:id="@+id/ivQuestion"
+            android:id="@+id/iv_question"
 			android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

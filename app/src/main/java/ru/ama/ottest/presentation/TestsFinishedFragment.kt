@@ -16,7 +16,10 @@ import ru.ama.ottest.presentation.adapters.ResultAdapter
 
 class TestsFinishedFragment : Fragment() {
 
-    private lateinit var binding: FragmentTestsFinishedBinding
+    //private lateinit var binding: FragmentTestsFinishedBinding
+    private var _binding: FragmentTestsFinishedBinding? = null
+    private val binding: FragmentTestsFinishedBinding
+        get() = _binding ?: throw RuntimeException("FragmentTestsFinishedBinding == null")
     private lateinit var testsResult: TestsResult
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
@@ -35,8 +38,13 @@ class TestsFinishedFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentTestsFinishedBinding.inflate(inflater, container, false)
+        _binding = FragmentTestsFinishedBinding.inflate(inflater, container, false)
         return binding.root
+    }
+
+  override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
