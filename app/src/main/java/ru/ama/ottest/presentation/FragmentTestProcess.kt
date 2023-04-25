@@ -2,10 +2,13 @@ package ru.ama.ottest.presentation
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
+import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
@@ -80,9 +83,47 @@ class FragmentTestProcess : Fragment() {
     }
 
     private fun setupClickListenersForItems() {
-        binding.lvAnswers.setOnItemClickListener { parent, view, position, id ->
-            viewModel.chooseAnswer(position)
+        binding.buttonSetAnswer.setOnClickListener{
+            viewModel.chooseAnswer(binding.lvAnswers.checkedItemPosition)
+
+            val sbArray: SparseBooleanArray = binding.lvAnswers.checkedItemPositions
+            for (i in 0 until sbArray.size()) {
+                val key = sbArray.keyAt(i)
+                if (sbArray[key]) Log.e("LOG_TAG", i.toString())
+            }
+            /*
+            public void onClick(View arg0) {
+  // пишем в лог выделенные элементы
+  Log.d(LOG_TAG, "checked: ");
+  SparseBooleanArray sbArray = lvMain.getCheckedItemPositions();
+  for (int i = 0; i < sbArray.size(); i++) {
+    int key = sbArray.keyAt(i);
+    if (sbArray.get(key))
+      Log.d(LOG_TAG, names[key]);
+  }
+}
+            * */
         }
+       /* binding.lvAnswers.setOnItemClickListener { parent, view, position, id ->
+           // viewModel.chooseAnswer(position)
+        }*/
+    }
+
+    private fun getAdapter(correct:List<Int>,ar:List<String>): ArrayAdapter<String> {
+        if (correct.size==1)
+        binding.lvAnswers.setChoiceMode(ListView.CHOICE_MODE_SINGLE)
+        else
+            binding.lvAnswers.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE)
+        return if (correct.size==1)
+             ArrayAdapter(
+                requireContext(), android.R.layout.simple_list_item_single_choice,
+                ar
+            )
+        else
+        ArrayAdapter(
+            requireContext(), android.R.layout.simple_list_item_multiple_choice,
+            ar
+        )
     }
 
     private fun observeViewModel() {
@@ -101,11 +142,11 @@ class FragmentTestProcess : Fragment() {
                 } else
                     ivQuestion.visibility = View.GONE
                 tvQuestion.text = "${it.question}"
-                val adapter = ArrayAdapter(
+               /* val adapter = ArrayAdapter(
                     requireContext(), android.R.layout.simple_list_item_1,
                     it.answers
-                )
-                lvAnswers.adapter = adapter
+                )*/
+                lvAnswers.adapter = getAdapter(it.correct,it.answers)
             }
         }
         viewModel.gameResult.observe(viewLifecycleOwner) {
