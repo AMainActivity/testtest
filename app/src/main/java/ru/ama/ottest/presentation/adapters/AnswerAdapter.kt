@@ -35,7 +35,7 @@ class AnswerAdapter(
                     for ((index, element) in answers.withIndex()) {
                         val ss = (if (index == 0) EMPTY_STRING else PERENOS_STROKI_STRING)
                         ans = ans + ss + when (index) {
-                            correct[0] ->
+                            in correct ->
                                 String.format(
                                     context.getString(R.string.questin_user_correct_answer_id),
                                     (index + 1).toString(),

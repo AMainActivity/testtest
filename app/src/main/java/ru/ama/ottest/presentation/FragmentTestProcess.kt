@@ -70,6 +70,7 @@ class FragmentTestProcess : Fragment() {
         setupClickListenersForItems()
         viewModel.setParams(testInfo)
         observeViewModel()
+        binding.buttonSetAnswer.isEnabled=false
     }
 
     private fun parseArgs() {
@@ -83,14 +84,34 @@ class FragmentTestProcess : Fragment() {
     }
 
     private fun setupClickListenersForItems() {
+		binding.lvAnswers.setOnItemClickListener { parent, view, position, id ->
+            binding.buttonSetAnswer.isEnabled=true
+        }
+		
         binding.buttonSetAnswer.setOnClickListener{
-            viewModel.chooseAnswer(binding.lvAnswers.checkedItemPosition)
-
-            val sbArray: SparseBooleanArray = binding.lvAnswers.checkedItemPositions
-            for (i in 0 until sbArray.size()) {
-                val key = sbArray.keyAt(i)
-                if (sbArray[key]) Log.e("LOG_TAG", i.toString())
+            val rList: MutableList<Int> = mutableListOf()
+            val r=binding.lvAnswers.checkedItemPosition
+            Log.e("LOG_TAG", binding.lvAnswers.choiceMode.toString())
+			when(binding.lvAnswers.choiceMode){
+                ListView.CHOICE_MODE_SINGLE->{
+                    Log.e("LOG_TAG1",r.toString())
+                    rList.add(r)
+                }
+                ListView.CHOICE_MODE_MULTIPLE->{
+                    val sbArray: SparseBooleanArray = binding.lvAnswers.checkedItemPositions
+                    for (i in 0 until sbArray.size()) {
+                        val key = sbArray.keyAt(i)
+                        if (sbArray[key])
+                        {
+                            rList.add(key)
+                            Log.e("LOG_TAG2", key.toString())
+                        }
+                    }
+                }
             }
+
+            viewModel.chooseAnswer(rList)
+
             /*
             public void onClick(View arg0) {
   // пишем в лог выделенные элементы
@@ -103,6 +124,7 @@ class FragmentTestProcess : Fragment() {
   }
 }
             * */
+			binding.buttonSetAnswer.isEnabled=false
         }
        /* binding.lvAnswers.setOnItemClickListener { parent, view, position, id ->
            // viewModel.chooseAnswer(position)
@@ -111,9 +133,9 @@ class FragmentTestProcess : Fragment() {
 
     private fun getAdapter(correct:List<Int>,ar:List<String>): ArrayAdapter<String> {
         if (correct.size==1)
-        binding.lvAnswers.setChoiceMode(ListView.CHOICE_MODE_SINGLE)
+            binding.lvAnswers.choiceMode = ListView.CHOICE_MODE_SINGLE
         else
-            binding.lvAnswers.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE)
+            binding.lvAnswers.choiceMode = ListView.CHOICE_MODE_MULTIPLE
         return if (correct.size==1)
              ArrayAdapter(
                 requireContext(), android.R.layout.simple_list_item_single_choice,
