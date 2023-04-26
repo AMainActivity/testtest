@@ -35,18 +35,49 @@ class ResultAdapter(
                     var ans = EMPTY_STRING
                     for ((index, element) in answers.withIndex()) {
                         val ss = (if (index == 0) EMPTY_STRING else PERENOS_STROKI_STRING)
-                        ans = ans + ss + when (index) {
-                            indexOfUserAnswer ->
+                        ans = ans + ss +
+                    if (index in indexOfUserAnswer && index in indexOfCorrect)
+                        String.format(
+                            context.getString(R.string.questin_user_correct_answer_id),
+                            (index + 1).toString(),
+                            "✅"+element
+                        )
+                        else if(index in indexOfUserAnswer )
+                        String.format(
+                            context.getString(R.string.questin_user_answer_id),
+                            (index + 1).toString(),
+                            "✅"+element
+                        )
+                        else if (index in indexOfCorrect)
+                        String.format(
+                            context.getString(R.string.questin_user_correct_answer_id),
+                            (index + 1).toString(),
+                            element
+                        )
+                        else
+                        String.format(
+                            context.getString(R.string.questin_user_another_id),
+                            (index + 1).toString(),
+                            element
+                        )
+                    /*when (index) {
+                            in indexOfUserAnswer ->
                                 String.format(
                                     context.getString(R.string.questin_user_answer_id),
                                     (index + 1).toString(),
                                     element
                                 )
-                            indexOfCorrect ->
+                            in indexOfCorrect ->
                                 String.format(
                                     context.getString(R.string.questin_user_correct_answer_id),
                                     (index + 1).toString(),
-                                    element
+                                    "✅"+element
+                                )
+                            in indexOfCorrect, in indexOfUserAnswer ->
+                                String.format(
+                                    context.getString(R.string.questin_user_correct_answer_id),
+                                    (index + 1).toString(),
+                                    "✅"+element
                                 )
                             else ->
                                 String.format(
@@ -54,7 +85,7 @@ class ResultAdapter(
                                     (index + 1).toString(),
                                     element
                                 )
-                        }
+                        }*/
                     }
 
                     tvResultQuestion.text = HtmlCompat.fromHtml(

@@ -19,7 +19,8 @@
     <string name="frgmnt_menu_share_use">использовать</string>
     <string name="frgmnt_menu_share_body">я %s прошел тест \"%s\" за %sминут, верно ответив на %s вопросов из %s (%s%% верных ответов)</string>
 
-    <string name="score_answers">дано %s ответов за %s минут\n%s верных ответов из %s\nнабрано %s%% из %s, необходимых для успеха</string>
+    <string name="score_answers">дано %s ответов за %s минут\n%s верных ответов из %s\nнабрано %s%% из %s, необходимых для успеха\n
+    Ниже зеленым цветом помечены верные ответы, красным - неверные, символом \"✅\" - Ваши ответы</string>
     <string name="retry">Повторить</string>
     <string name="right_answers">Правильных ответов %s из %s необходимых</string>
     <string name="sdsd">разбор ответов</string>

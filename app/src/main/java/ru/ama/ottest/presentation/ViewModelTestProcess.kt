@@ -1,6 +1,8 @@
 package ru.ama.ottest.presentation
 
+import android.content.Context
 import android.os.CountDownTimer
+import android.widget.ArrayAdapter
 import androidx.lifecycle.*
 import kotlinx.coroutines.*
 import ru.ama.ottest.domain.entity.*
@@ -75,13 +77,15 @@ class ViewModelTestProcess @Inject constructor(
         getTInfo()
     }
 
+
+
     fun startGame() {
         startTimer()
         _curNumOfQuestion.value = currentNoOfQuestion
         generateQuestion(currentNoOfQuestion)
     }
 
-    fun chooseAnswer(answer: Int) {
+    fun chooseAnswer(answer: List<Int>) {
         if (gameResult.value != null) {
             return
         }
@@ -93,9 +97,12 @@ class ViewModelTestProcess @Inject constructor(
     }
 
 
-    private fun checkAnswer(answer: Int) {
+    private fun checkAnswer(answer: List<Int>/*массив*/) {
         val rightAnswer = question.value
-        if (answer == rightAnswer!!.correct[PARAMETER_ZERO]) {
+		//сравнить массивы
+		val b=(answer.containsAll(rightAnswer!!.correct)&& rightAnswer!!.correct.containsAll(answer))
+        if (b/*answer == rightAnswer!!.correct*/)
+        {
             countOfRightAnswers++
         } else {
             countOfWrongAnswers++
@@ -105,7 +112,7 @@ class ViewModelTestProcess @Inject constructor(
                 rightAnswer.imageUrl,
                 rightAnswer.answers,
                 answer,
-                rightAnswer.correct[PARAMETER_ZERO]
+                rightAnswer.correct
             )
             listAnswerOfTests.add(rOt)
         }
@@ -137,12 +144,26 @@ class ViewModelTestProcess @Inject constructor(
         if (questionNo < testInfo.countOfQuestions) {
             val oldAnswerList = testQuestion[questionNo].answers
             val oldCorrectAnswers = testQuestion[questionNo].correct
-            val oldCorrectAnswerString = oldAnswerList[oldCorrectAnswers[PARAMETER_ZERO]]
+			val oldCorrectAnswerList: MutableList<String> = mutableListOf()
+                for (cor in oldCorrectAnswers) {
+					oldCorrectAnswerList.add(oldAnswerList[cor])
+				}
+			val newCorrectAnswerIndexList: MutableList<Int> = mutableListOf()
             val newAnswerList = randomElementsFromAnswersList(oldAnswerList, oldAnswerList.size)
-            val newCorrectAnswerIndex = newAnswerList.indexOf(oldCorrectAnswerString)
+			for (newCor in oldCorrectAnswerList) {
+					newCorrectAnswerIndexList.add(newAnswerList.indexOf(newCor))
+				}
+			
+			
+          //  val oldCorrectAnswerString = oldAnswerList[oldCorrectAnswers[PARAMETER_ZERO]]
+			
+			
+			
+			
+         //   val newCorrectAnswerIndex = newAnswerList.indexOf(oldCorrectAnswerString)
             val newQuestion = testQuestion[questionNo].copy(
                 answers = newAnswerList,
-                correct = listOf(newCorrectAnswerIndex)
+                correct =newCorrectAnswerIndexList// listOf(newCorrectAnswerIndex)
             )
 
             _question.value = newQuestion

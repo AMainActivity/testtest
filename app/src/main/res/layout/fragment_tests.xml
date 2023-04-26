@@ -58,9 +58,17 @@
         tools:text="@string/frgmnt_test_title_question" />
     <ListView
         android:id="@+id/lv_answers"
+        android:layout_weight="1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="0dp"/>
 
 
 
+    <Button
+        android:id="@+id/button_set_answer"
+        android:layout_margin="3dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ответить"
+        />
 </LinearLayout>

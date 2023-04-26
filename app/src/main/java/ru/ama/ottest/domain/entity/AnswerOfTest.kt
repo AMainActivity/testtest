@@ -9,6 +9,6 @@ data class AnswerOfTest(
     val question: String,
     val imageUrl: String? = null,
     val answers: List<String>,
-    val indexOfUserAnswer: Int,
-    val indexOfCorrect: Int
+    val indexOfUserAnswer: List<Int>,
+    val indexOfCorrect: List<Int>
 ) : Parcelable
