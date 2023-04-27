@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 
 @Parcelize
-data class TestInfo(
+data class TestInfoDomModel(
     val testId: Int,
     val title: String,
     val mainImageUrl: String? = null,

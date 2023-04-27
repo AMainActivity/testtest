@@ -9,6 +9,6 @@ data class TestJsonDto(
     @Expose
     @SerializedName("message") val message: String,
     @Expose
-    @SerializedName("questions") val questions: List<TestQuestionsDto>
+    @SerializedName("questions") val questions: List<QuestionDto>
 
 )

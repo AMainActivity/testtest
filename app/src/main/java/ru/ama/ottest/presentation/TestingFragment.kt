@@ -2,7 +2,6 @@ package ru.ama.ottest.presentation
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.View
@@ -16,13 +15,13 @@ import androidx.lifecycle.ViewModelProvider
 import com.squareup.picasso.Picasso
 import ru.ama.ottest.R
 import ru.ama.ottest.databinding.FragmentTestsBinding
-import ru.ama.ottest.domain.entity.TestInfo
+import ru.ama.ottest.domain.entity.TestInfoDomModel
 import javax.inject.Inject
 
-class FragmentTestProcess : Fragment() {
+class TestingFragment : Fragment() {
 
-    private lateinit var testInfo: TestInfo
-    private lateinit var viewModel: ViewModelTestProcess
+    private lateinit var testInfoDomModel: TestInfoDomModel
+    private lateinit var viewModel: TestingViewModel
     private val component by lazy {
         (requireActivity().application as MyApplication).component
     }
@@ -55,9 +54,7 @@ class FragmentTestProcess : Fragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
         _binding = FragmentTestsBinding.inflate(inflater, container, false)
         return binding.root
@@ -65,12 +62,12 @@ class FragmentTestProcess : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (requireActivity() as AppCompatActivity).supportActionBar?.title = testInfo.title
-        viewModel = ViewModelProvider(this, viewModelFactory)[ViewModelTestProcess::class.java]
+        (requireActivity() as AppCompatActivity).supportActionBar?.title = testInfoDomModel.title
+        viewModel = ViewModelProvider(this, viewModelFactory)[TestingViewModel::class.java]
         setupClickListenersForItems()
-        viewModel.setParams(testInfo)
+        viewModel.setParams(testInfoDomModel)
         observeViewModel()
-        binding.buttonSetAnswer.isEnabled=false
+        binding.buttonSetAnswer.isEnabled = false
     }
 
     private fun parseArgs() {
@@ -78,78 +75,51 @@ class FragmentTestProcess : Fragment() {
         if (!args.containsKey(ARG_TEST_INFO)) {
             throw RuntimeException("Required param TestInfo is absent")
         }
-        args.getParcelable<TestInfo>(ARG_TEST_INFO)?.let {
-            testInfo = it
+        args.getParcelable<TestInfoDomModel>(ARG_TEST_INFO)?.let {
+            testInfoDomModel = it
         }
     }
 
     private fun setupClickListenersForItems() {
-		binding.lvAnswers.setOnItemClickListener { parent, view, position, id ->
-            binding.buttonSetAnswer.isEnabled=true
+        binding.lvAnswers.setOnItemClickListener { parent, view, position, id ->
+            binding.buttonSetAnswer.isEnabled = true
         }
-		
-        binding.buttonSetAnswer.setOnClickListener{
+
+        binding.buttonSetAnswer.setOnClickListener {
             val rList: MutableList<Int> = mutableListOf()
-            val r=binding.lvAnswers.checkedItemPosition
-            //Log.e("LOG_TAG", binding.lvAnswers.choiceMode.toString())
-			when(binding.lvAnswers.choiceMode){
-                ListView.CHOICE_MODE_SINGLE->{
-                   // Log.e("LOG_TAG1",r.toString())
-					rList.clear()
+            val r = binding.lvAnswers.checkedItemPosition
+            when (binding.lvAnswers.choiceMode) {
+                ListView.CHOICE_MODE_SINGLE -> {
+                    rList.clear()
                     rList.add(r)
                 }
-                ListView.CHOICE_MODE_MULTIPLE->{
+                ListView.CHOICE_MODE_MULTIPLE -> {
                     val sbArray: SparseBooleanArray = binding.lvAnswers.checkedItemPositions
-					rList.clear()
+                    rList.clear()
                     for (i in 0 until sbArray.size()) {
                         val key = sbArray.keyAt(i)
-                        if (sbArray[key])
-                        {
+                        if (sbArray[key]) {
                             rList.add(key)
-                          //  Log.e("LOG_TAG2", key.toString())
                         }
                     }
                 }
             }
-            Log.e("LOG_TAG2", rList.toString())
             viewModel.chooseAnswer(rList)
 
-            /*
-            public void onClick(View arg0) {
-  // пишем в лог выделенные элементы
-  Log.d(LOG_TAG, "checked: ");
-  SparseBooleanArray sbArray = lvMain.getCheckedItemPositions();
-  for (int i = 0; i < sbArray.size(); i++) {
-    int key = sbArray.keyAt(i);
-    if (sbArray.get(key))
-      Log.d(LOG_TAG, names[key]);
-  }
-}
-            * */
-			binding.buttonSetAnswer.isEnabled=false
+
+            binding.buttonSetAnswer.isEnabled = false
         }
-       /* binding.lvAnswers.setOnItemClickListener { parent, view, position, id ->
-           // viewModel.chooseAnswer(position)
-        }*/
     }
 
-    private fun getAdapter(correct:List<Int>,ar:List<String>): ArrayAdapter<String> {
-                            Log.e("LOG_correct", correct.toString())
-                            Log.e("LOG_answers", ar.toString())
-		
-        if (correct.size==1)
-            binding.lvAnswers.choiceMode = ListView.CHOICE_MODE_SINGLE
-        else
-            binding.lvAnswers.choiceMode = ListView.CHOICE_MODE_MULTIPLE
-        return if (correct.size==1)
-             ArrayAdapter(
-                requireContext(), R.layout.item_single_choice,
-                ar
-            )
-        else
-        ArrayAdapter(
-            requireContext(), R.layout.item_multi_choice,
-            ar
+    private fun getAdapter(correct: List<Int>, ar: List<String>): ArrayAdapter<String> {
+
+        if (correct.size == 1) binding.lvAnswers.choiceMode = ListView.CHOICE_MODE_SINGLE
+        else binding.lvAnswers.choiceMode = ListView.CHOICE_MODE_MULTIPLE
+        return if (correct.size == 1) ArrayAdapter(
+            requireContext(), R.layout.item_single_choice, ar
+        )
+        else ArrayAdapter(
+            requireContext(), R.layout.item_multi_choice, ar
         )
     }
 
@@ -166,21 +136,15 @@ class FragmentTestProcess : Fragment() {
                 if (isImage) {
                     Picasso.get().load(s).placeholder(R.drawable.preload).into(ivQuestion)
                     ivQuestion.visibility = View.VISIBLE
-                } else
-                    ivQuestion.visibility = View.GONE
+                } else ivQuestion.visibility = View.GONE
                 tvQuestion.text = "${it.question}"
-               /* val adapter = ArrayAdapter(
-                    requireContext(), android.R.layout.simple_list_item_1,
-                    it.answers
-                )*/
-                lvAnswers.adapter = getAdapter(it.correct,it.answers)
+                lvAnswers.adapter = getAdapter(it.correct, it.answers)
             }
         }
         viewModel.gameResult.observe(viewLifecycleOwner) {
             requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.main_container, FragmentTestFinish.newInstance(it))
-                .addToBackStack(null)
-                .commit()
+                .replace(R.id.main_container, TestFinishFragment.newInstance(it))
+                .addToBackStack(null).commit()
         }
         viewModel.percentOfRightAnswersStr.observe(viewLifecycleOwner) {
             binding.tvPercentOfRight.text = it.toString()
@@ -190,8 +154,7 @@ class FragmentTestProcess : Fragment() {
         }
 
         viewModel.curNumOfQuestion.observe(viewLifecycleOwner) {
-            if (it < viewModel.testInfo.countOfQuestions)
-                setActionBarSubTitle("${it + 1}/${viewModel.testInfo.countOfQuestions} ")
+            if (it < viewModel.testInfoDomModel.countOfQuestions) setActionBarSubTitle("${it + 1}/${viewModel.testInfoDomModel.countOfQuestions} ")
         }
 
         viewModel.leftFormattedTime.observe(viewLifecycleOwner) {
@@ -215,8 +178,8 @@ class FragmentTestProcess : Fragment() {
         private const val ARG_TEST_INFO = "testInfo"
         const val NAME = "TestFragment"
 
-        fun newInstance(testId: TestInfo): FragmentTestProcess {
-            return FragmentTestProcess().apply {
+        fun newInstance(testId: TestInfoDomModel): TestingFragment {
+            return TestingFragment().apply {
                 arguments = Bundle().apply {
                     putParcelable(ARG_TEST_INFO, testId)
                 }

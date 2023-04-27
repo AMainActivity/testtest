@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import ru.ama.ottest.domain.usecase.LoadTestsFromNetUseCase
 import javax.inject.Inject
 
-class ViewModelSplash @Inject constructor(
+class SplashViewModel @Inject constructor(
     private val loadTestsFromNetUseCase: LoadTestsFromNetUseCase
 ) : ViewModel() {
 

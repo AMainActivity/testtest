@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class SplashActivity : AppCompatActivity() {
 
-    private lateinit var viewModel: ViewModelSplash
+    private lateinit var viewModel: SplashViewModel
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -19,7 +19,7 @@ class SplashActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         component.inject(this)
-        viewModel = ViewModelProvider(this, viewModelFactory)[ViewModelSplash::class.java]
+        viewModel = ViewModelProvider(this, viewModelFactory)[SplashViewModel::class.java]
         viewModel.canStart.observe(this) {
             startActivity(Intent(this, MainActivity::class.java))
             finish()

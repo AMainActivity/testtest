@@ -1,13 +1,12 @@
 package ru.ama.ottest.presentation
 
-import android.os.CountDownTimer
 import androidx.lifecycle.*
 import kotlinx.coroutines.*
 import ru.ama.ottest.domain.entity.*
 import ru.ama.ottest.domain.usecase.*
 import javax.inject.Inject
 
-class ViewModelTestList @Inject constructor(
+class TestListViewModel @Inject constructor(
     private val getTestInfoUseCase: GetTestInfoUseCase
 ) : ViewModel() {
 
@@ -19,12 +18,12 @@ class ViewModelTestList @Inject constructor(
 
         viewModelScope.launch {
             val p=d.await()
-            _testInfo.value = p
+            _testInfoDomModel.value = p
         }
     }
-   private val _testInfo = MutableLiveData<List<TestInfo>>()
-    val testInfo: LiveData<List<TestInfo>>
-        get() = _testInfo
+   private val _testInfoDomModel = MutableLiveData<List<TestInfoDomModel>>()
+    val testInfoDomModel: LiveData<List<TestInfoDomModel>>
+        get() = _testInfoDomModel
 
     companion object {}
 }

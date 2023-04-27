@@ -14,9 +14,9 @@ import ru.ama.ottest.presentation.*
 )
 interface ApplicationComponent {
 
-    fun inject(fragment: FragmentTestProcess)
-    fun inject(fragment: FragmentChooseTest)
-    fun inject(fragment: FragmentAnswers)
+    fun inject(fragment: TestingFragment)
+    fun inject(fragment: TestListFragment)
+    fun inject(fragment: AnswersFragment)
     fun inject(activity: SplashActivity)
 
     fun inject(application: MyApplication)

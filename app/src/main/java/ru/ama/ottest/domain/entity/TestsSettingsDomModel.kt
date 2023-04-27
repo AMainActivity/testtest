@@ -4,7 +4,7 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class TestsSettings(
+data class TestsSettingsDomModel(
     val minPercentOfRightAnswers: Int,
     val testTimeInSeconds: Int
 ) : Parcelable

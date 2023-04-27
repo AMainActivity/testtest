@@ -1,11 +1,11 @@
 package ru.ama.ottest.domain.usecase
 
-import ru.ama.ottest.domain.repository.TestsRepository
+import ru.ama.ottest.domain.repository.TestRepository
 import javax.inject.Inject
 
 class LoadTestsFromNetUseCase @Inject constructor(
-    private val repository: TestsRepository
+    private val repository: TestRepository
 ) {
 
-    operator suspend fun invoke() = repository.loadTestsFromNet()
+    suspend operator fun invoke() = repository.loadTestsFromNet()
 }

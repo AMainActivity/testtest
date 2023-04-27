@@ -4,31 +4,31 @@ import androidx.lifecycle.ViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
-import ru.ama.ottest.presentation.ViewModelAnswers
-import ru.ama.ottest.presentation.ViewModelSplash
-import ru.ama.ottest.presentation.ViewModelTestList
-import ru.ama.ottest.presentation.ViewModelTestProcess
+import ru.ama.ottest.presentation.AnswersViewModel
+import ru.ama.ottest.presentation.SplashViewModel
+import ru.ama.ottest.presentation.TestListViewModel
+import ru.ama.ottest.presentation.TestingViewModel
 
 @Module
 interface ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(ViewModelSplash::class)
-    fun bindSplashViewModel(viewModel: ViewModelSplash): ViewModel
+    @ViewModelKey(SplashViewModel::class)
+    fun bindSplashViewModel(viewModel: SplashViewModel): ViewModel
 
     @Binds
     @IntoMap
-    @ViewModelKey(ViewModelTestProcess::class)
-    fun bindTestViewModel(viewModel: ViewModelTestProcess): ViewModel
+    @ViewModelKey(TestingViewModel::class)
+    fun bindTestViewModel(viewModel: TestingViewModel): ViewModel
 
     @Binds
     @IntoMap
-    @ViewModelKey(ViewModelTestList::class)
-    fun bindTestsViewModel(viewModel: ViewModelTestList): ViewModel
+    @ViewModelKey(TestListViewModel::class)
+    fun bindTestsViewModel(viewModel: TestListViewModel): ViewModel
 
     @Binds
     @IntoMap
-    @ViewModelKey(ViewModelAnswers::class)
-    fun bindViewModelAnswers(viewModel: ViewModelAnswers): ViewModel
+    @ViewModelKey(AnswersViewModel::class)
+    fun bindViewModelAnswers(viewModel: AnswersViewModel): ViewModel
 }

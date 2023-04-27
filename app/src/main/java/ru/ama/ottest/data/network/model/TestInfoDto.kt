@@ -3,7 +3,7 @@ package ru.ama.ottest.data.network.model
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-data class TestListDataDto(
+data class TestInfoDto(
     @Expose
     @SerializedName("test_id") val testId: Int,
     @Expose

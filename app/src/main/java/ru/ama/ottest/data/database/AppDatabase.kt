@@ -6,8 +6,12 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 
-@Database(entities = [TestQuestionsDbModel::class,TestInfoDbModel::class], version = 2, exportSchema = false)
-@TypeConverters(AnswersConverter::class,CorrectConverter::class,QuestionsConverter::class)
+@Database(
+    entities = [QuestionDbModel::class, TestInfoDbModel::class],
+    version = 2,
+    exportSchema = false
+)
+@TypeConverters(AnswersConverter::class, CorrectConverter::class, QuestionConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     companion object {
 
@@ -25,7 +29,7 @@ abstract class AppDatabase : RoomDatabase() {
                         DB_NAME
                     )
                         .fallbackToDestructiveMigration()
-                       // .allowMainThreadQueries()
+                        // .allowMainThreadQueries()
                         .build()
                 db = instance
                 return instance
@@ -33,6 +37,6 @@ abstract class AppDatabase : RoomDatabase() {
         }
     }
 
-    abstract fun testQuestionsDao(): TestQuestionsDao
+    abstract fun testQuestionsDao(): QuestionDao
     abstract fun testInfoDao(): TestInfoDao
 }

@@ -20,13 +20,3 @@ data class TestInfoDbModel(
         const val tabTestInfo = "test_info"
     }
 }
-
-/*
-class TestAndQuestions {
-   @Embedded
-   var test: TestInfoDbModel? = null
-   @Relation(parentColumn = “testId”,
-             entityColumn = “ownerTestId”)
-   var questions: List<TestQuestionsDbModel> = ArrayList()
-}
-*/

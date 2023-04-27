@@ -10,15 +10,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import ru.ama.ottest.R
 import ru.ama.ottest.databinding.FragmentTestsFinishedBinding
-import ru.ama.ottest.domain.entity.TestsResult
+import ru.ama.ottest.domain.entity.TestResultDomModel
 import ru.ama.ottest.presentation.adapters.ResultAdapter
 
-class FragmentTestFinish : Fragment() {
+class TestFinishFragment : Fragment() {
 
     private var _binding: FragmentTestsFinishedBinding? = null
     private val binding: FragmentTestsFinishedBinding
         get() = _binding ?: throw RuntimeException("FragmentTestsFinishedBinding == null")
-    private lateinit var testsResult: TestsResult
+    private lateinit var testResultDomModel: TestResultDomModel
     private val onBackPressedCallback = object : OnBackPressedCallback(true) {
         override fun handleOnBackPressed() {
             goToStartGame()
@@ -40,14 +40,15 @@ class FragmentTestFinish : Fragment() {
         return binding.root
     }
 
-  override fun onDestroyView() {
+    override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        (requireActivity() as AppCompatActivity).supportActionBar?.title = getString(R.string.frgmnt_result_ab_title) //"Разбор ответов"
+        (requireActivity() as AppCompatActivity).supportActionBar?.title =
+            getString(R.string.frgmnt_result_ab_title) //"Разбор ответов"
         (requireActivity() as AppCompatActivity).supportActionBar?.subtitle = null
         activity?.onBackPressedDispatcher?.addCallback(
             viewLifecycleOwner,
@@ -56,29 +57,39 @@ class FragmentTestFinish : Fragment() {
         binding.buttonRetry.setOnClickListener {
             goToStartGame()
         }
-        with(testsResult) {
-			
+        with(testResultDomModel) {
+
             val adapter = ResultAdapter(requireContext())
             binding.rvResultList.setHasFixedSize(false)
             binding.rvResultList.isNestedScrollingEnabled = false
-        binding.rvResultList.adapter = adapter
-          adapter.submitList(answerOfTest)
+            binding.rvResultList.adapter = adapter
+            adapter.submitList(userAnswerDomModel)
 
-            val emojiResId = if (winner) {
-                binding.tvZacet.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.result_zacet))
+            val emojiResId = if (isWin) {
+                binding.tvZacet.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.result_zacet
+                    )
+                )
                 getString(R.string.frgmnt_result_passed)
             } else {
-                binding.tvZacet.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.result_nezacet))
+                binding.tvZacet.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.result_nezacet
+                    )
+                )
                 getString(R.string.frgmnt_result_missed)
             }
-            binding.tvZacet.text=emojiResId
+            binding.tvZacet.text = emojiResId
             binding.tvScoreAnswers.text = String.format(
                 getString(R.string.score_answers),
-				countOfAnswers,
-				timeForTest,
-				countOfRightAnswers,
-				countOfQuestions,
-				percentageOfRightAnswers,
+                countOfAnswers,
+                timeForTest,
+                countOfRightAnswers,
+                countOfQuestions,
+                percentageOfRightAnswers,
                 minPercentOfRightAnswers
             )
         }
@@ -89,38 +100,41 @@ class FragmentTestFinish : Fragment() {
         if (!args.containsKey(ARG_GAME_RESULT)) {
             throw RuntimeException("$this must contain argument $ARG_GAME_RESULT")
         }
-        args.getParcelable<TestsResult>(ARG_GAME_RESULT)?.let {
-            testsResult = it
+        args.getParcelable<TestResultDomModel>(ARG_GAME_RESULT)?.let {
+            testResultDomModel = it
         }
     }
 
     private fun goToStartGame() {
         activity?.supportFragmentManager?.popBackStack(
-            FragmentTestProcess.NAME,
+            TestingFragment.NAME,
             FragmentManager.POP_BACK_STACK_INCLUSIVE
         )
     }
 
 
- override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
+    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_frgmnt_result, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.menu_share -> {
-			val shareBody=
-			String.format(getString(R.string.frgmnt_menu_share_body),
-			if (!testsResult.winner) getString(R.string.frgmnt_menu_share_ne) else getString(R.string.frgmnt_menu_share_success) ,
-			testsResult.title,
-			testsResult.timeForTest,
-			testsResult.countOfRightAnswers,
-			testsResult.countOfQuestions,
-			testsResult.percentageOfRightAnswers
-			)+"\n\n"+getString(R.string.app_url)
+                val shareBody =
+                    String.format(
+                        getString(R.string.frgmnt_menu_share_body),
+                        if (!testResultDomModel.isWin) getString(R.string.frgmnt_menu_share_ne) else getString(
+                            R.string.frgmnt_menu_share_success
+                        ),
+                        testResultDomModel.title,
+                        testResultDomModel.timeForTest,
+                        testResultDomModel.countOfRightAnswers,
+                        testResultDomModel.countOfQuestions,
+                        testResultDomModel.percentageOfRightAnswers
+                    ) + "\n\n" + getString(R.string.app_url)
 
 
-				sharetext(getString(R.string.frgmnt_menu_share_title),shareBody,false)
+                sharetext(getString(R.string.frgmnt_menu_share_title), shareBody, false)
                 return true
             }
 
@@ -130,35 +144,35 @@ class FragmentTestFinish : Fragment() {
     }
 
 
-private fun sharetext(
-            textZagol: String,
-            textBody: String,
-            isEmail: Boolean
-        ) {
-            val sharingIntent = Intent(Intent.ACTION_SEND)
+    private fun sharetext(
+        textZagol: String,
+        textBody: String,
+        isEmail: Boolean
+    ) {
+        val sharingIntent = Intent(Intent.ACTION_SEND)
 
-            if (isEmail) {
-                sharingIntent.putExtra(
-                    Intent.EXTRA_EMAIL,
-                    arrayOf(getString(R.string.frgmnt_menu_share_mail))
-                )
-                sharingIntent.type = SHARE_MAIL_TYPE
-            } else
-                sharingIntent.type = SHARE_TEXT_TYPE
-				sharingIntent.putExtra(
-                android.content.Intent.EXTRA_SUBJECT,
-                textZagol
-            )
+        if (isEmail) {
             sharingIntent.putExtra(
-                android.content.Intent.EXTRA_TEXT, 
-                textBody
+                Intent.EXTRA_EMAIL,
+                arrayOf(getString(R.string.frgmnt_menu_share_mail))
             )
-            val d = Intent.createChooser(
-                sharingIntent,
-                getString(R.string.frgmnt_menu_share_use)
-            )
-            requireActivity().startActivity(d)
-        }
+            sharingIntent.type = SHARE_MAIL_TYPE
+        } else
+            sharingIntent.type = SHARE_TEXT_TYPE
+        sharingIntent.putExtra(
+            Intent.EXTRA_SUBJECT,
+            textZagol
+        )
+        sharingIntent.putExtra(
+            Intent.EXTRA_TEXT,
+            textBody
+        )
+        val d = Intent.createChooser(
+            sharingIntent,
+            getString(R.string.frgmnt_menu_share_use)
+        )
+        requireActivity().startActivity(d)
+    }
 
     companion object {
 
@@ -166,10 +180,10 @@ private fun sharetext(
         private const val SHARE_MAIL_TYPE = "message/rfc822"
         private const val SHARE_TEXT_TYPE = "text/plain"
 
-        fun newInstance(testsResult: TestsResult): FragmentTestFinish {
-            return FragmentTestFinish().apply {
+        fun newInstance(testResultDomModel: TestResultDomModel): TestFinishFragment {
+            return TestFinishFragment().apply {
                 arguments = Bundle().apply {
-                    putParcelable(ARG_GAME_RESULT, testsResult)
+                    putParcelable(ARG_GAME_RESULT, testResultDomModel)
                 }
             }
         }

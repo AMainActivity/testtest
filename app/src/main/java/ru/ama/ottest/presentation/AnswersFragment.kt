@@ -14,14 +14,14 @@ import ru.ama.ottest.databinding.FragmentTestsAnswersBinding
 import ru.ama.ottest.presentation.adapters.AnswerAdapter
 import javax.inject.Inject
 
-class FragmentAnswers : Fragment() {
+class AnswersFragment : Fragment() {
 
     private var _binding: FragmentTestsAnswersBinding? = null
     private val binding: FragmentTestsAnswersBinding
         get() = _binding ?: throw RuntimeException("FragmentTestsAnswersBinding == null")
     private var testTitle: String = PARAMETER_EMPTY_STRING
     private var testId: Int = PARAMETER_MINUS_ODIN
-    private lateinit var viewModel: ViewModelAnswers
+    private lateinit var viewModel: AnswersViewModel
     private val component by lazy {
         (requireActivity().application as MyApplication).component
     }
@@ -73,7 +73,7 @@ class FragmentAnswers : Fragment() {
         }
 
 
-        viewModel = ViewModelProvider(this, viewModelFactory)[ViewModelAnswers::class.java]
+        viewModel = ViewModelProvider(this, viewModelFactory)[AnswersViewModel::class.java]
         viewModel.getTestAnswers(testId)
         viewModel.listOfAnswers.observe(viewLifecycleOwner) {
 
@@ -98,7 +98,7 @@ class FragmentAnswers : Fragment() {
         if (!args.containsKey(ARG_TEST_ANSWERS_ID)) {
             throw RuntimeException("$this must contain argument $ARG_TEST_ANSWERS_ID")
         }
-        args.getInt(ARG_TEST_ANSWERS_ID)?.let {
+        args.getInt(ARG_TEST_ANSWERS_ID).let {
             testId = it
         }
     }
@@ -119,8 +119,8 @@ class FragmentAnswers : Fragment() {
         private const val ARG_TEST_ANSWERS_ID = "test_answers_id"
         const val NAME = "FragmentAnswers"
 
-        fun newInstance(testInfo: String, testId: Int): FragmentAnswers {
-            return FragmentAnswers().apply {
+        fun newInstance(testInfo: String, testId: Int): AnswersFragment {
+            return AnswersFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_TEST_ANSWERS_TITLE, testInfo)
                     putInt(ARG_TEST_ANSWERS_ID, testId)

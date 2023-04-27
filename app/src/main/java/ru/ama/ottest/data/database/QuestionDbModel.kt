@@ -3,9 +3,9 @@ package ru.ama.ottest.data.database
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import ru.ama.ottest.data.database.TestQuestionsDbModel.Companion.fieldOwnerId
-import ru.ama.ottest.data.database.TestQuestionsDbModel.Companion.fieldTestId
-import ru.ama.ottest.data.database.TestQuestionsDbModel.Companion.tabTestQuestions
+import ru.ama.ottest.data.database.QuestionDbModel.Companion.fieldOwnerId
+import ru.ama.ottest.data.database.QuestionDbModel.Companion.fieldTestId
+import ru.ama.ottest.data.database.QuestionDbModel.Companion.tabTestQuestions
 
 @Entity(
     tableName = tabTestQuestions,
@@ -18,7 +18,7 @@ import ru.ama.ottest.data.database.TestQuestionsDbModel.Companion.tabTestQuestio
         )
     ]
 )
-data class TestQuestionsDbModel(
+data class QuestionDbModel(
     val number: Int,
     val question: String,
     val imageUrl: String? = null,

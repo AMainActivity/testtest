@@ -1,6 +1,5 @@
 package ru.ama.ottest.presentation
 
-import android.content.Context
 import android.os.Bundle
 import android.text.util.Linkify
 import android.view.*
@@ -47,14 +46,10 @@ class MainActivity : AppCompatActivity() {
     private fun showPopupText(anchor: View, txt: String) {
         val popupWindow = PopupWindow(application)
         popupWindow.animationStyle = R.style.dialog_animation
-        val inflater = getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
-
         val binding2 = ItemMenuInfoBinding.inflate(layoutInflater)
         popupWindow.setBackgroundDrawable(
             ResourcesCompat.getDrawable(
-                getResources(),
-                R.drawable.nulldr,
-                null
+                getResources(), R.drawable.nulldr, null
             )
         )
         binding2.tvMenuHelp.linksClickable = true
@@ -71,7 +66,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun launchFirstScreen() {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.main_container, FragmentChooseTest.newInstance())
-            .commit()
+            .replace(R.id.main_container, TestListFragment.newInstance()).commit()
     }
 }

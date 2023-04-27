@@ -7,11 +7,11 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import ru.ama.ottest.domain.entity.TestQuestion
+import ru.ama.ottest.domain.entity.QuestionDomModel
 import ru.ama.ottest.domain.usecase.GetAllQuestionsListUseCase
 import javax.inject.Inject
 
-class ViewModelAnswers @Inject constructor(
+class AnswersViewModel @Inject constructor(
     private val getAllQuestionsListUseCase: GetAllQuestionsListUseCase
 ) : ViewModel() {
 
@@ -26,9 +26,8 @@ class ViewModelAnswers @Inject constructor(
         }
     }
 
-    private val _listOfAnswers = MutableLiveData<List<TestQuestion>>()
-    val listOfAnswers: LiveData<List<TestQuestion>>
+    private val _listOfAnswers = MutableLiveData<List<QuestionDomModel>>()
+    val listOfAnswers: LiveData<List<QuestionDomModel>>
         get() = _listOfAnswers
 
-    companion object {}
 }

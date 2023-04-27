@@ -4,16 +4,16 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 
 @Parcelize
-data class TestsResult(
+data class TestResultDomModel(
     val title: String,
     val timeForTest: String,
     val countOfAnswers: Int,
-    val winner: Boolean,
+    val isWin: Boolean,
     val countOfRightAnswers: Int,
     val countOfQuestions: Int,
     val minPercentOfRightAnswers: Int,
     val testTimeInSeconds: Int,
-    val answerOfTest: List<AnswerOfTest>
+    val userAnswerDomModel: List<UserAnswerDomModel>
 ) : Parcelable {
 
     companion object {

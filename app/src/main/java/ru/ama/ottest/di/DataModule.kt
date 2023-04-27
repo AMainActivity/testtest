@@ -6,18 +6,18 @@ import dagger.Module
 import dagger.Provides
 import ru.ama.ottest.data.database.AppDatabase
 import ru.ama.ottest.data.database.TestInfoDao
-import ru.ama.ottest.data.database.TestQuestionsDao
+import ru.ama.ottest.data.database.QuestionDao
 import ru.ama.ottest.data.network.TestApiFactory
 import ru.ama.ottest.data.network.TestApiService
-import ru.ama.ottest.data.repository.TestsRepositoryImpl
-import ru.ama.ottest.domain.repository.TestsRepository
+import ru.ama.ottest.data.repository.TestRepositoryImpl
+import ru.ama.ottest.domain.repository.TestRepository
 
 @Module
 interface DataModule {
 
     @Binds
     @ApplicationScope
-    fun bindCoinRepository(impl: TestsRepositoryImpl): TestsRepository
+    fun bindCoinRepository(impl: TestRepositoryImpl): TestRepository
 
     companion object {
 
@@ -25,7 +25,7 @@ interface DataModule {
         @ApplicationScope
         fun provideTestDao(
             application: Application
-        ): TestQuestionsDao {
+        ): QuestionDao {
             return AppDatabase.getInstance(application).testQuestionsDao()
         }
 

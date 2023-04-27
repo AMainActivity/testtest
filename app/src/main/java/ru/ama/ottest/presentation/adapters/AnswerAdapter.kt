@@ -9,23 +9,21 @@ import androidx.recyclerview.widget.ListAdapter
 import com.squareup.picasso.Picasso
 import ru.ama.ottest.R
 import ru.ama.ottest.databinding.ItemResultBinding
-import ru.ama.ottest.domain.entity.TestQuestion
+import ru.ama.ottest.domain.entity.QuestionDomModel
 
 class AnswerAdapter(
     private val context: Context
-) : ListAdapter<TestQuestion, ResultViewHolder>(AnswerDiffCallback) {
+) : ListAdapter<QuestionDomModel, AnswerViewHolder>(AnswerDiffCallback) {
 
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ResultViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AnswerViewHolder {
         val binding = ItemResultBinding.inflate(
-            LayoutInflater.from(parent.context),
-            parent,
-            false
+            LayoutInflater.from(parent.context), parent, false
         )
-        return ResultViewHolder(binding)
+        return AnswerViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ResultViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: AnswerViewHolder, position: Int) {
         val res = getItem(position)
 
         with(holder.binding) {
@@ -35,18 +33,16 @@ class AnswerAdapter(
                     for ((index, element) in answers.withIndex()) {
                         val ss = (if (index == 0) EMPTY_STRING else PERENOS_STROKI_STRING)
                         ans = ans + ss + when (index) {
-                            in correct ->
-                                String.format(
-                                    context.getString(R.string.questin_user_correct_answer_id),
-                                    (index + 1).toString(),
-                                    element
-                                )
-                            else ->
-                                String.format(
-                                    context.getString(R.string.questin_user_another_id),
-                                    (index + 1).toString(),
-                                    element
-                                )
+                            in correct -> String.format(
+                                context.getString(R.string.questin_user_correct_answer_id),
+                                (index + 1).toString(),
+                                element
+                            )
+                            else -> String.format(
+                                context.getString(R.string.questin_user_another_id),
+                                (index + 1).toString(),
+                                element
+                            )
                         }
                     }
 
@@ -66,8 +62,7 @@ class AnswerAdapter(
                     Picasso.get().load(imageUrl).placeholder(R.drawable.preload)
                         .into(ivResultQuestion)
                     ivResultQuestion.visibility = View.VISIBLE
-                } else
-                    ivResultQuestion.visibility = View.GONE
+                } else ivResultQuestion.visibility = View.GONE
 
             }
         }

@@ -1,15 +1,13 @@
 package ru.ama.ottest.presentation
 
-import android.content.Context
 import android.os.CountDownTimer
-import android.widget.ArrayAdapter
 import androidx.lifecycle.*
 import kotlinx.coroutines.*
 import ru.ama.ottest.domain.entity.*
 import ru.ama.ottest.domain.usecase.*
 import javax.inject.Inject
 
-class ViewModelTestProcess @Inject constructor(
+class TestingViewModel @Inject constructor(
     private val getQuestionsListUseCase: GetQuestionsListUseCase
 ) : ViewModel() {
 
@@ -17,17 +15,17 @@ class ViewModelTestProcess @Inject constructor(
     private var timer: CountDownTimer? = null
     private var countOfRightAnswers = PARAMETER_ZERO
     private var countOfWrongAnswers = PARAMETER_ZERO
-    private var listAnswerOfTests: MutableList<AnswerOfTest> = mutableListOf()
+    private var listUserAnswerDomModels: MutableList<UserAnswerDomModel> = mutableListOf()
 
     private val _readyStart = MutableLiveData<Unit>()
     val readyStart: LiveData<Unit>
         get() = _readyStart
 
-    lateinit var testInfo: TestInfo
-    lateinit var testQuestion: List<TestQuestion>
+    lateinit var testInfoDomModel: TestInfoDomModel
+    lateinit var questionDomModel: List<QuestionDomModel>
 
-    private val _question = MutableLiveData<TestQuestion>()
-    val question: LiveData<TestQuestion>
+    private val _question = MutableLiveData<QuestionDomModel>()
+    val question: LiveData<QuestionDomModel>
         get() = _question
 
     private val _leftFormattedTime = MutableLiveData<String>()
@@ -38,8 +36,8 @@ class ViewModelTestProcess @Inject constructor(
     val curNumOfQuestion: LiveData<Int>
         get() = _curNumOfQuestion
 
-    private val _gameResult = MutableLiveData<TestsResult>()
-    val gameResult: LiveData<TestsResult>
+    private val _gameResult = MutableLiveData<TestResultDomModel>()
+    val gameResult: LiveData<TestResultDomModel>
         get() = _gameResult
 
     private var millisAfterStart = PARAMETER_ZERO_LONG
@@ -53,7 +51,7 @@ class ViewModelTestProcess @Inject constructor(
         get() = _percentOfRightAnswersStr
 
     val enoughPercentage: LiveData<Boolean> = Transformations.map(percentOfRightAnswers) {
-        it >= testInfo.minPercentOfRightAnswers
+        it >= testInfoDomModel.minPercentOfRightAnswers
     }
 
     init {
@@ -63,17 +61,17 @@ class ViewModelTestProcess @Inject constructor(
     private fun getTInfo() {
 
         val d = viewModelScope.async(Dispatchers.IO) {
-            getQuestionsListUseCase(testInfo.testId, testInfo.countOfQuestions)
+            getQuestionsListUseCase(testInfoDomModel.testId, testInfoDomModel.countOfQuestions)
 
         }
         viewModelScope.launch {
-            testQuestion = d.await()
+            questionDomModel = d.await()
             _readyStart.postValue(Unit)
         }
     }
 
-    fun setParams(tInfo: TestInfo) {
-        testInfo = tInfo
+    fun setParams(tInfo: TestInfoDomModel) {
+        testInfoDomModel = tInfo
         getTInfo()
     }
 
@@ -106,7 +104,7 @@ class ViewModelTestProcess @Inject constructor(
             countOfRightAnswers++
         } else {
             countOfWrongAnswers++
-            val rOt = AnswerOfTest(
+            val rOt = UserAnswerDomModel(
                 currentNoOfQuestion + 1,
                 rightAnswer.question,
                 rightAnswer.imageUrl,
@@ -114,7 +112,7 @@ class ViewModelTestProcess @Inject constructor(
                 answer,
                 rightAnswer.correct
             )
-            listAnswerOfTests.add(rOt)
+            listUserAnswerDomModels.add(rOt)
         }
     }
 
@@ -125,7 +123,7 @@ class ViewModelTestProcess @Inject constructor(
     private fun startTimer() {
         millisAfterStart = PARAMETER_ZERO_LONG
         timer = object : CountDownTimer(
-            testInfo.testTimeInSeconds * MILLIS_IN_SECONDS + MILLIS_IN_SECONDS,
+            testInfoDomModel.testTimeInSeconds * MILLIS_IN_SECONDS + MILLIS_IN_SECONDS,
             MILLIS_IN_SECONDS
         ) {
             override fun onTick(millisUntilFinished: Long) {
@@ -141,9 +139,9 @@ class ViewModelTestProcess @Inject constructor(
     }
 
     private fun generateQuestion(questionNo: Int) {
-        if (questionNo < testInfo.countOfQuestions) {
-            val oldAnswerList = testQuestion[questionNo].answers
-            val oldCorrectAnswers = testQuestion[questionNo].correct
+        if (questionNo < testInfoDomModel.countOfQuestions) {
+            val oldAnswerList = questionDomModel[questionNo].answers
+            val oldCorrectAnswers = questionDomModel[questionNo].correct
 			val oldCorrectAnswerList: MutableList<String> = mutableListOf()
                 for (cor in oldCorrectAnswers) {
 					oldCorrectAnswerList.add(oldAnswerList[cor])
@@ -161,7 +159,7 @@ class ViewModelTestProcess @Inject constructor(
 			
 			
          //   val newCorrectAnswerIndex = newAnswerList.indexOf(oldCorrectAnswerString)
-            val newQuestion = testQuestion[questionNo].copy(
+            val newQuestion = questionDomModel[questionNo].copy(
                 answers = newAnswerList,
                 correct =newCorrectAnswerIndexList// listOf(newCorrectAnswerIndex)
             )
@@ -176,21 +174,21 @@ class ViewModelTestProcess @Inject constructor(
         _gameResult.value = getGameResult()
     }
 
-    private fun getGameResult(): TestsResult {
+    private fun getGameResult(): TestResultDomModel {
         val percentOfRightAnswers = getPercentOfRightAnswers()
-        val enoughPercentage = percentOfRightAnswers >= testInfo.minPercentOfRightAnswers
+        val enoughPercentage = percentOfRightAnswers >= testInfoDomModel.minPercentOfRightAnswers
         val winner = enoughPercentage
         val countOfQuestions = countOfRightAnswers + countOfWrongAnswers
-        return TestsResult(
-            testInfo.title,
-            getFormattedLeftTime(testInfo.testTimeInSeconds * MILLIS_IN_SECONDS + MILLIS_IN_SECONDS - millisAfterStart),
+        return TestResultDomModel(
+            testInfoDomModel.title,
+            getFormattedLeftTime(testInfoDomModel.testTimeInSeconds * MILLIS_IN_SECONDS + MILLIS_IN_SECONDS - millisAfterStart),
             currentNoOfQuestion,
             winner,
             countOfRightAnswers,
             countOfQuestions,
-            testInfo.minPercentOfRightAnswers,
-            testInfo.testTimeInSeconds,
-            listAnswerOfTests
+            testInfoDomModel.minPercentOfRightAnswers,
+            testInfoDomModel.testTimeInSeconds,
+            listUserAnswerDomModels
         )
     }
 
@@ -203,7 +201,7 @@ class ViewModelTestProcess @Inject constructor(
         }
         _percentOfRightAnswers.value = percentOfRightAnswers
         _percentOfRightAnswersStr.value =
-            "$percentOfRightAnswers/${testInfo.minPercentOfRightAnswers}"
+            "$percentOfRightAnswers/${testInfoDomModel.minPercentOfRightAnswers}"
         return percentOfRightAnswers
     }
 
