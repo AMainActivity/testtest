@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,9 +7,11 @@
     android:layout_margin="4dp"
     android:background="?android:attr/selectableItemBackground"
     android:descendantFocusability="blocksDescendants"
-    app:cardBackgroundColor="#ffe9ff"
+    app:cardBackgroundColor="#FFF0F5"
     app:cardCornerRadius="7dp"
     app:cardElevation="2dp"
+    app:strokeWidth="2dp"
+    app:strokeColor="@android:color/darker_gray"
     app:cardUseCompatPadding="true">
 
     <LinearLayout
@@ -49,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical|right"
                 android:layout_margin="3dp"
-                android:backgroundTint="@color/purple_200"
+                android:backgroundTint="#ADFF2F"
                 android:clickable="true"
                 android:contentDescription="@string/frgmnt_test_answers"
                 app:fabSize="mini"
@@ -70,4 +72,4 @@
 
     </LinearLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

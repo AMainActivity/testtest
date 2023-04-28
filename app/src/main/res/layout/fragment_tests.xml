@@ -3,73 +3,96 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".presentation.TestingFragment">
-  <LinearLayout
+
+    <LinearLayout
         android:layout_width="match_parent"
-        android:orientation="horizontal"
-      android:gravity="center"
-        android:layout_height="wrap_content">
-      <FrameLayout
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content">
-    <TextView
-        android:id="@+id/tv_timer"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/purple_700"
-        android:textSize="24sp"
-        android:layout_margin="3dp"
-        android:layout_gravity="center"
-        tools:text="@string/frgmnt_test_time_elapsed" />
-		
-	   <TextView
-        android:id="@+id/tv_percent_of_right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/purple_700"
-        android:textSize="24sp"
-           android:layout_margin="3dp"
-        android:layout_gravity="right"
-        tools:text="@string/frgmnt_test_percent_right_answers" />
-      </FrameLayout>
-		
-</LinearLayout>
+        android:gravity="center"
+        android:orientation="horizontal">
 
-
-
-  <ImageView
-            android:id="@+id/iv_question"
-			android:visibility="gone"
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="3dp"
-      android:adjustViewBounds="true"
-            tools:src="@mipmap/ic_launcher" />
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="3dp"
+                android:textColor="@color/purple_700"
+                android:textSize="24sp"
+                tools:text="@string/frgmnt_test_time_elapsed" />
+
+            <TextView
+                android:id="@+id/tv_percent_of_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:layout_margin="3dp"
+                android:textColor="@color/purple_700"
+                android:textSize="24sp"
+                tools:text="@string/frgmnt_test_percent_right_answers" />
+        </FrameLayout>
+
+    </LinearLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="4dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:descendantFocusability="blocksDescendants"
+        app:cardBackgroundColor="#FFF0F5"
+        app:cardCornerRadius="7dp"
+        app:cardElevation="2dp"
+        app:strokeWidth="2dp"
+        app:strokeColor="@android:color/darker_gray"
+        app:cardUseCompatPadding="true">
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+
+
+    <ImageView
+        android:id="@+id/iv_question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="3dp"
+        android:adjustViewBounds="true"
+        android:visibility="gone"
+        tools:src="@mipmap/ic_launcher" />
+
     <TextView
         android:id="@+id/tv_question"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:gravity="left"
         android:textColor="@color/purple_700"
         android:textSize="17dp"
+        android:padding="5dp"
         android:textStyle="bold"
         tools:text="@string/frgmnt_test_title_question" />
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </com.google.android.material.card.MaterialCardView>
     <ListView
         android:id="@+id/lv_answers"
-        android:layout_weight="1"
-        tools:listitem="@layout/item_single_choice"
         android:layout_width="match_parent"
-        android:layout_height="0dp"/>
-
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:listitem="@layout/item_single_choice" />
 
 
     <Button
         android:id="@+id/button_set_answer"
-        android:layout_margin="3dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Ответить"
-        />
+        android:layout_margin="3dp"
+        android:text="Ответить" />
 </LinearLayout>

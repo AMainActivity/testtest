@@ -8,7 +8,7 @@ import androidx.room.TypeConverters
 
 @Database(
     entities = [QuestionDbModel::class, TestInfoDbModel::class],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(AnswersConverter::class, CorrectConverter::class, QuestionConverter::class)
