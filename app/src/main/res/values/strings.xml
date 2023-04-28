@@ -38,5 +38,7 @@
     <string name="frgmnt_test_title_question">вопрос</string>
     <string name="frgmnt_finish_zachet">зачтено</string>
     <string name="frgmnt_test_answers">ответы</string>
+    <string name="set_answer">Ответить</string>
+    <string name="show_question_time">кол-во вопросов/время</string>
 
 </resources>

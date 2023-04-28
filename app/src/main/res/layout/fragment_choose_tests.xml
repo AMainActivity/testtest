@@ -5,14 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".presentation.TestListFragment"
-    >
+    tools:context=".presentation.TestListFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_tests_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        tools:listitem="@layout/item_test_info"/>
+        tools:listitem="@layout/item_test_info" />
 
 </LinearLayout>

@@ -170,7 +170,7 @@ class TestingFragment : Fragment() {
             android.R.color.holo_red_light
         }
         val color = ContextCompat.getColor(requireContext(), colorResId)
-        binding.tvPercentOfRight.setBackgroundColor((color))
+        binding.cvPercentOfRight.setCardBackgroundColor(color)
     }
 
     companion object {

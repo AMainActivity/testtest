@@ -10,9 +10,9 @@
     app:cardBackgroundColor="#FFF0F5"
     app:cardCornerRadius="7dp"
     app:cardElevation="2dp"
-    app:strokeWidth="2dp"
+    app:cardUseCompatPadding="true"
     app:strokeColor="@android:color/darker_gray"
-    app:cardUseCompatPadding="true">
+    app:strokeWidth="2dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -65,7 +65,7 @@
                 android:padding="16dp"
                 android:textColor="#000"
                 android:textSize="14sp"
-                tools:text="кол-во вопросов/время" />
+                tools:text="@string/show_question_time" />
 
         </FrameLayout>
 

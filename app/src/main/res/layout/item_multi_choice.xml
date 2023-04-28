@@ -3,7 +3,7 @@
     android:id="@android:id/text1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:textAppearance="?android:attr/textAppearanceListItemSmall"
-    android:gravity="center"
     android:checkMark="?android:attr/listChoiceIndicatorMultiple"
-    android:padding="20dp" />
+    android:gravity="center"
+    android:padding="20dp"
+    android:textAppearance="?android:attr/textAppearanceListItemSmall" />
